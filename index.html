@@ -21,8 +21,17 @@
     </script>
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK (Compatibilidad para un solo archivo HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- INDICADOR DE SINCRONIZACIÓN EN LA NUBE -->
+    <div id="sync-status" class="bg-emerald-600 text-white text-[11px] text-center py-1 font-bold hidden">
+        <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Sincronizando cambios en la nube...
+    </div>
 
     <!-- BARRA SUPERIOR / TASA Y ANUNCIOS -->
     <div class="bg-secondary text-white text-xs sm:text-sm py-2 px-4 shadow-inner">
@@ -96,7 +105,7 @@
             <div class="z-10 text-center md:text-left">
                 <span class="bg-accent text-secondary text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">Servicio Local</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold mb-2">¡Compra sin salir de casa!</h2>
-                <p class="text-slate-300 text-sm sm:text-base max-w-xl">Pide tus víveres y embutidos con total confianza. Delivery gratis en los primeros 2 kilómetros al rededor del pueblo.</p>
+                <p class="text-slate-300 text-sm sm:text-base max-w-xl">Pide tus víveres y embutidos con total confianza. Delivery gratis en los primeros 2 kilómetros alrededor del pueblo.</p>
             </div>
             <div class="z-10 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                 <button onclick="filterCategory('Ofertas')" class="bg-accent hover:bg-amber-400 text-secondary font-bold px-6 py-3 rounded-xl shadow-lg transition text-center">
@@ -120,7 +129,10 @@
         </div>
 
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Productos inyectados por JS -->
+            <div class="col-span-full text-center py-12 text-slate-400">
+                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 text-primary"></i>
+                <p>Cargando catálogo actualizado...</p>
+            </div>
         </div>
     </main>
 
@@ -156,7 +168,6 @@
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
         <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
             <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
-                <!-- Cabecera Carrito -->
                 <div class="p-5 bg-secondary text-white flex items-center justify-between">
                     <h3 class="text-lg font-bold flex items-center gap-2">
                         <i class="fa-solid fa-cart-shopping text-accent"></i> Tu Carrito de Compras
@@ -166,18 +177,13 @@
                     </button>
                 </div>
 
-                <!-- Progreso de Envío Gratis -->
                 <div class="bg-amber-50 border-b border-amber-100 p-3 text-xs text-amber-800 flex items-center gap-2">
                     <i class="fa-solid fa-truck-fast text-accent text-base"></i>
                     <span id="delivery-promo-text">¡Primeros 2 km de delivery completamente gratis!</span>
                 </div>
 
-                <!-- Contenido Items -->
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3">
-                    <!-- Dinámico -->
-                </div>
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
 
-                <!-- Formulario de Envío / Datos Cliente -->
                 <div class="border-t border-slate-200 p-4 bg-slate-50 space-y-3">
                     <h4 class="font-bold text-sm text-secondary flex items-center gap-2">
                         <i class="fa-solid fa-address-book text-primary"></i> Datos de Entrega
@@ -214,11 +220,10 @@
                         </div>
                         <div id="save-client-checkbox-wrapper" class="flex items-center gap-2 pt-1">
                             <input type="checkbox" id="save-as-client" class="rounded text-primary focus:ring-primary">
-                            <label for="save-as-client" class="text-xs text-slate-600">Guardar mis datos como cliente fijo (crear PIN)</label>
+                            <label for="save-as-client" class="text-xs text-slate-600">Guardar mis datos como cliente fijo (PIN por defecto: 1234)</label>
                         </div>
                     </div>
 
-                    <!-- Resumen Totales -->
                     <div class="border-t border-slate-200 pt-3 space-y-1 text-sm">
                         <div class="flex justify-between text-slate-500">
                             <span>Subtotal productos:</span>
@@ -266,18 +271,14 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">PIN de Acceso (4 dígitos)</label>
-                        <input type="password" maxlength="4" id="client-login-pin" placeholder="Ej. 1111" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        <input type="password" maxlength="4" id="client-login-pin" placeholder="Ej. 1234" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                     </div>
                     <button onclick="loginClient()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg transition">
                         Iniciar Sesión
                     </button>
-                    <div class="text-center pt-2">
-                        <span class="text-xs text-slate-500">¿No tienes cuenta? Se creará automáticamente al hacer tu primer pedido marcando la casilla de cliente fijo.</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- Panel de Cliente Logueado -->
             <div id="client-dashboard-view" class="hidden space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div>
@@ -294,9 +295,7 @@
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-secondary mb-2">Tus Compras Recientes</h4>
-                    <div id="client-orders-history" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Historial personal -->
-                    </div>
+                    <div id="client-orders-history" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </div>
@@ -305,824 +304,4 @@
     <!-- MODAL MODO ADMIN -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
         <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
-            <div class="p-5 bg-secondary text-white flex items-center justify-between">
-                <h3 class="text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-gauge-high text-accent"></i> Panel de Administración - Abasto Express
-                </h3>
-                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white p-2">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-
-            <!-- Login Admin -->
-            <div id="admin-login-screen" class="p-8 max-w-sm mx-auto my-auto text-center space-y-4 w-full">
-                <div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <h4 class="text-xl font-bold text-secondary">Acceso Administrador Seguro</h4>
-                <p class="text-xs text-slate-500">Ingresa la contraseña maestra (Por defecto: <span class="font-bold text-secondary">Abasto2026*</span>)</p>
-                <input type="password" id="admin-password-input" placeholder="Contraseña maestra" class="w-full text-center text-lg py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary">
-                <button onclick="verifyAdminPassword()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg transition">
-                    Ingresar al Panel
-                </button>
-            </div>
-
-            <!-- Dashboard Admin (Oculto hasta loguear) -->
-            <div id="admin-dashboard-screen" class="hidden flex-1 flex flex-col overflow-hidden">
-                <!-- Pestañas Admin -->
-                <div class="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-2 overflow-x-auto">
-                    <button onclick="switchAdminTab('products')" id="tab-btn-products" class="px-4 py-2.5 font-bold text-sm border-b-2 border-primary text-primary bg-white rounded-t-xl transition">Inventario y Productos</button>
-                    <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="px-4 py-2.5 font-bold text-sm text-slate-500 hover:text-secondary transition">Ventas Realizadas</button>
-                    <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="px-4 py-2.5 font-bold text-sm text-slate-500 hover:text-secondary transition">Clientes Fijos</button>
-                    <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-4 py-2.5 font-bold text-sm text-slate-500 hover:text-secondary transition">Configuración</button>
-                </div>
-
-                <!-- Contenido Pestañas Admin -->
-                <div class="flex-1 overflow-y-auto p-6 bg-slate-50">
-                    
-                    <!-- TAB 1: PRODUCTOS -->
-                    <div id="admin-tab-products" class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-secondary text-base">Gestión de Catálogo y Stock</h4>
-                            <button onclick="openProductModal()" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow transition">
-                                <i class="fa-solid fa-plus"></i> Nuevo Producto
-                            </button>
-                        </div>
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
-                                        <th class="p-3">Producto</th>
-                                        <th class="p-3">Categoría</th>
-                                        <th class="p-3">Precio ($)</th>
-                                        <th class="p-3 text-center">Stock</th>
-                                        <th class="p-3 text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-products-table" class="divide-y divide-slate-100">
-                                    <!-- Dinámico -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- TAB 2: VENTAS -->
-                    <div id="admin-tab-sales" class="space-y-4 hidden">
-                        <h4 class="font-bold text-secondary text-base">Historial de Ventas Confirmadas</h4>
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
-                                        <th class="p-3">Pedido / Fecha</th>
-                                        <th class="p-3">Cliente</th>
-                                        <th class="p-3">Ubicación</th>
-                                        <th class="p-3">Total</th>
-                                        <th class="p-3 text-center">Estatus</th>
-                                        <th class="p-3 text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-sales-table" class="divide-y divide-slate-100">
-                                    <!-- Dinámico -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- TAB 3: CLIENTES -->
-                    <div id="admin-tab-clients" class="space-y-4 hidden">
-                        <h4 class="font-bold text-secondary text-base">Directorio de Clientes Fijos</h4>
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
-                                        <th class="p-3">Nombre</th>
-                                        <th class="p-3">Teléfono / PIN</th>
-                                        <th class="p-3">Dirección Habitual</th>
-                                        <th class="p-3 text-center">Pedidos</th>
-                                        <th class="p-3 text-right">Consumo Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-clients-table" class="divide-y divide-slate-100">
-                                    <!-- Dinámico -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: CONFIGURACIÓN -->
-                    <div id="admin-tab-settings" class="space-y-4 max-w-lg hidden">
-                        <h4 class="font-bold text-secondary text-base">Parámetros de la Tienda</h4>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Negocio</label>
-                                <input type="text" id="setting-store-name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Número de WhatsApp (con código de país)</label>
-                                <input type="text" id="setting-whatsapp" placeholder="Ej. 584121234567" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Tasa del Dólar en Bolívares (Bs./$)</label>
-                                <input type="number" step="0.01" id="setting-rate" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold text-primary">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Contraseña de Administrador Segura</label>
-                                <input type="text" id="setting-admin-pin" placeholder="Ej. MiClaveSecreta2026*" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold text-rose-600">
-                                <span class="text-[10px] text-slate-400 mt-1 block">Usa una combinación fuerte que solo tú conozcas.</span>
-                            </div>
-                            <button onclick="saveStoreSettings()" class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow transition">
-                                Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL NUEVO/EDITAR PRODUCTO (ADMIN) -->
-    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
-            <h3 id="product-modal-title" class="text-lg font-bold text-secondary mb-4">Agregar Nuevo Producto</h3>
-            <input type="hidden" id="edit-product-id">
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Producto</label>
-                    <input type="text" id="prod-name" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Categoría</label>
-                        <select id="prod-category" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                            <option value="Víveres">Víveres</option>
-                            <option value="Embutidos y Lácteos">Embutidos y Lácteos</option>
-                            <option value="Bebidas y Snacks">Bebidas y Snacks</option>
-                            <option value="Limpieza">Limpieza</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Unidad de Medida</label>
-                        <input type="text" id="prod-unit" placeholder="Ej. Paquete 1kg" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Precio ($)</label>
-                        <input type="number" step="0.01" id="prod-price" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Precio Ant. ($)</label>
-                        <input type="number" step="0.01" id="prod-old-price" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Stock Disp.</label>
-                        <input type="number" id="prod-stock" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Enlace de Imagen (URL)</label>
-                    <input type="text" id="prod-image" placeholder="https://..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                </div>
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" id="prod-offer" class="rounded text-primary focus:ring-primary">
-                    <label for="prod-offer" class="text-xs font-bold text-slate-700">Marcar como Oferta del Día</label>
-                </div>
-                <div class="flex gap-2 pt-3">
-                    <button onclick="closeProductModal()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">Cancelar</button>
-                    <button onclick="saveProduct()" class="w-1/2 bg-primary hover:bg-primary/90 text-white py-2.5 rounded-xl font-bold text-xs shadow transition">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCRIPT DE LA APLICACIÓN -->
-    <script>
-        // CONFIGURACIÓN Y ESTADOS INICIALES (Contraseña maestra por defecto más segura)
-        let storeConfig = JSON.parse(localStorage.getItem('abasto_config')) || {
-            name: "Abasto Express",
-            whatsapp: "584121234567",
-            rate: 45.50,
-            adminPin: "Abasto2026*"
-        };
-
-        let products = JSON.parse(localStorage.getItem('abasto_products')) || [
-            { id: 1, name: "Harina P.A.N. 1kg", category: "Víveres", price: 1.40, oldPrice: 1.65, stock: 45, unit: "Paquete 1kg", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400", offer: true },
-            { id: 2, name: "Arroz Primor 1kg", category: "Víveres", price: 1.20, oldPrice: 1.40, stock: 30, unit: "Paquete 1kg", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400", offer: false },
-            { id: 3, name: "Aceite Mazeite 1L", category: "Víveres", price: 2.80, oldPrice: 3.10, stock: 18, unit: "Botella 1L", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400", offer: true },
-            { id: 4, name: "Azúcar Refinada 1kg", category: "Víveres", price: 1.35, oldPrice: 1.35, stock: 25, unit: "Paquete 1kg", image: "https://images.unsplash.com/photo-1581441363689-1f373c990cb2?auto=format&fit=crop&q=80&w=400", offer: false },
-            { id: 5, name: "Café El Peñón 200g", category: "Víveres", price: 3.50, oldPrice: 4.00, stock: 12, unit: "Paquete 200g", image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400", offer: true },
-            { id: 6, name: "Queso Blanco Duro 1kg", category: "Embutidos y Lácteos", price: 5.50, oldPrice: 6.00, stock: 15, unit: "Kilo", image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&q=80&w=400", offer: true },
-            { id: 7, name: "Jamón de Pierna 1kg", category: "Embutidos y Lácteos", price: 6.80, oldPrice: 7.50, stock: 10, unit: "Kilo", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=400", offer: false },
-            { id: 8, name: "Huevos Cartón x30", category: "Embutidos y Lácteos", price: 5.20, oldPrice: 5.80, stock: 8, unit: "Cartón 30 un", image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&q=80&w=400", offer: true },
-            { id: 9, name: "Refresco Cola 2L", category: "Bebidas y Snacks", price: 2.20, oldPrice: 2.50, stock: 24, unit: "Botella 2L", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=400", offer: false },
-            { id: 10, name: "Dap 1L Limpieza", category: "Limpieza", price: 2.50, oldPrice: 2.90, stock: 14, unit: "Litro", image: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&q=80&w=400", offer: false }
-        ];
-
-        let sales = JSON.parse(localStorage.getItem('abasto_sales')) || [
-            { id: "PED-1001", date: "14/11/2026 09:15", name: "Carlos Mendoza", phone: "0412-5551234", address: "Calle Principal, Casa #14", distance: "1.5 km", totalUsd: 8.90, totalBs: 404.95, status: "Entregado", payment: "Pago Móvil" }
-        ];
-
-        let clients = JSON.parse(localStorage.getItem('abasto_clients')) || [
-            { phone: "04125551234", pin: "1111", name: "Carlos Mendoza", address: "Calle Principal, Casa #14", reference: "Frente a bodega", ordersCount: 2, totalSpent: 18.50 }
-        ];
-
-        let cart = [];
-        let currentCategory = 'Todos';
-        let searchQuery = '';
-        let currentLoggedClient = JSON.parse(localStorage.getItem('abasto_logged_client')) || null;
-
-        // INICIALIZACIÓN
-        document.addEventListener('DOMContentLoaded', () => {
-            applyStoreConfig();
-            renderCategories();
-            renderProducts();
-            updateCartUI();
-            updateClientHeader();
-        });
-
-        function applyStoreConfig() {
-            document.getElementById('store-title').innerText = storeConfig.name;
-            document.getElementById('top-rate-display').innerText = Number(storeConfig.rate).toFixed(2);
-            document.getElementById('footer-whatsapp-link').href = `https://wa.me/${storeConfig.whatsapp}?text=Hola,%20tengo%20una%20consulta%20sobre%20un%20pedido.`;
-            document.getElementById('setting-store-name').value = storeConfig.name;
-            document.getElementById('setting-whatsapp').value = storeConfig.whatsapp;
-            document.getElementById('setting-rate').value = storeConfig.rate;
-            document.getElementById('setting-admin-pin').value = storeConfig.adminPin;
-        }
-
-        // CATEGORÍAS
-        const categories = ["Todos", "Ofertas", "Víveres", "Embutidos y Lácteos", "Bebidas y Snacks", "Limpieza"];
-        function renderCategories() {
-            const container = document.getElementById('categories-container');
-            container.innerHTML = categories.map(cat => `
-                <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-xl text-xs font-bold transition ${currentCategory === cat ? 'bg-primary text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}">
-                    ${cat === 'Ofertas' ? '<i class="fa-solid fa-tag mr-1 text-accent"></i> ' : ''}${cat}
-                </button>
-            `).join('');
-        }
-
-        function filterCategory(cat) {
-            currentCategory = cat;
-            document.getElementById('current-category-title').innerText = cat === 'Todos' ? 'Catálogo Disponible' : (cat === 'Ofertas' ? 'Ofertas Especiales del Día' : cat);
-            renderCategories();
-            renderProducts();
-        }
-
-        function handleSearch(val) {
-            searchQuery = val.toLowerCase().trim();
-            renderProducts();
-        }
-
-        function sortProducts(criteria) {
-            if (criteria === 'price-asc') products.sort((a,b) => a.price - b.price);
-            if (criteria === 'price-desc') products.sort((a,b) => b.price - a.price);
-            if (criteria === 'name') products.sort((a,b) => a.name.localeCompare(b.name));
-            renderProducts();
-        }
-
-        // RENDERIZAR PRODUCTOS
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            let filtered = products.filter(p => {
-                let matchCat = currentCategory === 'Todos' || (currentCategory === 'Ofertas' ? p.offer : p.category === currentCategory);
-                let matchSearch = p.name.toLowerCase().includes(searchQuery) || p.category.toLowerCase().includes(searchQuery);
-                return matchCat && matchSearch;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400"><i class="fa-solid fa-box-open text-4xl mb-2"></i><p>No se encontraron productos disponibles.</p></div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(p => {
-                let bsPrice = (p.price * storeConfig.rate).toFixed(2);
-                let isOutOfStock = p.stock <= 0;
-                return `
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                        <div>
-                            <div class="relative h-44 bg-slate-100 overflow-hidden">
-                                <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400'">
-                                ${p.offer ? '<span class="absolute top-2 left-2 bg-accent text-secondary text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">¡Oferta!</span>' : ''}
-                                ${isOutOfStock ? '<div class="absolute inset-0 bg-slate-900/60 flex items-center justify-center text-white font-bold text-sm">Agotado</div>' : ''}
-                            </div>
-                            <div class="p-4">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.category}</span>
-                                <h4 class="font-bold text-secondary text-base mb-1 leading-snug">${p.name}</h4>
-                                <p class="text-xs text-slate-500 mb-3">${p.unit} • <span class="${p.stock > 5 ? 'text-emerald-600 font-bold' : 'text-amber-600 font-bold'}">Stock: ${p.stock}</span></p>
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-xl font-black text-primary">$${p.price.toFixed(2)}</span>
-                                    ${p.oldPrice && p.oldPrice > p.price ? `<span class="text-xs text-slate-400 line-through">$${p.oldPrice.toFixed(2)}</span>` : ''}
-                                </div>
-                                <div class="text-xs text-slate-500 font-medium mt-0.5">≈ ${bsPrice} Bs.</div>
-                            </div>
-                        </div>
-                        <div class="p-4 pt-0">
-                            <button onclick="addToCart(${p.id})" ${isOutOfStock ? 'disabled' : ''} class="w-full ${isOutOfStock ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20'} py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition active:scale-95">
-                                <i class="fa-solid fa-cart-plus"></i> ${isOutOfStock ? 'Sin Existencia' : 'Agregar'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // CARRITO DE COMPRAS
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
-        }
-
-        function addToCart(productId) {
-            let prod = products.find(p => p.id === productId);
-            if (!prod || prod.stock <= 0) return;
-
-            let existing = cart.find(item => item.id === productId);
-            if (existing) {
-                if (existing.qty < prod.stock) {
-                    existing.qty++;
-                } else {
-                    alert("Has alcanzado el límite del stock disponible para este producto.");
-                    return;
-                }
-            } else {
-                cart.push({ ...prod, qty: 1 });
-            }
-            updateCartUI();
-            toggleCart();
-        }
-
-        function changeQty(productId, delta) {
-            let item = cart.find(i => i.id === productId);
-            if (!item) return;
-            let prod = products.find(p => p.id === productId);
-
-            item.qty += delta;
-            if (item.qty <= 0) {
-                cart = cart.filter(i => i.id !== productId);
-            } else if (prod && item.qty > prod.stock) {
-                item.qty = prod.stock;
-                alert("No hay más unidades en stock.");
-            }
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            let badge = document.getElementById('cart-badge');
-            let container = document.getElementById('cart-items-container');
-            let totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
-
-            if (totalItems > 0) {
-                badge.innerText = totalItems;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-slate-400"><i class="fa-solid fa-cart-arrow-down text-4xl mb-2"></i><p class="text-sm">Tu carrito está vacío.</p></div>`;
-            } else {
-                container.innerHTML = cart.map(item => `
-                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <div class="flex items-center gap-3">
-                            <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=200'">
-                            <div>
-                                <h5 class="font-bold text-secondary text-sm">${item.name}</h5>
-                                <p class="text-xs text-primary font-bold">$${item.price.toFixed(2)} c/u</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeQty(${item.id}, -1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg font-bold text-slate-600 hover:bg-slate-100">-</button>
-                            <span class="text-sm font-bold w-6 text-center">${item.qty}</span>
-                            <button onclick="changeQty(${item.id}, 1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg font-bold text-slate-600 hover:bg-slate-100">+</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            updateCartTotals();
-        }
-
-        function calculateDeliveryCost(distanceKm) {
-            if (distanceKm <= 2) return 0;
-            return (distanceKm - 2) * 1.00;
-        }
-
-        function updateCartTotals() {
-            let subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            let distance = parseInt(document.getElementById('order-distance').value) || 2;
-            let deliveryCost = calculateDeliveryCost(distance);
-            let totalUsd = subtotal + deliveryCost;
-            let totalBs = totalUsd * storeConfig.rate;
-
-            document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)}`;
-            document.getElementById('cart-delivery-cost').innerText = deliveryCost === 0 ? '¡Gratis! ($0.00)' : `$${deliveryCost.toFixed(2)}`;
-            document.getElementById('cart-total-usd').innerText = `$${totalUsd.toFixed(2)}`;
-            document.getElementById('cart-total-bs').innerText = `${totalBs.toFixed(2)} Bs.`;
-
-            let promoText = document.getElementById('delivery-promo-text');
-            if (distance <= 2) {
-                promoText.innerText = "¡Primeros 2 km de delivery completamente gratis!";
-            } else {
-                promoText.innerText = `Aplica recargo de delivery por ${distance} km ($${deliveryCost.toFixed(2)})`;
-            }
-        }
-
-        function captureGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    let lat = position.coords.latitude;
-                    let lon = position.coords.longitude;
-                    let gpsUrl = `https://maps.google.com/?q=${lat},${lon}`;
-                    let addrInput = document.getElementById('order-address');
-                    addrInput.value = `GPS: ${lat.toFixed(4)}, ${lon.toFixed(4)} (${gpsUrl})`;
-                    alert("¡Ubicación GPS capturada con éxito!");
-                }, () => {
-                    alert("No se pudo obtener la ubicación GPS. Por favor escribe tu dirección manualmente.");
-                });
-            } else {
-                alert("Tu navegador no soporta geolocalización.");
-            }
-        }
-
-        // WHATSAPP CHECKOUT
-        function checkoutWhatsApp() {
-            if (cart.length === 0) {
-                alert("Agrega productos a tu carrito antes de enviar el pedido.");
-                return;
-            }
-            let name = document.getElementById('order-name').value.trim();
-            let phone = document.getElementById('order-phone').value.trim();
-            let address = document.getElementById('order-address').value.trim();
-            let reference = document.getElementById('order-reference').value.trim();
-            let distance = document.getElementById('order-distance').value;
-            let payment = document.getElementById('order-payment').value;
-            let saveAsClient = document.getElementById('save-as-client').checked;
-
-            if (!name || !phone || !address) {
-                alert("Por favor completa tu Nombre, Teléfono y Dirección de entrega.");
-                return;
-            }
-
-            let subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            let deliveryCost = calculateDeliveryCost(parseInt(distance));
-            let totalUsd = subtotal + deliveryCost;
-            let totalBs = totalUsd * storeConfig.rate;
-
-            let itemsText = cart.map(i => `• ${i.qty}x ${i.name} ($${(i.price * i.qty).toFixed(2)})`).join('%0A');
-            
-            let message = `*¡NUEVO PEDIDO - ABASTO EXPRESS!*%0A%0A` +
-                          `👤 *Cliente:* ${name}%0A` +
-                          `📱 *Teléfono:* ${phone}%0A` +
-                          `📍 *Ubicación:* ${address}%0A` +
-                          `📌 *Referencia:* ${reference || 'Ninguna'}%0A` +
-                          `🛣️ *Distancia:* ${distance} km%0A` +
-                          `💳 *Pago:* ${payment}%0A%0A` +
-                          `🛒 *DETALLE DEL PEDIDO:*%0A${itemsText}%0A%0A` +
-                          `📦 *Subtotal:* $${subtotal.toFixed(2)}%0A` +
-                          `🚚 *Delivery:* ${deliveryCost === 0 ? 'Gratis ($0.00)' : '$' + deliveryCost.toFixed(2)}%0A` +
-                          `💰 *TOTAL A PAGAR: $${totalUsd.toFixed(2)}* (${totalBs.toFixed(2)} Bs.)`;
-
-            // Descontar stock y registrar venta
-            cart.forEach(item => {
-                let p = products.find(prod => prod.id === item.id);
-                if (p) p.stock -= item.qty;
-            });
-
-            let newSale = {
-                id: "PED-" + Math.floor(1000 + Math.random() * 9000),
-                date: new Date().toLocaleString(),
-                name, phone, address, distance: distance + " km",
-                totalUsd, totalBs, status: "Pendiente", payment
-            };
-            sales.unshift(newSale);
-            localStorage.setItem('abasto_sales', JSON.stringify(sales));
-            localStorage.setItem('abasto_products', JSON.stringify(products));
-
-            // Manejar cliente fijo si aplica
-            if (saveAsClient || currentLoggedClient) {
-                let clientRecord = clients.find(c => c.phone === phone);
-                if (clientRecord) {
-                    clientRecord.address = address;
-                    clientRecord.reference = reference;
-                    clientRecord.ordersCount++;
-                    clientRecord.totalSpent += totalUsd;
-                } else {
-                    clients.push({
-                        phone, pin: "1234", name, address, reference, ordersCount: 1, totalSpent: totalUsd
-                    });
-                }
-                localStorage.setItem('abasto_clients', JSON.stringify(clients));
-            }
-
-            // Abrir WhatsApp
-            window.open(`https://wa.me/${storeConfig.whatsapp}?text=${message}`, '_blank');
-
-            // Limpiar carrito
-            cart = [];
-            updateCartUI();
-            toggleCart();
-            renderProducts();
-            alert("¡Pedido generado y enviado a WhatsApp con éxito!");
-        }
-
-        // CLIENTES FIJOS
-        function openClientModal() {
-            document.getElementById('client-modal').classList.remove('hidden');
-            if (currentLoggedClient) {
-                document.getElementById('client-login-view').classList.add('hidden');
-                document.getElementById('client-dashboard-view').classList.remove('hidden');
-                document.getElementById('client-dash-name').innerText = currentLoggedClient.name;
-                document.getElementById('client-dash-phone').innerText = currentLoggedClient.phone;
-                document.getElementById('client-dash-address').innerText = currentLoggedClient.address;
-                document.getElementById('client-dash-ref').innerText = currentLoggedClient.reference || 'Ninguna';
-                
-                let personalSales = sales.filter(s => s.phone === currentLoggedClient.phone);
-                let historyContainer = document.getElementById('client-orders-history');
-                if (personalSales.length === 0) {
-                    historyContainer.innerHTML = `<p class="text-slate-400 text-xs">No tienes pedidos anteriores.</p>`;
-                } else {
-                    historyContainer.innerHTML = personalSales.map(s => `
-                        <div class="bg-white p-2.5 rounded-lg border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <span class="font-bold text-secondary">${s.id}</span> (${s.date})
-                                <div class="text-slate-500">$${s.totalUsd.toFixed(2)} - ${s.status}</div>
-                            </div>
-                            <button onclick="reorder('${s.id}')" class="bg-primary/10 text-primary font-bold px-2.5 py-1 rounded-md hover:bg-primary/20 transition">Volver a pedir</button>
-                        </div>
-                    `).join('');
-                }
-            } else {
-                document.getElementById('client-login-view').classList.remove('hidden');
-                document.getElementById('client-dashboard-view').classList.add('hidden');
-            }
-        }
-
-        function closeClientModal() {
-            document.getElementById('client-modal').classList.add('hidden');
-        }
-
-        function loginClient() {
-            let phone = document.getElementById('client-login-phone').value.trim();
-            let pin = document.getElementById('client-login-pin').value.trim();
-            let client = clients.find(c => c.phone === phone && c.pin === pin);
-
-            if (client) {
-                currentLoggedClient = client;
-                localStorage.setItem('abasto_logged_client', JSON.stringify(client));
-                updateClientHeader();
-                openClientModal();
-                // Autocompletar en carrito
-                document.getElementById('order-name').value = client.name;
-                document.getElementById('order-phone').value = client.phone;
-                document.getElementById('order-address').value = client.address;
-                document.getElementById('order-reference').value = client.reference || '';
-                document.getElementById('save-client-checkbox-wrapper').classList.add('hidden');
-            } else {
-                alert("Teléfono o PIN incorrecto. Si es tu primera vez, haz tu pedido marcando la casilla de cliente fijo.");
-            }
-        }
-
-        function logoutClient() {
-            currentLoggedClient = null;
-            localStorage.removeItem('abasto_logged_client');
-            updateClientHeader();
-            closeClientModal();
-            document.getElementById('save-client-checkbox-wrapper').classList.remove('hidden');
-        }
-
-        function updateClientHeader() {
-            let btnText = document.getElementById('client-btn-text');
-            if (currentLoggedClient) {
-                btnText.innerText = currentLoggedClient.name.split(' ')[0];
-            } else {
-                btnText.innerText = "Cliente Fijo";
-            }
-        }
-
-        function reorder(saleId) {
-            alert("Función de repetición rápida cargada. Revisa tu carrito.");
-            closeClientModal();
-            toggleCart();
-        }
-
-        // MODO ADMINISTRADOR (Contraseña Segura)
-        function openAdminModal() {
-            document.getElementById('admin-modal').classList.remove('hidden');
-            document.getElementById('admin-login-screen').classList.remove('hidden');
-            document.getElementById('admin-dashboard-screen').classList.add('hidden');
-            document.getElementById('admin-password-input').value = '';
-        }
-
-        function closeAdminModal() {
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        function verifyAdminPassword() {
-            let pass = document.getElementById('admin-password-input').value.trim();
-            if (pass === storeConfig.adminPin) {
-                document.getElementById('admin-login-screen').classList.add('hidden');
-                document.getElementById('admin-dashboard-screen').classList.remove('hidden');
-                renderAdminProducts();
-                renderAdminSales();
-                renderAdminClients();
-            } else {
-                alert("Contraseña incorrecta. Acceso denegado.");
-            }
-        }
-
-        function switchAdminTab(tab) {
-            ['products', 'sales', 'clients', 'settings'].forEach(t => {
-                document.getElementById(`admin-tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className = "px-4 py-2.5 font-bold text-sm text-slate-500 hover:text-secondary transition";
-            });
-            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).className = "px-4 py-2.5 font-bold text-sm border-b-2 border-primary text-primary bg-white rounded-t-xl transition";
-        }
-
-        function renderAdminProducts() {
-            let tbody = document.getElementById('admin-products-table');
-            tbody.innerHTML = products.map(p => `
-                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="p-3 font-bold text-secondary flex items-center gap-2">
-                        <img src="${p.image}" class="w-8 h-8 rounded-lg object-cover" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=100'">
-                        ${p.name}
-                    </td>
-                    <td class="p-3 text-slate-600 text-xs">${p.category}</td>
-                    <td class="p-3 font-bold text-primary">$${p.price.toFixed(2)}</td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="adjustStock(${p.id}, -1)" class="w-6 h-6 bg-slate-200 rounded font-bold hover:bg-slate-300">-</button>
-                            <span class="font-bold w-6 text-center">${p.stock}</span>
-                            <button onclick="adjustStock(${p.id}, 1)" class="w-6 h-6 bg-slate-200 rounded font-bold hover:bg-slate-300">+</button>
-                        </div>
-                    </td>
-                    <td class="p-3 text-center space-x-2">
-                        <button onclick="editProduct(${p.id})" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteProduct(${p.id})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function adjustStock(id, delta) {
-            let p = products.find(prod => prod.id === id);
-            if (p) {
-                p.stock = Math.max(0, p.stock + delta);
-                localStorage.setItem('abasto_products', JSON.stringify(products));
-                renderAdminProducts();
-                renderProducts();
-            }
-        }
-
-        function openProductModal(id = null) {
-            document.getElementById('product-modal').classList.remove('hidden');
-            if (id) {
-                let p = products.find(prod => prod.id === id);
-                document.getElementById('product-modal-title').innerText = "Editar Producto";
-                document.getElementById('edit-product-id').value = p.id;
-                document.getElementById('prod-name').value = p.name;
-                document.getElementById('prod-category').value = p.category;
-                document.getElementById('prod-unit').value = p.unit;
-                document.getElementById('prod-price').value = p.price;
-                document.getElementById('prod-old-price').value = p.oldPrice || '';
-                document.getElementById('prod-stock').value = p.stock;
-                document.getElementById('prod-image').value = p.image;
-                document.getElementById('prod-offer').checked = p.offer;
-            } else {
-                document.getElementById('product-modal-title').innerText = "Agregar Nuevo Producto";
-                document.getElementById('edit-product-id').value = '';
-                document.getElementById('prod-name').value = '';
-                document.getElementById('prod-unit').value = '';
-                document.getElementById('prod-price').value = '';
-                document.getElementById('prod-old-price').value = '';
-                document.getElementById('prod-stock').value = '10';
-                document.getElementById('prod-image').value = '';
-                document.getElementById('prod-offer').checked = false;
-            }
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
-
-        function saveProduct() {
-            let editId = document.getElementById('edit-product-id').value;
-            let name = document.getElementById('prod-name').value.trim();
-            let category = document.getElementById('prod-category').value;
-            let unit = document.getElementById('prod-unit').value.trim();
-            let price = parseFloat(document.getElementById('prod-price').value);
-            let oldPrice = parseFloat(document.getElementById('prod-old-price').value) || null;
-            let stock = parseInt(document.getElementById('prod-stock').value);
-            let image = document.getElementById('prod-image').value.trim();
-            let offer = document.getElementById('prod-offer').checked;
-
-            if (!name || isNaN(price) || isNaN(stock)) {
-                alert("Por favor completa los campos obligatorios correctamente.");
-                return;
-            }
-
-            if (editId) {
-                let p = products.find(prod => prod.id == editId);
-                if (p) {
-                    p.name = name; p.category = category; p.unit = unit; p.price = price;
-                    p.oldPrice = oldPrice; p.stock = stock; p.image = image; p.offer = offer;
-                }
-            } else {
-                let newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-                products.push({ id: newId, name, category, unit, price, oldPrice, stock, image, offer });
-            }
-
-            localStorage.setItem('abasto_products', JSON.stringify(products));
-            closeProductModal();
-            renderAdminProducts();
-            renderProducts();
-        }
-
-        function editProduct(id) {
-            openProductModal(id);
-        }
-
-        function deleteProduct(id) {
-            if (confirm("¿Estás seguro de eliminar este producto?")) {
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('abasto_products', JSON.stringify(products));
-                renderAdminProducts();
-                renderProducts();
-            }
-        }
-
-        function renderAdminSales() {
-            let tbody = document.getElementById('admin-sales-table');
-            if (sales.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No hay ventas registradas.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = sales.map(s => `
-                <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
-                    <td class="p-3">
-                        <span class="font-bold text-secondary">${s.id}</span>
-                        <div class="text-slate-400">${s.date}</div>
-                    </td>
-                    <td class="p-3">
-                        <span class="font-bold">${s.name}</span>
-                        <div class="text-slate-500">${s.phone}</div>
-                    </td>
-                    <td class="p-3 text-slate-600">${s.address} (${s.distance})</td>
-                    <td class="p-3 font-bold text-primary">
-                        $${s.totalUsd.toFixed(2)}
-                        <div class="text-slate-400 font-normal">${s.totalBs.toFixed(2)} Bs.</div>
-                    </td>
-                    <td class="p-3 text-center">
-                        <span class="px-2.5 py-1 rounded-full font-bold ${s.status === 'Entregado' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">${s.status}</span>
-                    </td>
-                    <td class="p-3 text-center space-x-1">
-                        <a href="https://wa.me/58${s.phone.replace(/[^0-9]/g,'')}?text=Hola%20${s.name},%20te%20escribimos%20de%20Abasto%20Express%20sobre%20tu%20pedido%20${s.id}" target="_blank" class="text-emerald-600 hover:text-emerald-800 p-1" title="Escribir por WhatsApp"><i class="fa-brands fa-whatsapp text-sm"></i></a>
-                        <button onclick="toggleSaleStatus('${s.id}')" class="text-blue-600 hover:text-blue-800 p-1" title="Cambiar Estatus"><i class="fa-solid fa-rotate"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function toggleSaleStatus(id) {
-            let s = sales.find(sale => sale.id === id);
-            if (s) {
-                s.status = s.status === 'Pendiente' ? 'Entregado' : 'Pendiente';
-                localStorage.setItem('abasto_sales', JSON.stringify(sales));
-                renderAdminSales();
-            }
-        }
-
-        function renderAdminClients() {
-            let tbody = document.getElementById('admin-clients-table');
-            if (clients.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">No hay clientes fijos registrados.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = clients.map(c => `
-                <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
-                    <td class="p-3 font-bold text-secondary">${c.name}</td>
-                    <td class="p-3">
-                        <div>${c.phone}</div>
-                        <span class="text-slate-400">PIN: ${c.pin}</span>
-                    </td>
-                    <td class="p-3 text-slate-600">${c.address}</td>
-                    <td class="p-3 text-center font-bold">${c.ordersCount}</td>
-                    <td class="p-3 text-right font-bold text-primary">$${c.totalSpent.toFixed(2)}</td>
-                </tr>
-            `).join('');
-        }
-
-        function saveStoreSettings() {
-            storeConfig.name = document.getElementById('setting-store-name').value.trim();
-            storeConfig.whatsapp = document.getElementById('setting-whatsapp').value.trim();
-            storeConfig.rate = parseFloat(document.getElementById('setting-rate').value) || 45.50;
-            storeConfig.adminPin = document.getElementById('setting-admin-pin').value.trim() || "Abasto2026*";
-
-            localStorage.setItem('abasto_config', JSON.stringify(storeConfig));
-            applyStoreConfig();
-            renderProducts();
-            alert("¡Configuración y contraseña guardadas con éxito!");
-        }
-    </script>
-</body>
-</html>
+            <div class="p-5 bg-secondary text-white flex items-center justify-between"
