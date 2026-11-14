@@ -73,15 +73,43 @@
         </div>
     </header>
 
+    <!-- BANNER DE PROMOCIONES / OFERTAS -->
+    <section class="max-w-7xl mx-auto px-4 mt-6">
+        <div class="bg-gradient-to-r from-primary to-secondary rounded-3xl p-6 sm:p-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="bg-accent text-slate-900 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">🔥 Ofertas del Día</span>
+                <h2 class="text-2xl sm:text-3xl font-black">¡Ahorra en tus compras con delivery rápido!</h2>
+                <p class="text-slate-300 text-sm max-w-xl">Explora nuestras categorías y haz tus pedidos al instante directamente con nosotros.</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
+                <p class="text-xs text-slate-300">Servicio activo</p>
+                <p class="text-lg font-bold text-accent">Delivery Local</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BARRA DE CATEGORÍAS -->
+    <nav class="max-w-7xl mx-auto px-4 mt-6">
+        <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition">Todos</button>
+            <button onclick="filterCategory('Bebidas y snacks')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Bebidas y snacks</button>
+            <button onclick="filterCategory('Víveres')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Víveres</button>
+            <button onclick="filterCategory('Comida')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Comida</button>
+            <button onclick="filterCategory('Accesorios')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Accesorios</button>
+            <button onclick="filterCategory('Repuestos')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Repuestos</button>
+            <button onclick="filterCategory('Cosméticos')" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition">Cosméticos</button>
+        </div>
+    </nav>
+
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
         <div id="loading-spinner" class="flex flex-col items-center justify-center py-20">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
             <p class="text-slate-500 text-sm font-medium">Cargando inventario y precios...</p>
         </div>
 
         <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
-            <!-- Productos dinámicos -->
+            <!-- Productos dinámicos con foto -->
         </div>
     </main>
 
@@ -95,7 +123,6 @@
                 </button>
             </div>
             
-            <!-- PESTAÑAS DEL PANEL ADMIN -->
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-4">
                 <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary">Configuración</button>
                 <button onclick="switchAdminTab('inventory')" id="tab-btn-inventory" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary">Inventario</button>
@@ -103,7 +130,7 @@
             </div>
 
             <div class="p-6 overflow-y-auto flex-grow space-y-6">
-                <!-- SECCIÓN 1: CONFIGURACIÓN -->
+                <!-- CONFIGURACIÓN -->
                 <div id="admin-tab-config" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
@@ -130,15 +157,22 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN 2: INVENTARIO -->
+                <!-- INVENTARIO -->
                 <div id="admin-tab-inventory" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-plus-circle text-accent mr-1"></i> Agregar / Editar Producto</h4>
-                        <input type="hidden" id="edit-prod-id">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-plus-circle text-accent mr-1"></i> Agregar Producto con Foto</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                             <input type="text" id="prod-name" placeholder="Nombre del producto" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-price" step="0.01" placeholder="Precio en USD ($)" class="px-3 py-2 border rounded-xl text-sm">
-                            <input type="text" id="prod-category" placeholder="Categoría" class="px-3 py-2 border rounded-xl text-sm">
+                            <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white">
+                                <option value="Bebidas y snacks">Bebidas y snacks</option>
+                                <option value="Víveres">Víveres</option>
+                                <option value="Comida">Comida</option>
+                                <option value="Accesorios">Accesorios</option>
+                                <option value="Repuestos">Repuestos</option>
+                                <option value="Cosméticos">Cosméticos</option>
+                            </select>
+                            <input type="text" id="prod-image" placeholder="Enlace de la foto (URL)" class="px-3 py-2 border rounded-xl text-sm">
                         </div>
                         <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90">Guardar Producto</button>
                     </div>
@@ -146,6 +180,7 @@
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-700 border-b">
+                                    <th class="p-3">Foto</th>
                                     <th class="p-3">Producto</th>
                                     <th class="p-3">Categoría</th>
                                     <th class="p-3">Precio</th>
@@ -153,13 +188,13 @@
                                 </tr>
                             </thead>
                             <tbody id="admin-inventory-table">
-                                <!-- Inventario dinámico -->
+                                <!-- Inventario -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- SECCIÓN 3: VENTAS -->
+                <!-- VENTAS -->
                 <div id="admin-tab-sales" class="space-y-4 hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
@@ -172,7 +207,7 @@
                                 </tr>
                             </thead>
                             <tbody id="admin-sales-table">
-                                <!-- Ventas dinámicas -->
+                                <!-- Ventas -->
                             </tbody>
                         </table>
                     </div>
@@ -208,6 +243,8 @@
 
         let currentAdminPin = "Abasto2026*";
         let whatsappNumber = "584125551234";
+        let allProducts = {};
+        let currentCategory = 'Todos';
 
         async function initApp() {
             try {
@@ -226,52 +263,87 @@
                     }
                 }
                 window.currentAdminPin = currentAdminPin;
-                loadProducts();
+                loadProductsData();
                 loadSales();
             } catch (error) {
                 console.error("Error al conectar con Firebase:", error);
             }
         }
 
-        async function loadProducts() {
+        async function loadProductsData() {
             const productsRef = ref(db, 'products');
             const prodSnapshot = await get(productsRef);
-            const container = document.getElementById('products-container');
-            const tableBody = document.getElementById('admin-inventory-table');
-            container.innerHTML = '';
-            tableBody.innerHTML = '';
+            allProducts = prodSnapshot.exists() ? prodSnapshot.val() : {};
+            renderProducts();
+            renderAdminInventory();
+        }
 
-            if (prodSnapshot.exists()) {
-                const products = prodSnapshot.val();
-                Object.keys(products).forEach(key => {
-                    const p = products[key];
+        window.renderProducts = function() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            const keys = Object.keys(allProducts);
+            let filteredKeys = keys.filter(key => {
+                const p = allProducts[key];
+                const matchesCat = currentCategory === 'Todos' || p.category === currentCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filteredKeys.length > 0) {
+                filteredKeys.forEach(key => {
+                    const p = allProducts[key];
+                    const imageUrl = p.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80';
                     container.innerHTML += `
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-slate-800">${p.name}</h3>
-                                <p class="text-xs text-slate-500 mb-2">${p.category || 'General'}</p>
-                                <p class="text-accent font-black text-lg">$${p.price}</p>
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between">
+                            <div class="h-40 bg-slate-100 overflow-hidden relative">
+                                <img src="${imageUrl}" alt="${p.name}" class="w-full h-full object-cover">
+                                <span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">${p.category || 'General'}</span>
                             </div>
-                            <button onclick="alert('Pedido vía WhatsApp al número ${whatsappNumber}')" class="mt-4 w-full bg-slate-100 hover:bg-primary hover:text-white text-slate-700 py-2 rounded-xl text-sm font-semibold transition">Pedir por WhatsApp</button>
+                            <div class="p-4 flex flex-col flex-grow justify-between">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-base mb-1">${p.name}</h3>
+                                    <p class="text-accent font-black text-xl mb-3">$${p.price}</p>
+                                </div>
+                                <button onclick="window.sendWhatsApp('${p.name}', '${p.price}')" class="w-full bg-slate-100 hover:bg-primary hover:text-white text-slate-700 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-green-600 text-lg"></i> Pedir por WhatsApp
+                                </button>
+                            </div>
                         </div>
                     `;
+                });
+            } else {
+                container.innerHTML = '<p class="text-slate-500 col-span-full text-center py-12">No se encontraron productos en esta categoría.</p>';
+            }
+            document.getElementById('loading-spinner').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+
+        window.renderAdminInventory = function() {
+            const tableBody = document.getElementById('admin-inventory-table');
+            tableBody.innerHTML = '';
+            const keys = Object.keys(allProducts);
+
+            if (keys.length > 0) {
+                keys.forEach(key => {
+                    const p = allProducts[key];
+                    const img = p.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80';
                     tableBody.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
+                            <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-lg"></td>
                             <td class="p-3 font-medium">${p.name}</td>
                             <td class="p-3 text-slate-500">${p.category || 'General'}</td>
                             <td class="p-3 font-bold text-accent">$${p.price}</td>
-                            <td class="p-3 text-center space-x-2">
+                            <td class="p-3 text-center">
                                 <button onclick="deleteProduct('${key}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
                 });
             } else {
-                container.innerHTML = '<p class="text-slate-500 col-span-full text-center py-10">No hay productos registrados.</p>';
-                tableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500">No hay productos en inventario.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">No hay productos en inventario.</td></tr>';
             }
-            document.getElementById('loading-spinner').classList.add('hidden');
-            container.classList.remove('hidden');
         }
 
         async function loadSales() {
@@ -298,8 +370,28 @@
             }
         }
 
-        window.loadProducts = loadProducts;
-        window.loadSales = loadSales;
+        window.sendWhatsApp = function(name, price) {
+            const phone = whatsappNumber;
+            const text = encodeURIComponent(`¡Hola! 👋 Deseo pedir el producto *${name}* con un precio de *$${price}* en Abasto Express.`);
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        }
+
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if(btn.innerText.trim() === cat) {
+                    btn.className = "category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition";
+                } else {
+                    btn.className = "category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 hover:bg-slate-100 whitespace-nowrap border border-slate-200 transition";
+                }
+            });
+            window.renderProducts();
+        }
+
+        window.filterProducts = function() {
+            window.renderProducts();
+        }
+
         initApp();
     </script>
 
@@ -361,16 +453,17 @@
             const name = document.getElementById('prod-name').value;
             const price = document.getElementById('prod-price').value;
             const category = document.getElementById('prod-category').value;
+            const image = document.getElementById('prod-image').value;
 
             if(!name || !price) return alert("Completa al menos el nombre y el precio");
             try {
                 const newProdRef = window.push(window.ref(window.db, 'products'));
-                await window.set(newProdRef, { name, price, category: category || 'General' });
+                await window.set(newProdRef, { name, price, category, image: image || '' });
                 document.getElementById('prod-name').value = '';
                 document.getElementById('prod-price').value = '';
-                document.getElementById('prod-category').value = '';
+                document.getElementById('prod-image').value = '';
                 alert("¡Producto guardado con éxito!");
-                window.loadProducts();
+                location.reload();
             } catch (e) { alert("Error al guardar producto"); }
         }
 
@@ -378,15 +471,13 @@
             if(confirm("¿Estás seguro de eliminar este producto?")) {
                 try {
                     await window.remove(window.ref(window.db, `products/${key}`));
-                    window.loadProducts();
+                    location.reload();
                 } catch (e) { alert("Error al eliminar"); }
             }
         }
 
         function openClientModal() { alert("Módulo de cliente fijo"); }
         function openCartModal() { alert("Carrito de compras"); }
-        function filterCategory(cat) {}
-        function filterProducts() {}
 
         window.openAdminModal = openAdminModal;
         window.switchAdminTab = switchAdminTab;
