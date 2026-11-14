@@ -81,7 +81,7 @@
         </div>
     </section>
 
-    <!-- BARRA DE CATEGORÍAS (DEPARTAMENTOS DINÁMICOS) -->
+    <!-- BARRA DE CATEGORÍAS (DEPARTAMENTOS) -->
     <nav class="max-w-7xl mx-auto px-4 mt-6">
         <div id="categories-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition">Todos</button>
@@ -100,7 +100,7 @@
         </div>
     </main>
 
-    <!-- MODAL MODO ADMIN (NO SACA DE LA PÁGINA) -->
+    <!-- MODAL MODO ADMIN (SE MANTIENE ABIERTO) -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
             <div class="p-5 bg-secondary text-white flex items-center justify-between">
@@ -181,7 +181,7 @@
                             <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white">
                                 <!-- Opciones dinámicas -->
                             </select>
-                            <input type="text" id="prod-image" placeholder="URL de la foto" class="px-3 py-2 border rounded-xl text-sm col-span-full">
+                            <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="px-3 py-2 border rounded-xl text-sm col-span-full">
                         </div>
                         <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90">Guardar Producto</button>
                     </div>
@@ -277,7 +277,7 @@
                     }
                 }
                 window.currentAdminPin = currentAdminPin;
-                loadStoreData();
+                await loadStoreData();
             } catch (error) {
                 console.error("Error al conectar con Firebase:", error);
             }
@@ -294,6 +294,8 @@
             renderAdminDepartments();
             loadSales();
         }
+
+        window.loadStoreData = loadStoreData;
 
         window.renderCategories = function() {
             const container = document.getElementById('categories-container');
@@ -325,7 +327,7 @@
             if (filteredKeys.length > 0) {
                 filteredKeys.forEach(key => {
                     const p = allProducts[key];
-                    const img = p.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80';
+                    const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80';
                     const stockVal = p.stock !== undefined ? p.stock : 10;
                     const stockBadge = stockVal > 0 ? `<span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Stock: ${stockVal}</span>` : `<span class="text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full">Agotado</span>`;
 
@@ -365,10 +367,10 @@
             if (keys.length > 0) {
                 keys.forEach(key => {
                     const p = allProducts[key];
-                    const img = p.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80';
+                    const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80';
                     tableBody.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
-                            <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-lg"></td>
+                            <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-lg shadow-sm"></td>
                             <td class="p-3 font-medium">${p.name}</td>
                             <td class="p-3 text-slate-500">${p.category || 'General'}</td>
                             <td class="p-3 font-bold text-accent">$${p.price}</td>
@@ -422,16 +424,13 @@
             }
         }
 
-        // DESCUENTO AUTOMÁTICO DE STOCK Y REGISTRO DE VENTA
+        // DESCUENTO AUTOMÁTICO DE STOCK
         window.orderProduct = async function(key, name, price, currentStock) {
             if (currentStock <= 0) return alert("Lo sentimos, este producto está agotado.");
             
             const newStock = currentStock - 1;
             try {
-                // Actualizar stock en Firebase
                 await update(ref(db, `products/${key}`), { stock: newStock });
-
-                // Registrar venta en Firebase
                 const saleRef = push(ref(db, 'sales'));
                 await set(saleRef, {
                     date: new Date().toLocaleString(),
@@ -439,12 +438,11 @@
                     items: `1x ${name}`
                 });
 
-                // Redirigir a WhatsApp
                 const phone = whatsappNumber;
                 const text = encodeURIComponent(`¡Hola! 👋 Deseo pedir el producto *${name}* por un valor de *$${price}* en Abasto Express.`);
                 window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 
-                loadStoreData();
+                await loadStoreData();
             } catch (e) {
                 alert("Error al procesar el pedido");
             }
@@ -517,15 +515,14 @@
             const deptName = document.getElementById('new-dept-name').value.trim();
             if(!deptName) return alert("Ingresa un nombre para el departamento");
             
-            // Obtener lista actual desde Firebase o memoria
             const snap = await window.get(window.ref(window.db, 'config/departments'));
             let depts = snap.exists() ? snap.val() : ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
             if(!depts.includes(deptName)) {
                 depts.push(deptName);
                 await window.set(window.ref(window.db, 'config/departments'), depts);
                 document.getElementById('new-dept-name').value = '';
-                alert("¡Departamento agregado con éxito!");
-                location.reload();
+                alert("¡Departamento agregado!");
+                await window.loadStoreData();
             } else {
                 alert("Este departamento ya existe.");
             }
@@ -539,7 +536,7 @@
                 depts.splice(index, 1);
                 await window.set(window.ref(window.db, 'config/departments'), depts);
                 alert("¡Departamento eliminado!");
-                location.reload();
+                await window.loadStoreData();
             }
         }
 
@@ -554,14 +551,20 @@
             
             const newProdRef = window.push(window.ref(window.db, 'products'));
             await window.set(newProdRef, { name, price, stock, category, image: image || '' });
-            alert("¡Producto y stock guardados con éxito!");
-            location.reload();
+            
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-price').value = '';
+            document.getElementById('prod-stock').value = '';
+            document.getElementById('prod-image').value = '';
+            
+            alert("¡Producto guardado con éxito!");
+            await window.loadStoreData();
         }
 
         async function deleteProduct(key) {
             if(confirm("¿Eliminar este producto?")) {
                 await window.remove(window.ref(window.db, `products/${key}`));
-                location.reload();
+                await window.loadStoreData();
             }
         }
 
