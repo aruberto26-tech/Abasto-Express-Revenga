@@ -375,11 +375,13 @@
     <!-- SCRIPT -->
     <script>
         const firebaseConfig = { databaseURL: "https://abasto-express-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         let products = {};
-        let categories = [];
+        let categories = ['Víveres', 'Bebidas', 'Limpieza'];
         let cart = [];
         let posCart = [];
         let salesHistory = {};
@@ -388,6 +390,12 @@
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
 
         window.onload = function() {
+            // Seguridad para ocultar el spinner si Firebase tarda más de 2 segundos
+            setTimeout(() => {
+                const spinner = document.getElementById('loading-spinner');
+                if(spinner) spinner.classList.add('hidden');
+            }, 2000);
+
             db.ref('config').on('value', snapshot => {
                 const data = snapshot.val();
                 if (data) {
@@ -400,7 +408,9 @@
 
             db.ref('categories').on('value', snapshot => {
                 const data = snapshot.val();
-                categories = data ? Object.values(data) : ['Víveres', 'Bebidas', 'Limpieza'];
+                if (data) {
+                    categories = Object.values(data);
+                }
                 renderCategories();
                 renderCategorySelects();
                 renderDeptTable();
@@ -411,7 +421,8 @@
                 renderProducts();
                 renderInventoryTable();
                 renderPosSelect();
-                document.getElementById('loading-spinner').classList.add('hidden');
+                const spinner = document.getElementById('loading-spinner');
+                if(spinner) spinner.classList.add('hidden');
             });
 
             db.ref('sales').on('value', snapshot => {
@@ -425,6 +436,7 @@
 
         function renderCategories() {
             const container = document.getElementById('categories-container');
+            if(!container) return;
             container.innerHTML = `<button onclick="filterCategory('Todos')" class="category-btn ${currentCategory === 'Todos' ? 'active bg-primary text-white' : 'bg-white text-slate-700'} px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition cursor-pointer">Todos</button>`;
             categories.forEach(cat => {
                 container.innerHTML += `<button onclick="filterCategory('${cat}')" class="category-btn ${currentCategory === cat ? 'active bg-primary text-white' : 'bg-white text-slate-700'} px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition cursor-pointer">${cat}</button>`;
@@ -488,12 +500,15 @@
             const promosSection = document.getElementById('promos-section');
             const catalogTitle = document.getElementById('catalog-title');
             
+            if(!container || !promosContainer) return;
+
             container.innerHTML = '';
             promosContainer.innerHTML = '';
             
             let hasPromos = false;
             let hasCatalog = false;
-            const search = document.getElementById('search-input').value.toLowerCase();
+            const searchInput = document.getElementById('search-input');
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
             const rate = Number(storeConfig.rate) || 45.50;
 
             Object.keys(products).forEach(key => {
@@ -503,7 +518,6 @@
 
                 const priceBs = (p.price * rate).toFixed(2);
                 
-                // OCULTAR SI ESTÁ VACÍO O ES 0 EN LA VISTA DE CLIENTES
                 let mayorHtml = '';
                 if (p.priceMayor && Number(p.priceMayor) > 0) {
                     const mayorBs = (Number(p.priceMayor) * rate).toFixed(2);
@@ -545,8 +559,11 @@
                 }
             });
 
-            if (hasPromos) promosSection.classList.remove('hidden'); else promosSection.classList.add('hidden');
-            if (hasCatalog) { catalogTitle.classList.remove('hidden'); container.classList.remove('hidden'); } else { catalogTitle.classList.add('hidden'); container.classList.add('hidden'); }
+            if (promosSection) { if (hasPromos) promosSection.classList.remove('hidden'); else promosSection.classList.add('hidden'); }
+            if (catalogTitle && container) {
+                if (hasCatalog) { catalogTitle.classList.remove('hidden'); container.classList.remove('hidden'); }
+                else { catalogTitle.classList.add('hidden'); container.classList.add('hidden'); }
+            }
         }
 
         function filterProducts() { renderProducts(); }
@@ -554,7 +571,7 @@
         // --- CARRITO ---
         function addToCart(key) {
             const p = products[key];
-            if (p.stock <= 0) { alert('Producto agotado'); return; }
+            if (!p || p.stock <= 0) { alert('Producto agotado'); return; }
             const existing = cart.find(item => item.key === key);
             if (existing) {
                 if (existing.qty < p.stock) existing.qty++; else alert('No hay más stock disponible');
@@ -565,12 +582,13 @@
         }
 
         function updateCartBadge() {
-            const total = cart.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('cart-badge').innerText = total;
+            const badge = document.getElementById('cart-badge');
+            if(badge) badge.innerText = cart.reduce((sum, item) => sum + item.qty, 0);
         }
 
         function openCartModal() {
             const container = document.getElementById('cart-items-container');
+            if(!container) return;
             container.innerHTML = '';
             if (cart.length === 0) {
                 container.innerHTML = `<p class="text-slate-400 text-center py-6 text-sm">Tu carrito está vacío.</p>`;
@@ -754,7 +772,7 @@
             db.ref('config/phone').set(phone, () => alert('Teléfono actualizado'));
         }
 
-        // --- INVENTARIO & EDICIÓN CORREGIDA ---
+        // --- INVENTARIO & EDICIÓN ---
         function saveProduct() {
             const key = document.getElementById('edit-prod-key').value;
             const name = document.getElementById('prod-name').value.trim();
@@ -834,7 +852,6 @@
             Object.keys(products).forEach(key => {
                 const p = products[key];
                 
-                // OCULTAR O MOSTRAR CAMPOS VACÍOS EN LA TABLA ADMIN
                 const mayorTxt = (p.priceMayor && Number(p.priceMayor) > 0) ? `$${Number(p.priceMayor).toFixed(2)}` : '';
                 const granMayorTxt = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? `$${Number(p.priceGranMayor).toFixed(2)}` : '';
                 let mayorGranMayorCombined = '-';
