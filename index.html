@@ -390,7 +390,6 @@
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
 
         window.onload = function() {
-            // Seguridad para ocultar el spinner si Firebase tarda más de 2 segundos
             setTimeout(() => {
                 const spinner = document.getElementById('loading-spinner');
                 if(spinner) spinner.classList.add('hidden');
