@@ -11,9 +11,10 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e293b',
-                        secondary: '#0f172a',
-                        accent: '#f59e0b'
+                        primary: '#065f46', /* Verde esmeralda profundo de confianza */
+                        secondary: '#064e3b',
+                        accent: '#f97316', /* Naranja vibrante para comprar */
+                        success: '#10b981'
                     }
                 }
             }
@@ -28,21 +29,21 @@
     <div class="bg-secondary text-white text-xs sm:text-sm py-2 px-4 shadow-inner">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-store text-accent"></i>
-                <span class="font-medium">¡Bienvenidos a Abasto Express! Delivery local rápido y seguro.</span>
+                <i class="fa-solid fa-store text-accent animate-pulse"></i>
+                <span class="font-medium">¡Compra segura desde la comodidad de tu hogar! Delivery rápido.</span>
             </div>
             <div class="flex items-center gap-4">
-                <div class="flex items-center gap-1.5 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
-                    <span class="text-slate-400">Tasa BCV:</span>
-                    <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
+                <div class="flex items-center gap-1.5 bg-emerald-800 px-3 py-1 rounded-full border border-emerald-700">
+                    <span class="text-emerald-200">Tasa BCV:</span>
+                    <span id="top-rate-display" class="font-bold text-amber-400">45.50</span> Bs/$
                 </div>
-                <!-- BOTÓN DE CLIENTE DIRECTO -->
+                <!-- BOTÓN DE CLIENTE -->
                 <div id="client-auth-container">
-                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 </div>
-                <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1 cursor-pointer">
+                <button onclick="openAdminModal()" class="hover:text-amber-400 transition flex items-center gap-1 cursor-pointer">
                     <i class="fa-solid fa-lock text-xs"></i> Admin
                 </button>
             </div>
@@ -66,12 +67,12 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </span>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="¿Qué deseas comprar hoy?" class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
                 </div>
                 <!-- BOTÓN DEL CARRITO -->
-                <button onclick="openCartModal()" class="relative bg-primary hover:bg-slate-800 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center cursor-pointer">
+                <button onclick="openCartModal()" class="relative bg-accent hover:bg-orange-600 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center cursor-pointer font-bold">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
-                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-accent text-slate-900 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
                 </button>
             </div>
         </div>
@@ -79,15 +80,15 @@
 
     <!-- BANNER DE OFERTAS -->
     <section class="max-w-7xl mx-auto px-4 mt-6">
-        <div class="bg-gradient-to-r from-primary to-secondary rounded-3xl p-6 sm:p-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="bg-gradient-to-r from-primary via-emerald-700 to-secondary rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="space-y-2 text-center md:text-left">
-                <span class="bg-accent text-slate-900 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">🔥 Ofertas del Día</span>
-                <h2 class="text-2xl sm:text-3xl font-black">¡Ahorra en tus compras con delivery rápido!</h2>
-                <p class="text-slate-300 text-sm max-w-xl">Explora libremente nuestros departamentos y haz tus pedidos al instante.</p>
+                <span class="bg-accent text-white font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow">🚀 ¡Pide y Recibe en Casa!</span>
+                <h2 class="text-2xl sm:text-3xl font-black">Haz tus compras al mejor precio y sin salir de hogar</h2>
+                <p class="text-emerald-100 text-sm max-w-xl">Productos frescos, viveres, hogar y mucho más directo a tu puerta con total confianza.</p>
             </div>
-            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
-                <p class="text-xs text-slate-300">Servicio activo</p>
-                <p class="text-lg font-bold text-accent">Delivery Local</p>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center shadow-inner">
+                <p class="text-xs text-emerald-200">Atención Garantizada</p>
+                <p class="text-lg font-bold text-amber-400">Delivery Rápido</p>
             </div>
         </div>
     </section>
@@ -115,14 +116,14 @@
     <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Registro de Cliente</h3>
+                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-primary mr-2"></i> Mi Cuenta</h3>
                 <button onclick="window.closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             
             <div id="client-form-view" class="space-y-3">
-                <p class="text-xs text-slate-500 bg-amber-50 p-3 rounded-xl border border-amber-200">⚠️ Por favor completa tus datos para poder registrarte y realizar tus compras.</p>
+                <p class="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">👋 ¡Regístrate una sola vez para poder hacer tus compras desde casa y recibirlas cómodamente!</p>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre y Apellido</label>
                     <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
@@ -136,8 +137,8 @@
                     <input type="text" id="client-phone" placeholder="Ej: 0412-5551234" class="w-full px-3 py-2 border rounded-xl text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto de Perfil (Seleccionar de galería JPG / PNG)</label>
-                    <input type="file" id="client-photo-file" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-slate-800 cursor-pointer">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto de Perfil (Galería JPG / PNG)</label>
+                    <input type="file" id="client-photo-file" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-emerald-700 cursor-pointer">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Ubicación / Dirección de Entrega</label>
@@ -147,31 +148,31 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave de Seguridad (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
-                <button onclick="window.registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Comprar</button>
+                <button onclick="window.registerOrLoginClient()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Continuar</button>
             </div>
 
-            <!-- VISTA DE PERFIL UNA VEZ REGISTRADO (CON EDICIÓN DE TELÉFONO, FOTO Y UBICACIÓN) -->
+            <!-- VISTA DE PERFIL UNA VEZ REGISTRADO -->
             <div id="client-profile-view" class="space-y-4 hidden text-center">
                 <div class="flex flex-col items-center">
-                    <img id="profile-img-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-24 h-24 object-cover rounded-full shadow-md border-2 border-accent mb-2">
+                    <img id="profile-img-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-24 h-24 object-cover rounded-full shadow-md border-2 border-primary mb-2">
                     <h4 id="profile-name-display" class="font-bold text-lg text-slate-800">Nombre</h4>
                     <p id="profile-ci-display" class="text-xs text-slate-500">Cédula</p>
                 </div>
                 <div class="text-left space-y-2">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Teléfono</label>
-                        <input type="text" id="client-phone-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Ej: 0412-5551234">
+                        <input type="text" id="client-phone-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Foto (Galería JPG / PNG)</label>
-                        <input type="file" id="client-photo-file-update" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-slate-800 cursor-pointer">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Foto (JPG / PNG)</label>
+                        <input type="file" id="client-photo-file-update" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-emerald-700 cursor-pointer">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Ubicación</label>
                         <input type="text" id="client-location-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                 </div>
-                <button onclick="window.saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Datos</button>
+                <button onclick="window.saveClientProfile()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Mis Datos</button>
                 <button onclick="window.logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
             </div>
         </div>
@@ -190,31 +191,33 @@
             <div class="border-t pt-4 space-y-3">
                 <div class="flex justify-between text-base font-black text-slate-800">
                     <span>Total a Pagar:</span>
-                    <span id="cart-total-price" class="text-accent">$0.00</span>
+                    <span id="cart-total-price" class="text-accent text-xl">$0.00</span>
                 </div>
-                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2 cursor-pointer">
+                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Pedido por WhatsApp
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL MODO ADMIN -->
+    <!-- MODAL MODO ADMIN (ÚNICO ACCESO A CAJA FÍSICA) -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
             <div class="p-5 bg-secondary text-white flex items-center justify-between">
-                <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-accent mr-2"></i> Panel de Administración</h3>
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-amber-400 mr-2"></i> Panel de Administración y Caja</h3>
                 <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
             
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-2 overflow-x-auto">
-                <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap cursor-pointer">Configuración</button>
+                <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer">Configuración</button>
                 <button onclick="switchAdminTab('departments')" id="tab-btn-departments" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Departamentos</button>
-                <button onclick="switchAdminTab('inventory')" id="tab-btn-inventory" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Inventario y Stock</button>
-                <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Ventas</button>
-                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Clientes Registrados</button>
+                <button onclick="switchAdminTab('inventory')" id="tab-btn-inventory" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Inventario y Ganancias</button>
+                <button onclick="switchAdminTab('pos')" id="tab-btn-pos" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">💳 Caja Local (Admin)</button>
+                <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Historial Ventas</button>
+                <button onclick="switchAdminTab('closing')" id="tab-btn-closing" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">📊 Cierre Diario</button>
+                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Clientes</button>
             </div>
 
             <div class="p-6 overflow-y-auto flex-grow space-y-6">
@@ -225,21 +228,21 @@
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Tasa del Dólar BCV (Bs/$)</label>
                             <div class="flex gap-2">
                                 <input type="number" id="admin-rate-input" step="0.01" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Ej: 45.50">
-                                <button onclick="saveAdminRate()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Guardar</button>
+                                <button onclick="saveAdminRate()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">Guardar</button>
                             </div>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp de Pedidos</label>
                             <div class="flex gap-2">
                                 <input type="text" id="admin-phone-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Ej: 584125551234">
-                                <button onclick="saveAdminPhone()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Guardar</button>
+                                <button onclick="saveAdminPhone()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">Guardar</button>
                             </div>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Nueva Contraseña Admin</label>
                             <div class="flex gap-2">
                                 <input type="password" id="admin-pass-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Nueva clave">
-                                <button onclick="saveAdminPassword()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Cambiar</button>
+                                <button onclick="saveAdminPassword()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">Cambiar</button>
                             </div>
                         </div>
                     </div>
@@ -248,10 +251,10 @@
                 <!-- 2. DEPARTAMENTOS -->
                 <div id="admin-tab-departments" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-folder-plus text-accent mr-1"></i> Agregar Nuevo Departamento</h4>
+                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-folder-plus text-primary mr-1"></i> Agregar Nuevo Departamento</h4>
                         <div class="flex gap-2">
                             <input type="text" id="new-dept-name" placeholder="Ej: Bebidas y snacks, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
-                            <button onclick="addDepartment()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap cursor-pointer">Crear</button>
+                            <button onclick="addDepartment()" class="bg-accent text-white font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap cursor-pointer">Crear</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -267,18 +270,19 @@
                     </div>
                 </div>
 
-                <!-- 3. INVENTARIO Y STOCK -->
+                <!-- 3. INVENTARIO Y GANANCIAS -->
                 <div id="admin-tab-inventory" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-box text-accent mr-1"></i> Registrar Nuevo Producto</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+                        <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-box text-primary mr-1"></i> Registrar Nuevo Producto y Costos</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                             <input type="text" id="prod-name" placeholder="Nombre del producto" class="px-3 py-2 border rounded-xl text-sm">
-                            <input type="number" id="prod-price" step="0.01" placeholder="Precio ($)" class="px-3 py-2 border rounded-xl text-sm">
+                            <input type="number" id="prod-cost" step="0.01" placeholder="Precio de Costo ($)" class="px-3 py-2 border rounded-xl text-sm">
+                            <input type="number" id="prod-price" step="0.01" placeholder="Precio de Venta ($)" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-stock" placeholder="Stock inicial" class="px-3 py-2 border rounded-xl text-sm">
                             <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white"></select>
-                            <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="px-3 py-2 border rounded-xl text-sm col-span-full">
+                            <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="px-3 py-2 border rounded-xl text-sm col-span-3">
                         </div>
-                        <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 cursor-pointer">Guardar Producto</button>
+                        <button onclick="saveProduct()" class="bg-accent text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-orange-600 cursor-pointer">Guardar Producto</button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
@@ -286,10 +290,11 @@
                                 <tr class="bg-slate-100 text-slate-700 border-b">
                                     <th class="p-3">Foto</th>
                                     <th class="p-3">Producto</th>
-                                    <th class="p-3">Depto</th>
-                                    <th class="p-3">Precio</th>
-                                    <th class="p-3">Stock Actual</th>
-                                    <th class="p-3 text-center">Sumar / Sacar</th>
+                                    <th class="p-3">Costo ($)</th>
+                                    <th class="p-3">Venta ($)</th>
+                                    <th class="p-3">Ganancia ($ / %)</th>
+                                    <th class="p-3">Stock</th>
+                                    <th class="p-3 text-center">Ajustar Stock</th>
                                     <th class="p-3 text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -298,14 +303,48 @@
                     </div>
                 </div>
 
-                <!-- 4. VENTAS -->
+                <!-- 4. CAJA LOCAL EXCLUSIVA PARA EL ADMINISTRADOR (TIENDA FÍSICA) -->
+                <div id="admin-tab-pos" class="space-y-4 hidden">
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                        <h4 class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-cash-register mr-1"></i> Caja Registradora Presencial (Exclusivo Administrador)</h4>
+                        <p class="text-xs text-amber-800">Atiende al cliente que llega al local, arma su cuenta aquí, cobra y el stock se descontará de inmediato de forma automática.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-700">Seleccionar Producto:</label>
+                            <select id="pos-product-select" class="w-full px-3 py-2 border rounded-xl text-sm bg-white"></select>
+                            <label class="block text-xs font-semibold text-slate-700">Cantidad:</label>
+                            <input type="number" id="pos-qty-input" value="1" min="1" class="w-full px-3 py-2 border rounded-xl text-sm">
+                            <label class="block text-xs font-semibold text-slate-700">Nombre del Cliente en Tienda:</label>
+                            <input type="text" id="pos-client-name" value="Cliente Mostrador" class="w-full px-3 py-2 border rounded-xl text-sm">
+                            <button onclick="addPosItem()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm cursor-pointer shadow">Añadir a la Cuenta del Cliente</button>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border flex flex-col justify-between">
+                            <div>
+                                <h5 class="font-bold text-slate-800 border-b pb-2 mb-2">Cuenta Actual en Caja</h5>
+                                <div id="pos-cart-items" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+                                    <p class="text-slate-400 text-xs">No hay productos agregados a la caja.</p>
+                                </div>
+                            </div>
+                            <div class="border-t pt-3 mt-4">
+                                <div class="flex justify-between font-black text-base mb-3">
+                                    <span>Total a Cobrar:</span>
+                                    <span id="pos-total-price" class="text-accent text-xl">$0.00</span>
+                                </div>
+                                <button onclick="checkoutPosSale()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm cursor-pointer shadow">Registrar Venta y Descontar Stock</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. VENTAS -->
                 <div id="admin-tab-sales" class="space-y-4 hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-700 border-b">
                                     <th class="p-3">Fecha / ID</th>
-                                    <th class="p-3">Cliente</th>
+                                    <th class="p-3">Tipo / Cliente</th>
                                     <th class="p-3">Ubicación</th>
                                     <th class="p-3">Total ($)</th>
                                     <th class="p-3">Detalle</th>
@@ -316,7 +355,25 @@
                     </div>
                 </div>
 
-                <!-- 5. CLIENTES REGISTRADOS -->
+                <!-- 6. CIERRE DIARIO -->
+                <div id="admin-tab-closing" class="space-y-4 hidden">
+                    <div class="bg-gradient-to-r from-emerald-800 to-primary text-white p-6 rounded-2xl shadow-md">
+                        <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-chart-line text-amber-400 mr-2"></i> Reporte de Cierre Diario</h4>
+                        <p class="text-xs text-emerald-100 mb-4">Resumen consolidado de todas las ventas del día (Pedidos web + Ventas presenciales en caja).</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                                <p class="text-xs text-emerald-200">Total Transacciones Hoy</p>
+                                <p id="closing-count" class="text-2xl font-black">0</p>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                                <p class="text-xs text-emerald-200">Total Ingresos del Día</p>
+                                <p id="closing-total" class="text-2xl font-black text-amber-400">$0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. CLIENTES -->
                 <div id="admin-tab-clients" class="space-y-4 hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
@@ -327,7 +384,7 @@
                                     <th class="p-3">Cédula (CI)</th>
                                     <th class="p-3">Teléfono</th>
                                     <th class="p-3">Ubicación / Dirección</th>
-                                    <th class="p-3 text-center">Total Compras Realizadas</th>
+                                    <th class="p-3 text-center">Total Compras</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-clients-table"></tbody>
@@ -371,19 +428,16 @@
         let currentCategory = 'Todos';
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
         let cart = [];
+        let posCart = [];
 
         function convertFileToBase64(fileInputId) {
             return new Promise((resolve) => {
                 const fileInput = document.getElementById(fileInputId);
                 if (fileInput && fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        resolve(e.target.result);
-                    };
+                    reader.onload = function(e) { resolve(e.target.result); };
                     reader.readAsDataURL(fileInput.files[0]);
-                } else {
-                    resolve(null);
-                }
+                } else { resolve(null); }
             });
         }
 
@@ -439,9 +493,7 @@
                 });
             }
 
-            if (!photoBase64) {
-                photoBase64 = existingPhoto;
-            }
+            if (!photoBase64) photoBase64 = existingPhoto;
 
             loggedClient = { name, ci, phone, pin, photo: photoBase64, location };
             localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
@@ -455,7 +507,7 @@
             
             updateClientUI();
             closeClientAuthModal();
-            alert(`¡Registro exitoso, ${name}! Ya puedes continuar con tu compra.`);
+            alert(`¡Bienvenido(a) ${name}! Ya puedes hacer tus compras desde casa.`);
             window.loadStoreData();
         }
 
@@ -465,9 +517,7 @@
             let newPhoto = await convertFileToBase64('client-photo-file-update');
 
             if (loggedClient) {
-                if (newPhoto) {
-                    loggedClient.photo = newPhoto;
-                }
+                if (newPhoto) loggedClient.photo = newPhoto;
                 loggedClient.phone = phone;
                 loggedClient.location = location;
                 localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
@@ -528,14 +578,14 @@
             const container = document.getElementById('client-auth-container');
             if (loggedClient) {
                 container.innerHTML = `
-                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
-                        <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-accent">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
+                        <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-amber-400">
                         <span>${loggedClient.name}</span>
                     </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 `;
@@ -551,6 +601,7 @@
             renderProducts();
             renderAdminInventory();
             renderAdminDepartments();
+            renderPosProducts();
             loadSales();
             loadClientsData();
         }
@@ -589,13 +640,13 @@
                     const p = allProducts[key];
                     const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80';
                     const stockVal = p.stock !== undefined ? p.stock : 10;
-                    const stockBadge = stockVal > 0 ? `<span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Stock: ${stockVal}</span>` : `<span class="text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full">Agotado</span>`;
+                    const stockBadge = stockVal > 0 ? `<span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Stock: ${stockVal}</span>` : `<span class="text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-200">Agotado</span>`;
 
                     container.innerHTML += `
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col justify-between hover:shadow-md transition">
                             <div class="h-40 bg-slate-100 overflow-hidden relative">
                                 <img src="${img}" alt="${p.name}" class="w-full h-full object-cover">
-                                <span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">${p.category || 'General'}</span>
+                                <span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">${p.category || 'General'}</span>
                             </div>
                             <div class="p-4 flex flex-col flex-grow justify-between">
                                 <div>
@@ -605,8 +656,8 @@
                                     </div>
                                     <p class="text-accent font-black text-xl mb-3">$${p.price}</p>
                                 </div>
-                                <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-primary hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 cursor-pointer">
-                                    <i class="fa-solid fa-cart-plus"></i> ${stockVal > 0 ? 'Agregar al Carrito' : 'Agotado'}
+                                <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-accent hover:bg-orange-600 text-white shadow' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fa-solid fa-cart-plus"></i> ${stockVal > 0 ? 'Añadir al Carrito' : 'Agotado'}
                                 </button>
                             </div>
                         </div>
@@ -623,7 +674,7 @@
             if (stock <= 0) return alert("Producto agotado.");
             
             if (!loggedClient) {
-                alert("Para poder comprar y agregar productos al carrito, debes registrarte primero.");
+                alert("Para poder comprar desde casa, por favor regístrate o ingresa tus datos.");
                 window.openClientAuthModal();
                 return;
             }
@@ -723,21 +774,22 @@
                 const saleRef = push(ref(db, 'sales'));
                 await set(saleRef, {
                     date: new Date().toLocaleString(),
+                    timestamp: Date.now(),
+                    type: '🌐 Pedido Web (Casa)',
                     client: `${loggedClient.name} (CI: ${loggedClient.ci})`,
                     location: loggedClient.location || 'No especificada',
                     total: totalPrice.toFixed(2),
                     items: itemsText.trim().replace(/\n/g, ' | ')
                 });
 
-                const message = `*🛒 NUEVO PEDIDO - ABASTO EXPRESS*\n\n` +
+                const message = `*🛒 NUEVO PEDIDO WEB (CASA) - ABASTO EXPRESS*\n\n` +
                                 `👤 *Cliente:* ${loggedClient.name}\n` +
                                 `🪪 *Cédula:* ${loggedClient.ci}\n` +
                                 `📞 *Teléfono:* ${loggedClient.phone || 'No registrado'}\n` +
-                                `📍 *Ubicación:* ${loggedClient.location || 'No especificada'}\n` +
-                                `🖼️ *Foto de perfil cargada desde galería*\n\n` +
+                                `📍 *Ubicación de Entrega:* ${loggedClient.location || 'No especificada'}\n\n` +
                                 `📦 *PRODUCTOS SOLICITADOS:*\n${itemsText}\n` +
                                 `💰 *TOTAL A PAGAR:* $${totalPrice.toFixed(2)}\n\n` +
-                                `¡Por favor confirmar mi pedido y el envío!`;
+                                `¡Pedido realizado desde casa con éxito!`;
 
                 const phone = whatsappNumber;
                 window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -751,6 +803,100 @@
             }
         }
 
+        // LÓGICA DE CAJA LOCAL (EXCLUSIVA ADMIN)
+        window.renderPosProducts = function() {
+            const select = document.getElementById('pos-product-select');
+            select.innerHTML = '';
+            Object.keys(allProducts).forEach(key => {
+                const p = allProducts[key];
+                select.innerHTML += `<option value="${key}">${p.name} - $${p.price} (Stock: ${p.stock})</option>`;
+            });
+        }
+
+        window.addPosItem = function() {
+            const select = document.getElementById('pos-product-select');
+            const key = select.value;
+            if(!key || !allProducts[key]) return alert("Selecciona un producto válido.");
+            const p = allProducts[key];
+            const qty = parseInt(document.getElementById('pos-qty-input').value) || 1;
+
+            if(qty > p.stock) return alert("No hay suficiente stock disponible para esta cantidad.");
+
+            const existing = posCart.find(item => item.key === key);
+            if(existing) {
+                if((existing.qty + qty) > p.stock) return alert("Supera el stock disponible.");
+                existing.qty += qty;
+            } else {
+                posCart.push({ key, name: p.name, price: p.price, qty });
+            }
+            renderPosCart();
+        }
+
+        window.renderPosCart = function() {
+            const container = document.getElementById('pos-cart-items');
+            const totalEl = document.getElementById('pos-total-price');
+            container.innerHTML = '';
+            let total = 0;
+
+            if(posCart.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-xs">No hay productos agregados a la caja.</p>';
+                totalEl.innerText = '$0.00';
+                return;
+            }
+
+            posCart.forEach((item, index) => {
+                const sub = item.price * item.qty;
+                total += sub;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
+                        <span>${item.name} (${item.qty}x) - $${sub.toFixed(2)}</span>
+                        <button onclick="posCart.splice(${index},1); renderPosCart();" class="text-red-500 font-bold cursor-pointer">×</button>
+                    </div>
+                `;
+            });
+            totalEl.innerText = `$${total.toFixed(2)}`;
+        }
+
+        window.checkoutPosSale = async function() {
+            if(posCart.length === 0) return alert("La cuenta en caja está vacía.");
+            const clientName = document.getElementById('pos-client-name').value.trim() || "Cliente Presencial";
+            let itemsText = "";
+            let total = 0;
+
+            try {
+                for(const item of posCart) {
+                    const prodRef = ref(db, `products/${item.key}`);
+                    const prodSnap = await get(prodRef);
+                    if(prodSnap.exists()) {
+                        const curStock = prodSnap.val().stock;
+                        if(curStock < item.qty) return alert(`Stock insuficiente para ${item.name}`);
+                        await update(prodRef, { stock: curStock - item.qty });
+                    }
+                    const sub = item.price * item.qty;
+                    total += sub;
+                    itemsText += `• ${item.qty}x ${item.name} ($${sub.toFixed(2)}) | `;
+                }
+
+                const saleRef = push(ref(db, 'sales'));
+                await set(saleRef, {
+                    date: new Date().toLocaleString(),
+                    timestamp: Date.now(),
+                    type: '🏪 Venta en Local (Caja)',
+                    client: clientName,
+                    location: 'Tienda Física / Mostrador',
+                    total: total.toFixed(2),
+                    items: itemsText
+                });
+
+                alert(`¡Venta en caja registrada por $${total.toFixed(2)}! Stock descontado con éxito.`);
+                posCart = [];
+                renderPosCart();
+                await loadStoreData();
+            } catch(e) {
+                alert("Error al procesar la venta en caja.");
+            }
+        }
+
         window.renderAdminInventory = function() {
             const tableBody = document.getElementById('admin-inventory-table');
             tableBody.innerHTML = '';
@@ -761,18 +907,22 @@
                     const p = allProducts[key];
                     const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80';
                     const currentStock = p.stock !== undefined ? p.stock : 10;
+                    const cost = p.cost !== undefined ? p.cost : (p.price * 0.7).toFixed(2);
+                    const profit = (p.price - cost).toFixed(2);
+                    const profitPercent = cost > 0 ? ((profit / cost) * 100).toFixed(1) : 100;
+
                     tableBody.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
                             <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-lg shadow-sm"></td>
                             <td class="p-3 font-medium">${p.name}</td>
-                            <td class="p-3 text-slate-500">${p.category || 'General'}</td>
+                            <td class="p-3 text-slate-600">$${cost}</td>
                             <td class="p-3 font-bold text-accent">$${p.price}</td>
+                            <td class="p-3 font-semibold text-emerald-700">+$${profit} (${profitPercent}%)</td>
                             <td class="p-3 font-semibold text-slate-700">${currentStock}</td>
                             <td class="p-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
-                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold cursor-pointer">-1</button>
-                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold cursor-pointer">+1</button>
-                                    <button onclick="customAdjustStock('${key}', ${currentStock})" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded-lg text-xs font-medium cursor-pointer">± Cant</button>
+                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer">-1</button>
+                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer">+1</button>
                                 </div>
                             </td>
                             <td class="p-3 text-center">
@@ -782,7 +932,7 @@
                     `;
                 });
             } else {
-                tableBody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-500">No hay productos registrados.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-500">No hay productos registrados.</td></tr>';
             }
         }
 
@@ -807,15 +957,25 @@
             const salesTable = document.getElementById('admin-sales-table');
             salesTable.innerHTML = '';
 
+            let todayTotal = 0;
+            let todayCount = 0;
+            const todayStr = new Date().toDateString();
+
             if (salesSnap.exists()) {
                 const sales = salesSnap.val();
                 Object.keys(sales).forEach(key => {
                     const s = sales[key];
+                    const saleDate = s.timestamp ? new Date(s.timestamp).toDateString() : todayStr;
+                    if (saleDate === todayStr) {
+                        todayCount++;
+                        todayTotal += parseFloat(s.total || 0);
+                    }
+
                     salesTable.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
                             <td class="p-3 text-xs text-slate-500">${s.date || key}</td>
-                            <td class="p-3 font-medium">${s.client}</td>
-                            <td class="p-3 text-xs text-slate-600">${s.location || 'No especificada'}</td>
+                            <td class="p-3 font-medium"><span class="bg-slate-100 px-2 py-1 rounded-md text-xs font-semibold mr-1">${s.type || 'Venta'}</span> ${s.client}</td>
+                            <td class="p-3 text-xs text-slate-600">${s.location || 'Mostrador'}</td>
                             <td class="p-3 font-bold text-accent">$${s.total}</td>
                             <td class="p-3 text-xs text-slate-600">${s.items}</td>
                         </tr>
@@ -824,6 +984,9 @@
             } else {
                 salesTable.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
             }
+
+            document.getElementById('closing-count').innerText = todayCount;
+            document.getElementById('closing-total').innerText = `$${todayTotal.toFixed(2)}`;
         }
 
         async function loadClientsData() {
@@ -875,18 +1038,6 @@
             await window.loadStoreData();
         }
 
-        window.customAdjustStock = async function(key, currentStock) {
-            const input = prompt(`Stock actual: ${currentStock}\nIngresa la cantidad a sumar (ej: 10) o restar (ej: -5):`);
-            if(input !== null && input.trim() !== '') {
-                const val = parseInt(input);
-                if(!isNaN(val)) {
-                    const newStock = Math.max(0, currentStock + val);
-                    await update(ref(db, `products/${key}`), { stock: newStock });
-                    await window.loadStoreData();
-                } else { alert("Ingresa un número válido."); }
-            }
-        }
-
         window.filterCategory = function(cat) {
             currentCategory = cat;
             renderCategories();
@@ -909,12 +1060,12 @@
         }
 
         function switchAdminTab(tab) {
-            ['config', 'departments', 'inventory', 'sales', 'clients'].forEach(t => {
+            ['config', 'departments', 'inventory', 'pos', 'sales', 'closing', 'clients'].forEach(t => {
                 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
                 document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer";
             });
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap cursor-pointer";
+            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer";
         }
 
         async function saveAdminRate() {
@@ -969,22 +1120,24 @@
 
         async function saveProduct() {
             const name = document.getElementById('prod-name').value;
+            const cost = parseFloat(document.getElementById('prod-cost').value);
             const price = parseFloat(document.getElementById('prod-price').value);
             const stock = parseInt(document.getElementById('prod-stock').value);
             const category = document.getElementById('prod-category').value;
             const image = document.getElementById('prod-image').value;
 
-            if(!name || isNaN(price) || isNaN(stock)) return alert("Completa los campos correctamente");
+            if(!name || isNaN(cost) || isNaN(price) || isNaN(stock)) return alert("Completa los campos correctamente");
             
             const newProdRef = window.push(window.ref(window.db, 'products'));
-            await window.set(newProdRef, { name, price, stock, category, image: image || '' });
+            await window.set(newProdRef, { name, cost, price, stock, category, image: image || '' });
             
             document.getElementById('prod-name').value = '';
+            document.getElementById('prod-cost').value = '';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-stock').value = '';
             document.getElementById('prod-image').value = '';
             
-            alert("¡Producto guardado!");
+            alert("¡Producto y costos guardados!");
             await window.loadStoreData();
         }
 
