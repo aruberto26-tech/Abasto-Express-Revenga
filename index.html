@@ -11,9 +11,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#065f46', /* Verde esmeralda profundo de confianza */
+                        primary: '#065f46',
                         secondary: '#064e3b',
-                        accent: '#f97316', /* Naranja vibrante para comprar */
+                        accent: '#f97316',
                         success: '#10b981'
                     }
                 }
@@ -40,7 +40,6 @@
                     <span class="text-emerald-200">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-amber-400">45.50</span> Bs/$
                 </div>
-                <!-- BOTÓN DE CLIENTE -->
                 <div id="client-auth-container">
                     <button onclick="openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
@@ -72,7 +71,6 @@
                     </span>
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="¿Qué deseas comprar hoy?" class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
                 </div>
-                <!-- BOTÓN DEL CARRITO -->
                 <button onclick="openCartModal()" class="relative bg-accent hover:bg-orange-600 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center cursor-pointer font-bold">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
@@ -96,7 +94,7 @@
         </div>
     </section>
 
-    <!-- BARRA DE CATEGORÍAS (DEPARTAMENTOS) -->
+    <!-- BARRA DE CATEGORÍAS -->
     <nav class="max-w-7xl mx-auto px-4 mt-6">
         <div id="categories-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition cursor-pointer">Todos</button>
@@ -110,7 +108,6 @@
             <p class="text-slate-500 text-sm font-medium">Cargando inventario y departamentos...</p>
         </div>
 
-        <!-- SECCIÓN DE PRODUCTOS EN PROMOCIÓN -->
         <div id="promos-section" class="space-y-3 hidden">
             <div class="flex items-center gap-2 border-b pb-2">
                 <i class="fa-solid fa-fire text-accent text-xl animate-bounce"></i>
@@ -119,35 +116,28 @@
             <div id="promos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
         </div>
 
-        <!-- SECCIÓN DE TODOS LOS PRODUCTOS -->
         <div class="space-y-3">
             <div id="catalog-title" class="flex items-center gap-2 border-b pb-2 hidden">
                 <i class="fa-solid fa-boxes-stacked text-primary text-lg"></i>
                 <h3 class="font-black text-lg text-slate-800">Catálogo General</h3>
             </div>
-            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
-                <!-- Productos dinámicos -->
-            </div>
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
         </div>
     </main>
 
-    <!-- PIE DE PÁGINA -->
     <footer class="bg-secondary text-white py-6 mt-12 border-t border-emerald-900 text-center text-xs">
         <p>Abasto Express &copy; 2026 - Todos los derechos reservados</p>
     </footer>
 
-    <!-- MODAL DE REGISTRO / PERFIL DE CLIENTE -->
+    <!-- MODAL CLIENTE -->
     <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-primary mr-2"></i> Mi Cuenta</h3>
-                <button onclick="closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <div id="client-form-view" class="space-y-3">
-                <p class="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">👋 ¡Regístrate una sola vez para poder hacer tus compras desde casa y recibirlas cómodamente!</p>
+                <p class="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">👋 ¡Regístrate una sola vez para hacer tus compras desde casa!</p>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre y Apellido</label>
                     <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
@@ -172,10 +162,8 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave de Seguridad (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
-                <button onclick="registerOrLoginClient()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Continuar</button>
+                <button onclick="registerOrLoginClient()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro</button>
             </div>
-
-            <!-- VISTA DE PERFIL -->
             <div id="client-profile-view" class="space-y-4 hidden text-center">
                 <div class="flex flex-col items-center">
                     <img id="profile-img-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-24 h-24 object-cover rounded-full shadow-md border-2 border-primary mb-2">
@@ -202,14 +190,12 @@
         </div>
     </div>
 
-    <!-- MODAL DEL CARRITO DE COMPRAS -->
+    <!-- MODAL CARRITO -->
     <div id="cart-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-cart-shopping text-accent mr-2"></i> Tu Carrito de Compras</h3>
-                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div id="cart-items-container" class="overflow-y-auto flex-grow space-y-3 mb-4"></div>
             <div class="border-t pt-4 space-y-3">
@@ -224,14 +210,12 @@
         </div>
     </div>
 
-    <!-- MODAL MODO ADMIN -->
+    <!-- MODAL ADMIN -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
             <div class="p-5 bg-secondary text-white flex items-center justify-between">
                 <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-amber-400 mr-2"></i> Panel de Administración y Caja</h3>
-                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-2 overflow-x-auto">
@@ -245,7 +229,7 @@
             </div>
 
             <div class="p-6 overflow-y-auto flex-grow space-y-6">
-                <!-- 1. CONFIGURACIÓN -->
+                <!-- 1. CONFIG -->
                 <div id="admin-tab-config" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
@@ -270,24 +254,21 @@
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-folder-plus text-primary mr-1"></i> Agregar Nuevo Departamento</h4>
                         <div class="flex gap-2">
-                            <input type="text" id="new-dept-name" placeholder="Ej: Bebidas y snacks, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
+                            <input type="text" id="new-dept-name" placeholder="Ej: Bebidas, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
                             <button onclick="addDepartment()" class="bg-accent text-white font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap cursor-pointer">Crear</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 border-b">
-                                    <th class="p-3">Departamento / Categoría</th>
-                                    <th class="p-3 text-center">Acciones</th>
-                                </tr>
+                                <tr class="bg-slate-100 text-slate-700 border-b"><th class="p-3">Departamento / Categoría</th><th class="p-3 text-center">Acciones</th></tr>
                             </thead>
                             <tbody id="admin-dept-table"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 3. INVENTARIO Y PROMOCIONES -->
+                <!-- 3. INVENTARIO -->
                 <div id="admin-tab-inventory" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 id="form-product-title" class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-box text-primary mr-1"></i> Registrar o Editar Producto</h4>
@@ -304,7 +285,7 @@
                         </div>
                         <div class="flex items-center gap-2 mb-3 bg-amber-50 p-3 rounded-xl border border-amber-200">
                             <input type="checkbox" id="prod-is-promo" class="w-4 h-4 accent-accent rounded">
-                            <label for="prod-is-promo" class="font-bold text-amber-900 text-sm cursor-pointer">🔥 Marcar como producto en Promoción (Aparecerá destacado arriba)</label>
+                            <label for="prod-is-promo" class="font-bold text-amber-900 text-sm cursor-pointer">🔥 Marcar como producto en Promoción</label>
                         </div>
                         <div class="flex gap-2">
                             <button onclick="saveProduct()" id="btn-save-prod" class="bg-accent text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-orange-600 cursor-pointer">Guardar Producto</button>
@@ -329,7 +310,7 @@
                     </div>
                 </div>
 
-                <!-- 4. CAJA LOCAL ADMIN -->
+                <!-- 4. POS -->
                 <div id="admin-tab-pos" class="space-y-4 hidden">
                     <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
                         <h4 class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-cash-register mr-1"></i> Caja Registradora Presencial</h4>
@@ -347,15 +328,10 @@
                         <div class="bg-slate-50 p-4 rounded-2xl border flex flex-col justify-between">
                             <div>
                                 <h5 class="font-bold text-slate-800 border-b pb-2 mb-2">Cuenta Actual</h5>
-                                <div id="pos-cart-items" class="space-y-2 max-h-48 overflow-y-auto text-sm">
-                                    <p class="text-slate-400 text-xs">No hay productos agregados.</p>
-                                </div>
+                                <div id="pos-cart-items" class="space-y-2 max-h-48 overflow-y-auto text-sm"><p class="text-slate-400 text-xs">No hay productos agregados.</p></div>
                             </div>
                             <div class="border-t pt-3 mt-4">
-                                <div class="flex justify-between font-black text-base mb-3">
-                                    <span>Total a Cobrar:</span>
-                                    <span id="pos-total-price" class="text-accent text-xl">$0.00</span>
-                                </div>
+                                <div class="flex justify-between font-black text-base mb-3"><span>Total a Cobrar:</span><span id="pos-total-price" class="text-accent text-xl">$0.00</span></div>
                                 <button onclick="checkoutPosSale()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm cursor-pointer shadow">Registrar Venta y Descontar Stock</button>
                             </div>
                         </div>
@@ -367,57 +343,38 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 border-b">
-                                    <th class="p-3">Fecha / ID</th>
-                                    <th class="p-3">Tipo / Cliente</th>
-                                    <th class="p-3">Ubicación</th>
-                                    <th class="p-3">Total ($)</th>
-                                </tr>
+                                <tr class="bg-slate-100 text-slate-700 border-b"><th class="p-3">Fecha / ID</th><th class="p-3">Tipo / Cliente</th><th class="p-3">Ubicación</th><th class="p-3">Total ($)</th></tr>
                             </thead>
                             <tbody id="admin-sales-table"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 6. CIERRE DIARIO -->
+                <!-- 6. CIERRE -->
                 <div id="admin-tab-closing" class="space-y-4 hidden">
                     <div class="bg-gradient-to-r from-emerald-800 to-primary text-white p-6 rounded-2xl shadow-md">
                         <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-chart-line text-amber-400 mr-2"></i> Reporte de Cierre Diario</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
-                                <p class="text-xs text-emerald-200">Total Transacciones Hoy</p>
-                                <p id="closing-count" class="text-2xl font-black">0</p>
-                            </div>
-                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
-                                <p class="text-xs text-emerald-200">Total Ingresos del Día</p>
-                                <p id="closing-total" class="text-2xl font-black text-amber-400">$0.00</p>
-                            </div>
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20"><p class="text-xs text-emerald-200">Total Transacciones Hoy</p><p id="closing-count" class="text-2xl font-black">0</p></div>
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20"><p class="text-xs text-emerald-200">Total Ingresos del Día</p><p id="closing-total" class="text-2xl font-black text-amber-400">$0.00</p></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 7. ESTADÍSTICAS -->
+                <!-- 7. STATS -->
                 <div id="admin-tab-stats" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-accent">
-                            <h5 class="font-bold text-slate-800 mb-2">Ventas Totales</h5>
-                            <span id="stat-week-sales" class="text-2xl font-black text-primary">$0.00</span>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-success">
-                            <h5 class="font-bold text-slate-800 mb-2">Ganancia Neta Estimada</h5>
-                            <span id="stat-week-profit" class="text-2xl font-black text-success">$0.00</span>
-                        </div>
+                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-accent"><h5 class="font-bold text-slate-800 mb-2">Ventas Totales</h5><span id="stat-week-sales" class="text-2xl font-black text-primary">$0.00</span></div>
+                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-success"><h5 class="font-bold text-slate-800 mb-2">Ganancia Neta Estimada</h5><span id="stat-week-profit" class="text-2xl font-black text-success">$0.00</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT DE FIREBASE Y LÓGICA -->
+    <!-- SCRIPT -->
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://abasto-express-default-rtdb.firebaseio.com/"
-        };
+        const firebaseConfig = { databaseURL: "https://abasto-express-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -446,6 +403,7 @@
                 categories = data ? Object.values(data) : ['Víveres', 'Bebidas', 'Limpieza'];
                 renderCategories();
                 renderCategorySelects();
+                renderDeptTable();
             });
 
             db.ref('products').on('value', snapshot => {
@@ -481,10 +439,47 @@
 
         function renderCategorySelects() {
             const selectProd = document.getElementById('prod-category');
+            if(!selectProd) return;
             selectProd.innerHTML = '';
             categories.forEach(cat => {
                 selectProd.innerHTML += `<option value="${cat}">${cat}</option>`;
             });
+        }
+
+        function renderDeptTable() {
+            const tbody = document.getElementById('admin-dept-table');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            db.ref('categories').once('value', snapshot => {
+                const data = snapshot.val();
+                if(data) {
+                    Object.keys(data).forEach(key => {
+                        tbody.innerHTML += `
+                            <tr class="border-b">
+                                <td class="p-3 font-medium">${data[key]}</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="deleteDepartment('${key}')" class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
+
+        function addDepartment() {
+            const name = document.getElementById('new-dept-name').value.trim();
+            if (!name) return;
+            db.ref('categories').push(name, () => {
+                document.getElementById('new-dept-name').value = '';
+                renderDeptTable();
+            });
+        }
+
+        function deleteDepartment(key) {
+            if (confirm('¿Eliminar este departamento?')) {
+                db.ref('categories/' + key).remove(() => renderDeptTable());
+            }
         }
 
         function renderProducts() {
@@ -508,7 +503,7 @@
 
                 const priceBs = (p.price * rate).toFixed(2);
                 
-                // OCULTAR PRECIOS DE MAYOR Y GRAN MAYOR SI NO ESTÁN DEFINIDOS O SON 0
+                // OCULTAR SI ESTÁ VACÍO O ES 0
                 let mayorHtml = '';
                 if (p.priceMayor && Number(p.priceMayor) > 0) {
                     const mayorBs = (Number(p.priceMayor) * rate).toFixed(2);
@@ -556,7 +551,7 @@
 
         function filterProducts() { renderProducts(); }
 
-        // --- CARRITO DE CLIENTE ---
+        // --- CARRITO ---
         function addToCart(key) {
             const p = products[key];
             if (p.stock <= 0) { alert('Producto agotado'); return; }
@@ -638,7 +633,7 @@
                 }
             });
 
-            const saleData = {
+            db.ref('sales').push({
                 date: new Date().toISOString(),
                 type: 'Pedido Web',
                 clientName: loggedClient.name,
@@ -646,18 +641,16 @@
                 location: loggedClient.location,
                 items: cart,
                 totalUSD
-            };
-            db.ref('sales').push(saleData);
+            });
 
             cart = [];
             updateCartBadge();
             document.getElementById('cart-modal').classList.add('hidden');
-
             const phone = storeConfig.phone || '584125551234';
             window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
         }
 
-        // --- AUTENTICACIÓN CLIENTE ---
+        // --- CLIENTE AUTH ---
         function openClientAuthModal() {
             if (loggedClient) {
                 document.getElementById('client-form-view').classList.add('hidden');
@@ -686,7 +679,7 @@
             const photo = document.getElementById('client-photo-url').value.trim();
 
             if (!name || !ci || !phone || !location || pin.length !== 5) {
-                alert('Por favor complete todos los datos correctamente y asegúrese de que la clave tenga 5 dígitos.');
+                alert('Complete todos los datos correctamente (Clave de 5 dígitos).');
                 return;
             }
 
@@ -704,7 +697,7 @@
             loggedClient.photo = document.getElementById('client-photo-input').value.trim();
             localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
             db.ref('clients/' + loggedClient.ci).set(loggedClient);
-            alert('¡Datos actualizados con éxito!');
+            alert('¡Datos actualizados!');
             closeClientAuthModal();
         }
 
@@ -712,11 +705,13 @@
             loggedClient = null;
             localStorage.removeItem('abasto_client');
             closeClientAuthModal();
+            updateClientAuthUI();
             alert('Sesión cerrada');
         }
 
         function updateClientAuthUI() {
             const container = document.getElementById('client-auth-container');
+            if(!container) return;
             if (loggedClient) {
                 container.innerHTML = `<button onclick="openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer"><i class="fa-solid fa-user-check text-amber-400"></i> <span>${loggedClient.name.split(' ')[0]}</span></button>`;
             } else {
@@ -724,9 +719,9 @@
             }
         }
 
-        // --- ADMINISTRACIÓN ---
+        // --- ADMIN ---
         function openAdminModal() {
-            const pass = prompt('Ingrese la contraseña de Administrador:');
+            const pass = prompt('Contraseña de Administrador:');
             if (pass === '12345' || pass === 'admin') {
                 document.getElementById('admin-modal').classList.remove('hidden');
                 switchAdminTab('config');
@@ -737,34 +732,29 @@
 
         function switchAdminTab(tab) {
             ['config', 'departments', 'inventory', 'pos', 'sales', 'closing', 'stats'].forEach(t => {
-                document.getElementById(`admin-tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer border-b-2 border-transparent";
+                const el = document.getElementById(`admin-tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if(el) el.classList.add('hidden');
+                if(btn) btn.className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer border-b-2 border-transparent";
             });
-            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer";
+            const activeEl = document.getElementById(`admin-tab-${tab}`);
+            const activeBtn = document.getElementById(`tab-btn-${tab}`);
+            if(activeEl) activeEl.classList.remove('hidden');
+            if(activeBtn) activeBtn.className = "py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer";
         }
 
         function saveAdminRate() {
             const rate = parseFloat(document.getElementById('admin-rate-input').value);
             if (!rate) return;
-            db.ref('config/rate').set(rate);
-            alert('Tasa actualizada con éxito');
+            db.ref('config/rate').set(rate, () => alert('Tasa actualizada'));
         }
 
         function saveAdminPhone() {
             const phone = document.getElementById('admin-phone-input').value.trim();
-            db.ref('config/phone').set(phone);
-            alert('Teléfono actualizado');
+            db.ref('config/phone').set(phone, () => alert('Teléfono actualizado'));
         }
 
-        function addDepartment() {
-            const name = document.getElementById('new-dept-name').value.trim();
-            if (!name) return;
-            db.ref('categories').push(name);
-            document.getElementById('new-dept-name').value = '';
-        }
-
-        // --- INVENTARIO Y BOTÓN DE EDITAR ARREGLADO ---
+        // --- INVENTARIO & EDICIÓN CORREGIDA ---
         function saveProduct() {
             const key = document.getElementById('edit-prod-key').value;
             const name = document.getElementById('prod-name').value.trim();
@@ -777,34 +767,37 @@
             const image = document.getElementById('prod-image').value.trim();
             const isPromo = document.getElementById('prod-is-promo').checked;
 
-            if (!name || !cost || !price || isNaN(stock)) {
-                alert('Por favor complete los campos obligatorios (Nombre, Costo, Precio Detal, Stock).');
+            if (!name || isNaN(cost) || isNaN(price) || isNaN(stock)) {
+                alert('Complete los campos obligatorios correctamente.');
                 return;
             }
 
             const prodData = { name, cost, price, priceMayor, priceGranMayor, stock, category, image, isPromo };
 
             if (key) {
-                db.ref('products/' + key).set(prodData);
-                alert('¡Producto actualizado con éxito!');
+                db.ref('products/' + key).set(prodData, () => {
+                    alert('¡Producto actualizado!');
+                    resetProductForm();
+                });
             } else {
-                db.ref('products').push(prodData);
-                alert('¡Producto registrado con éxito!');
+                db.ref('products').push(prodData, () => {
+                    alert('¡Producto registrado!');
+                    resetProductForm();
+                });
             }
-            resetProductForm();
         }
 
         function editProduct(key) {
             const p = products[key];
             if (!p) return;
             document.getElementById('edit-prod-key').value = key;
-            document.getElementById('prod-name').value = p.name;
-            document.getElementById('prod-cost').value = p.cost;
-            document.getElementById('prod-price').value = p.price;
-            document.getElementById('prod-price-mayor').value = p.priceMayor || '';
-            document.getElementById('prod-price-gran-mayor').value = p.priceGranMayor || '';
-            document.getElementById('prod-stock').value = p.stock;
-            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-name').value = p.name || '';
+            document.getElementById('prod-cost').value = p.cost || '';
+            document.getElementById('prod-price').value = p.price || '';
+            document.getElementById('prod-price-mayor').value = (p.priceMayor && Number(p.priceMayor) > 0) ? p.priceMayor : '';
+            document.getElementById('prod-price-gran-mayor').value = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? p.priceGranMayor : '';
+            document.getElementById('prod-stock').value = p.stock || '';
+            document.getElementById('prod-category').value = p.category || categories[0];
             document.getElementById('prod-image').value = p.image || '';
             document.getElementById('prod-is-promo').checked = p.isPromo || false;
 
@@ -829,39 +822,41 @@
         }
 
         function deleteProduct(key) {
-            if (confirm('¿Eliminar este producto del inventario?')) {
+            if (confirm('¿Eliminar producto?')) {
                 db.ref('products/' + key).remove();
             }
         }
 
         function renderInventoryTable() {
             const tbody = document.getElementById('admin-inventory-table');
+            if(!tbody) return;
             tbody.innerHTML = '';
             Object.keys(products).forEach(key => {
                 const p = products[key];
-                const mayorTxt = (p.priceMayor && Number(p.priceMayor) > 0) ? `$${Number(p.priceMayor).toFixed(2)}` : '-';
-                const granMayorTxt = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? `$${Number(p.priceGranMayor).toFixed(2)}` : '-';
+                const mayorTxt = (p.priceMayor && Number(p.priceMayor) > 0) ? `$${Number(p.priceMayor).toFixed(2)}` : '<span class="text-slate-300">-</span>';
+                const granMayorTxt = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? `$${Number(p.priceGranMayor).toFixed(2)}` : '<span class="text-slate-300">-</span>';
 
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50">
                         <td class="p-3"><img src="${p.image || 'https://via.placeholder.com/50'}" class="w-10 h-10 object-cover rounded-xl"></td>
-                        <td class="p-3 font-semibold">${p.name}<br><span class="text-xs text-slate-400">${p.category}</span></td>
+                        <td class="p-3 font-semibold">${p.name}<br><span class="text-xs text-slate-400">${p.category || ''}</span></td>
                         <td class="p-3">$${Number(p.cost).toFixed(2)} / <strong class="text-primary">$${Number(p.price).toFixed(2)}</strong></td>
                         <td class="p-3 text-xs">${mayorTxt} / ${granMayorTxt}</td>
                         <td class="p-3">${p.isPromo ? '🔥 Sí' : 'No'}</td>
                         <td class="p-3 font-bold">${p.stock}</td>
                         <td class="p-3 text-center space-x-1">
-                            <button onclick="editProduct('${key}')" class="bg-amber-100 text-amber-700 px-2 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProduct('${key}')" class="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editProduct('${key}')" class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
+                            <button onclick="deleteProduct('${key}')" class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
         }
 
-        // --- CAJA LOCAL POS ---
+        // --- POS & SALES ---
         function renderPosSelect() {
             const select = document.getElementById('pos-product-select');
+            if(!select) return;
             select.innerHTML = '';
             Object.keys(products).forEach(key => {
                 const p = products[key];
@@ -885,6 +880,7 @@
 
         function renderPosCart() {
             const container = document.getElementById('pos-cart-items');
+            if(!container) return;
             container.innerHTML = '';
             let total = 0;
             posCart.forEach((item, index) => {
@@ -921,13 +917,14 @@
                 totalUSD
             });
 
-            alert('¡Venta en caja registrada con éxito!');
+            alert('¡Venta registrada con éxito!');
             posCart = [];
             renderPosCart();
         }
 
         function renderSalesTable() {
             const tbody = document.getElementById('admin-sales-table');
+            if(!tbody) return;
             tbody.innerHTML = '';
             Object.values(salesHistory).reverse().forEach(s => {
                 tbody.innerHTML += `
@@ -961,17 +958,18 @@
                         }
                     });
                 }
-
-                if (sDate === todayStr) {
-                    count++;
-                    total += totalUSD;
-                }
+                if (sDate === todayStr) { count++; total += totalUSD; }
             });
 
-            document.getElementById('closing-count').innerText = count;
-            document.getElementById('closing-total').innerText = `$${total.toFixed(2)}`;
-            document.getElementById('stat-week-sales').innerText = `$${weekSales.toFixed(2)}`;
-            document.getElementById('stat-week-profit').innerText = `$${weekProfit.toFixed(2)}`;
+            const cc = document.getElementById('closing-count');
+            const ct = document.getElementById('closing-total');
+            const sws = document.getElementById('stat-week-sales');
+            const swp = document.getElementById('stat-week-profit');
+
+            if(cc) cc.innerText = count;
+            if(ct) ct.innerText = `$${total.toFixed(2)}`;
+            if(sws) sws.innerText = `$${weekSales.toFixed(2)}`;
+            if(swp) swp.innerText = `$${weekProfit.toFixed(2)}`;
         }
     </script>
 </body>
