@@ -36,6 +36,12 @@
                     <span class="text-slate-400">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
                 </div>
+                <!-- BOTÓN DE CLIENTE FIJO / REGISTRO -->
+                <div id="client-auth-container">
+                    <button onclick="openClientAuthModal()" id="top-client-btn" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-user-circle"></i> <span id="client-btn-text">Registro / Ingresar</span>
+                    </button>
+                </div>
                 <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1">
                     <i class="fa-solid fa-lock text-xs"></i> Admin
                 </button>
@@ -99,6 +105,34 @@
             <!-- Productos dinámicos -->
         </div>
     </main>
+
+    <!-- MODAL DE REGISTRO / INGRESO DE CLIENTE -->
+    <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Acceso de Clientes</h3>
+                <button onclick="document.getElementById('client-auth-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-xs text-slate-500">Regístrate fácilmente con tu cédula y una clave de 5 dígitos, o ingresa si ya estás registrado.</p>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
+                    <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cédula</label>
+                    <input type="text" id="client-ci" placeholder="Ej: V-12345678" class="w-full px-3 py-2 border rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Clave (5 dígitos)</label>
+                    <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
+                </div>
+                <button onclick="registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow">Ingresar / Registrarse</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL MODO ADMIN -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
@@ -170,7 +204,7 @@
                     </div>
                 </div>
 
-                <!-- 3. INVENTARIO Y STOCK (CON SUMAR / RESTAR RÁPIDO) -->
+                <!-- 3. INVENTARIO Y STOCK -->
                 <div id="admin-tab-inventory" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-box text-accent mr-1"></i> Registrar Nuevo Producto</h4>
@@ -212,6 +246,7 @@
                             <thead>
                                 <tr class="bg-slate-100 text-slate-700 border-b">
                                     <th class="p-3">Fecha / ID</th>
+                                    <th class="p-3">Cliente</th>
                                     <th class="p-3">Total ($)</th>
                                     <th class="p-3">Detalle del Pedido</th>
                                 </tr>
@@ -257,6 +292,7 @@
         let allProducts = {};
         let allDepartments = ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
         let currentCategory = 'Todos';
+        let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
 
         async function initApp() {
             try {
@@ -278,9 +314,28 @@
                     }
                 }
                 window.currentAdminPin = currentAdminPin;
+                updateClientUI();
                 await loadStoreData();
             } catch (error) {
                 console.error("Error al conectar con Firebase:", error);
+            }
+        }
+
+        window.updateClientUI = function() {
+            const container = document.getElementById('client-auth-container');
+            if (loggedClient) {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-accent font-bold"><i class="fa-solid fa-user-check"></i> ${loggedClient.name} (${loggedClient.ci})</span>
+                        <button onclick="logoutClient()" class="text-xs text-slate-400 hover:text-white underline">Salir</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="openClientAuthModal()" id="top-client-btn" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-user-circle"></i> <span id="client-btn-text">Registro / Ingresar</span>
+                    </button>
+                `;
             }
         }
 
@@ -423,51 +478,22 @@
                     salesTable.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
                             <td class="p-3 text-xs text-slate-500">${s.date || key}</td>
+                            <td class="p-3 font-medium">${s.client || 'Cliente General'}</td>
                             <td class="p-3 font-bold text-accent">$${s.total}</td>
                             <td class="p-3 text-xs text-slate-600">${s.items}</td>
                         </tr>
                     `;
                 });
             } else {
-                salesTable.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
+                salesTable.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
             }
         }
 
-        // AJUSTAR STOCK RÁPIDO (+1 / -1)
-        window.adjustStock = async function(key, amount) {
-            const p = allProducts[key];
-            const currentStock = p.stock !== undefined ? p.stock : 10;
-            const newStock = Math.max(0, currentStock + amount);
-            try {
-                await update(ref(db, `products/${key}`), { stock: newStock });
-                await window.loadStoreData();
-            } catch (e) {
-                alert("Error al actualizar el stock");
-            }
-        }
-
-        // AJUSTAR STOCK CON CANTIDAD ESPECÍFICA (EJ: +15 ó -5)
-        window.customAdjustStock = async function(key, currentStock) {
-            const input = prompt(`Stock actual: ${currentStock}\nIngresa la cantidad a sumar (ej: 10) o restar con signo menos (ej: -5):`);
-            if(input !== null && input.trim() !== '') {
-                const val = parseInt(input);
-                if(!isNaN(val)) {
-                    const newStock = Math.max(0, currentStock + val);
-                    try {
-                        await update(ref(db, `products/${key}`), { stock: newStock });
-                        await window.loadStoreData();
-                    } catch (e) {
-                        alert("Error al actualizar el stock");
-                    }
-                } else {
-                    alert("Por favor ingresa un número válido.");
-                }
-            }
-        }
-
-        // DESCUENTO AUTOMÁTICO AL PEDIR POR WHATSAPP
+        // PEDIDO Y DESCUENTO AUTOMÁTICO DE STOCK CON CLIENTE REGISTRADO
         window.orderProduct = async function(key, name, price, currentStock) {
             if (currentStock <= 0) return alert("Lo sentimos, este producto está agotado.");
+            
+            const clientName = loggedClient ? `${loggedClient.name} (CI: ${loggedClient.ci})` : 'Cliente General';
             
             const newStock = currentStock - 1;
             try {
@@ -475,17 +501,42 @@
                 const saleRef = push(ref(db, 'sales'));
                 await set(saleRef, {
                     date: new Date().toLocaleString(),
+                    client: clientName,
                     total: price,
                     items: `1x ${name}`
                 });
 
                 const phone = whatsappNumber;
-                const text = encodeURIComponent(`¡Hola! 👋 Deseo pedir el producto *${name}* por un valor de *$${price}* en Abasto Express.`);
+                const text = encodeURIComponent(`¡Hola! 👋 Soy *${clientName}*. Deseo pedir el producto *${name}* por un valor de *$${price}* en Abasto Express.`);
                 window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 
                 await loadStoreData();
             } catch (e) {
                 alert("Error al procesar el pedido");
+            }
+        }
+
+        window.adjustStock = async function(key, amount) {
+            const p = allProducts[key];
+            const currentStock = p.stock !== undefined ? p.stock : 10;
+            const newStock = Math.max(0, currentStock + amount);
+            try {
+                await update(ref(db, `products/${key}`), { stock: newStock });
+                await window.loadStoreData();
+            } catch (e) { alert("Error al actualizar el stock"); }
+        }
+
+        window.customAdjustStock = async function(key, currentStock) {
+            const input = prompt(`Stock actual: ${currentStock}\nIngresa la cantidad a sumar (ej: 10) o restar (ej: -5):`);
+            if(input !== null && input.trim() !== '') {
+                const val = parseInt(input);
+                if(!isNaN(val)) {
+                    const newStock = Math.max(0, currentStock + val);
+                    try {
+                        await update(ref(db, `products/${key}`), { stock: newStock });
+                        await window.loadStoreData();
+                    } catch (e) { alert("Error al actualizar el stock"); }
+                } else { alert("Ingresa un número válido."); }
             }
         }
 
@@ -511,6 +562,35 @@
             } else if (pin !== null) {
                 alert("Contraseña incorrecta");
             }
+        }
+
+        function openClientAuthModal() {
+            document.getElementById('client-auth-modal').classList.remove('hidden');
+        }
+
+        async function registerOrLoginClient() {
+            const name = document.getElementById('client-name').value.trim();
+            const ci = document.getElementById('client-ci').value.trim();
+            const pin = document.getElementById('client-pin').value.trim();
+
+            if(!name || !ci || !pin) return alert("Por favor completa todos los campos.");
+            if(pin.length !== 5) return alert("La clave debe ser exactamente de 5 dígitos.");
+
+            // Guardar o verificar en Firebase / LocalStorage
+            const clientData = { name, ci, pin };
+            localStorage.setItem('abasto_client', JSON.stringify(clientData));
+            window.loggedClient = clientData;
+            
+            document.getElementById('client-auth-modal').classList.add('hidden');
+            window.updateClientUI();
+            alert(`¡Bienvenido(a) ${name}! Ya estás registrado y listo para comprar.`);
+        }
+
+        function logoutClient() {
+            localStorage.removeItem('abasto_client');
+            window.loggedClient = null;
+            window.updateClientUI();
+            alert("Has cerrado sesión.");
         }
 
         function switchAdminTab(tab) {
@@ -564,9 +644,7 @@
                 document.getElementById('new-dept-name').value = '';
                 alert("¡Departamento agregado!");
                 await window.loadStoreData();
-            } else {
-                alert("Este departamento ya existe.");
-            }
+            } else { alert("Este departamento ya existe."); }
         }
 
         async function deleteDepartment(index) {
@@ -610,6 +688,9 @@
         }
 
         window.openAdminModal = openAdminModal;
+        window.openClientAuthModal = openClientAuthModal;
+        window.registerOrLoginClient = registerOrLoginClient;
+        window.logoutClient = logoutClient;
         window.switchAdminTab = switchAdminTab;
         window.saveAdminRate = saveAdminRate;
         window.saveAdminPhone = saveAdminPhone;
