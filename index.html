@@ -36,9 +36,9 @@
                     <span class="text-slate-400">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
                 </div>
-                <!-- BOTÓN DE CLIENTE (DISPARADOR FIJO) -->
+                <!-- BOTÓN DE CLIENTE DIRECTO -->
                 <div id="client-auth-container">
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 </div>
@@ -95,7 +95,7 @@
     <!-- BARRA DE CATEGORÍAS (DEPARTAMENTOS) -->
     <nav class="max-w-7xl mx-auto px-4 mt-6">
         <div id="categories-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition">Todos</button>
+            <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition cursor-pointer">Todos</button>
         </div>
     </nav>
 
@@ -116,7 +116,7 @@
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Registro de Cliente</h3>
-                <button onclick="closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
+                <button onclick="window.closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -147,7 +147,7 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave de Seguridad (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
-                <button onclick="registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Comprar</button>
+                <button onclick="window.registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Comprar</button>
             </div>
 
             <!-- VISTA DE PERFIL UNA VEZ REGISTRADO -->
@@ -168,8 +168,8 @@
                         <input type="text" id="client-location-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                 </div>
-                <button onclick="saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Datos</button>
-                <button onclick="logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
+                <button onclick="window.saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Datos</button>
+                <button onclick="window.logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
             </div>
         </div>
     </div>
@@ -369,6 +369,107 @@
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
         let cart = [];
 
+        // DECLARAR LAS FUNCIONES DE MODAL DE CLIENTE GLOBALMENTE EN WINDOW INMEDIATAMENTE
+        window.openClientAuthModal = function() {
+            const modal = document.getElementById('client-auth-modal');
+            const formView = document.getElementById('client-form-view');
+            const profileView = document.getElementById('client-profile-view');
+
+            if (loggedClient) {
+                formView.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                document.getElementById('profile-name-display').innerText = loggedClient.name;
+                document.getElementById('profile-ci-display').innerText = `Cédula: ${loggedClient.ci}`;
+                document.getElementById('profile-phone-display').innerText = `Teléfono: ${loggedClient.phone || 'No registrado'}`;
+                document.getElementById('client-photo-input').value = loggedClient.photo || '';
+                document.getElementById('client-location-input').value = loggedClient.location || '';
+                if(loggedClient.photo) {
+                    document.getElementById('profile-img-preview').src = loggedClient.photo;
+                }
+            } else {
+                formView.classList.remove('hidden');
+                profileView.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        window.closeClientAuthModal = function() {
+            document.getElementById('client-auth-modal').classList.add('hidden');
+        }
+
+        window.registerOrLoginClient = async function() {
+            const name = document.getElementById('client-name').value.trim();
+            const ci = document.getElementById('client-ci').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const photo = document.getElementById('client-photo').value.trim();
+            const location = document.getElementById('client-location').value.trim();
+            const pin = document.getElementById('client-pin').value.trim();
+
+            if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa todos los campos obligatorios.");
+            if(pin.length !== 5) return alert("La clave de seguridad debe ser exactamente de 5 dígitos.");
+
+            const clientsSnap = await window.get(window.ref(window.db, 'clients'));
+            let clientId = null;
+
+            if (clientsSnap.exists()) {
+                const clients = clientsSnap.val();
+                Object.keys(clients).forEach(id => {
+                    if (clients[id].ci === ci) {
+                        clientId = id;
+                    }
+                });
+            }
+
+            loggedClient = { name, ci, phone, pin, photo, location };
+            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
+
+            if (clientId) {
+                await window.update(window.ref(window.db, `clients/${clientId}`), loggedClient);
+            } else {
+                const newClientRef = window.push(window.ref(window.db, 'clients'));
+                await window.set(newClientRef, loggedClient);
+            }
+            
+            updateClientUI();
+            closeClientAuthModal();
+            alert(`¡Registro exitoso, ${name}! Ya puedes continuar con tu compra.`);
+            window.loadStoreData();
+        }
+
+        window.saveClientProfile = async function() {
+            const photo = document.getElementById('client-photo-input').value.trim();
+            const location = document.getElementById('client-location-input').value.trim();
+
+            if (loggedClient) {
+                loggedClient.photo = photo;
+                loggedClient.location = location;
+                localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
+
+                const clientsSnap = await window.get(window.ref(window.db, 'clients'));
+                if (clientsSnap.exists()) {
+                    const clients = clientsSnap.val();
+                    Object.keys(clients).forEach(async id => {
+                        if (clients[id].ci === loggedClient.ci) {
+                            await window.update(window.ref(window.db, `clients/${id}`), { photo, location });
+                        }
+                    });
+                }
+
+                updateClientUI();
+                alert("¡Perfil actualizado con éxito!");
+                closeClientAuthModal();
+                window.loadStoreData();
+            }
+        }
+
+        window.logoutClient = function() {
+            localStorage.removeItem('abasto_client');
+            loggedClient = null;
+            updateClientUI();
+            closeClientAuthModal();
+            alert("Has cerrado sesión.");
+        }
+
         async function initApp() {
             try {
                 const configRef = ref(db, 'config');
@@ -398,14 +499,14 @@
             const container = document.getElementById('client-auth-container');
             if (loggedClient) {
                 container.innerHTML = `
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-accent">
                         <span>${loggedClient.name}</span>
                     </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 `;
@@ -492,10 +593,9 @@
         window.addToCart = function(key, name, price, stock) {
             if (stock <= 0) return alert("Producto agotado.");
             
-            // Verificación automática de registro
             if (!loggedClient) {
                 alert("Para poder comprar y agregar productos al carrito, debes registrarte primero.");
-                openClientAuthModal();
+                window.openClientAuthModal();
                 return;
             }
 
@@ -523,7 +623,7 @@
         window.openCartModal = function() {
             if (!loggedClient) {
                 alert("Por favor, regístrate antes de ver tu carrito.");
-                openClientAuthModal();
+                window.openClientAuthModal();
                 return;
             }
 
@@ -566,7 +666,7 @@
             if (!loggedClient) {
                 alert("Por favor, completa tu registro.");
                 document.getElementById('cart-modal').classList.add('hidden');
-                openClientAuthModal();
+                window.openClientAuthModal();
                 return;
             }
             if (cart.length === 0) return alert("Tu carrito está vacío.");
@@ -591,7 +691,6 @@
                     itemsText += `• ${item.qty}x ${item.name} ($${sub.toFixed(2)})\n`;
                 }
 
-                // Registrar venta
                 const saleRef = push(ref(db, 'sales'));
                 await set(saleRef, {
                     date: new Date().toLocaleString(),
@@ -780,107 +879,6 @@
             } else if (pin !== null) { alert("Contraseña incorrecta"); }
         }
 
-        // FUNCIONES GLOBALES ASEGURADAS PARA ABRIR Y CERRAR EL MODAL DE CLIENTE
-        window.openClientAuthModal = function() {
-            const modal = document.getElementById('client-auth-modal');
-            const formView = document.getElementById('client-form-view');
-            const profileView = document.getElementById('client-profile-view');
-
-            if (loggedClient) {
-                formView.classList.add('hidden');
-                profileView.classList.remove('hidden');
-                document.getElementById('profile-name-display').innerText = loggedClient.name;
-                document.getElementById('profile-ci-display').innerText = `Cédula: ${loggedClient.ci}`;
-                document.getElementById('profile-phone-display').innerText = `Teléfono: ${loggedClient.phone || 'No registrado'}`;
-                document.getElementById('client-photo-input').value = loggedClient.photo || '';
-                document.getElementById('client-location-input').value = loggedClient.location || '';
-                if(loggedClient.photo) {
-                    document.getElementById('profile-img-preview').src = loggedClient.photo;
-                }
-            } else {
-                formView.classList.remove('hidden');
-                profileView.classList.add('hidden');
-            }
-            modal.classList.remove('hidden');
-        }
-
-        window.closeClientAuthModal = function() {
-            document.getElementById('client-auth-modal').classList.add('hidden');
-        }
-
-        async function registerOrLoginClient() {
-            const name = document.getElementById('client-name').value.trim();
-            const ci = document.getElementById('client-ci').value.trim();
-            const phone = document.getElementById('client-phone').value.trim();
-            const photo = document.getElementById('client-photo').value.trim();
-            const location = document.getElementById('client-location').value.trim();
-            const pin = document.getElementById('client-pin').value.trim();
-
-            if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa todos los campos obligatorios.");
-            if(pin.length !== 5) return alert("La clave de seguridad debe ser exactamente de 5 dígitos.");
-
-            const clientsSnap = await window.get(window.ref(window.db, 'clients'));
-            let clientId = null;
-
-            if (clientsSnap.exists()) {
-                const clients = clientsSnap.val();
-                Object.keys(clients).forEach(id => {
-                    if (clients[id].ci === ci) {
-                        clientId = id;
-                    }
-                });
-            }
-
-            loggedClient = { name, ci, phone, pin, photo, location };
-            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
-
-            if (clientId) {
-                await window.update(window.ref(window.db, `clients/${clientId}`), loggedClient);
-            } else {
-                const newClientRef = window.push(window.ref(window.db, 'clients'));
-                await window.set(newClientRef, loggedClient);
-            }
-            
-            updateClientUI();
-            closeClientAuthModal();
-            alert(`¡Registro exitoso, ${name}! Ya puedes continuar con tu compra.`);
-            window.loadStoreData();
-        }
-
-        async function saveClientProfile() {
-            const photo = document.getElementById('client-photo-input').value.trim();
-            const location = document.getElementById('client-location-input').value.trim();
-
-            if (loggedClient) {
-                loggedClient.photo = photo;
-                loggedClient.location = location;
-                localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
-
-                const clientsSnap = await window.get(window.ref(window.db, 'clients'));
-                if (clientsSnap.exists()) {
-                    const clients = clientsSnap.val();
-                    Object.keys(clients).forEach(async id => {
-                        if (clients[id].ci === loggedClient.ci) {
-                            await window.update(window.ref(window.db, `clients/${id}`), { photo, location });
-                        }
-                    });
-                }
-
-                updateClientUI();
-                alert("¡Perfil actualizado con éxito!");
-                closeClientAuthModal();
-                window.loadStoreData();
-            }
-        }
-
-        function logoutClient() {
-            localStorage.removeItem('abasto_client');
-            loggedClient = null;
-            updateClientUI();
-            closeClientAuthModal();
-            alert("Has cerrado sesión.");
-        }
-
         function switchAdminTab(tab) {
             ['config', 'departments', 'inventory', 'sales', 'clients'].forEach(t => {
                 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
@@ -969,9 +967,6 @@
         }
 
         window.openAdminModal = openAdminModal;
-        window.registerOrLoginClient = registerOrLoginClient;
-        window.saveClientProfile = saveClientProfile;
-        window.logoutClient = logoutClient;
         window.switchAdminTab = switchAdminTab;
         window.saveAdminRate = saveAdminRate;
         window.saveAdminPhone = saveAdminPhone;
