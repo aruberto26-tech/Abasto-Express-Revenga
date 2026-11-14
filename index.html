@@ -11,9 +11,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#065f46',
+                        primary: '#065f46', /* Verde esmeralda profundo de confianza */
                         secondary: '#064e3b',
-                        accent: '#f97316',
+                        accent: '#f97316', /* Naranja vibrante para comprar */
                         success: '#10b981'
                     }
                 }
@@ -22,9 +22,6 @@
     </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
 
@@ -40,8 +37,9 @@
                     <span class="text-emerald-200">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-amber-400">45.50</span> Bs/$
                 </div>
+                <!-- BOTÓN DE CLIENTE -->
                 <div id="client-auth-container">
-                    <button onclick="openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 </div>
@@ -71,6 +69,7 @@
                     </span>
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="¿Qué deseas comprar hoy?" class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
                 </div>
+                <!-- BOTÓN DEL CARRITO -->
                 <button onclick="openCartModal()" class="relative bg-accent hover:bg-orange-600 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center cursor-pointer font-bold">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
@@ -94,7 +93,7 @@
         </div>
     </section>
 
-    <!-- BARRA DE CATEGORÍAS -->
+    <!-- BARRA DE CATEGORÍAS (DEPARTAMENTOS) -->
     <nav class="max-w-7xl mx-auto px-4 mt-6">
         <div id="categories-container" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             <button onclick="filterCategory('Todos')" class="category-btn active px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white whitespace-nowrap shadow-sm transition cursor-pointer">Todos</button>
@@ -108,6 +107,7 @@
             <p class="text-slate-500 text-sm font-medium">Cargando inventario y departamentos...</p>
         </div>
 
+        <!-- SECCIÓN DE PRODUCTOS EN PROMOCIÓN (DESTACADOS ARRIBA) -->
         <div id="promos-section" class="space-y-3 hidden">
             <div class="flex items-center gap-2 border-b pb-2">
                 <i class="fa-solid fa-fire text-accent text-xl animate-bounce"></i>
@@ -116,28 +116,30 @@
             <div id="promos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
         </div>
 
+        <!-- SECCIÓN DE TODOS LOS PRODUCTOS -->
         <div class="space-y-3">
             <div id="catalog-title" class="flex items-center gap-2 border-b pb-2 hidden">
                 <i class="fa-solid fa-boxes-stacked text-primary text-lg"></i>
                 <h3 class="font-black text-lg text-slate-800">Catálogo General</h3>
             </div>
-            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
+                <!-- Productos dinámicos -->
+            </div>
         </div>
     </main>
 
-    <footer class="bg-secondary text-white py-6 mt-12 border-t border-emerald-900 text-center text-xs">
-        <p>Abasto Express &copy; 2026 - Todos los derechos reservados</p>
-    </footer>
-
-    <!-- MODAL CLIENTE -->
+    <!-- MODAL DE REGISTRO / PERFIL DE CLIENTE -->
     <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-primary mr-2"></i> Mi Cuenta</h3>
-                <button onclick="closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="window.closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
+            
             <div id="client-form-view" class="space-y-3">
-                <p class="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">👋 ¡Regístrate una sola vez para hacer tus compras desde casa!</p>
+                <p class="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">👋 ¡Regístrate una sola vez para poder hacer tus compras desde casa y recibirlas cómodamente!</p>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre y Apellido</label>
                     <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
@@ -151,8 +153,8 @@
                     <input type="text" id="client-phone" placeholder="Ej: 0412-5551234" class="w-full px-3 py-2 border rounded-xl text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto de Perfil (URL)</label>
-                    <input type="text" id="client-photo-url" placeholder="https://..." class="w-full px-3 py-2 border rounded-xl text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto de Perfil (Galería JPG / PNG)</label>
+                    <input type="file" id="client-photo-file" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-emerald-700 cursor-pointer">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Ubicación / Dirección de Entrega</label>
@@ -162,8 +164,10 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave de Seguridad (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
-                <button onclick="registerOrLoginClient()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro</button>
+                <button onclick="window.registerOrLoginClient()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Continuar</button>
             </div>
+
+            <!-- VISTA DE PERFIL UNA VEZ REGISTRADO -->
             <div id="client-profile-view" class="space-y-4 hidden text-center">
                 <div class="flex flex-col items-center">
                     <img id="profile-img-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-24 h-24 object-cover rounded-full shadow-md border-2 border-primary mb-2">
@@ -176,26 +180,28 @@
                         <input type="text" id="client-phone-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Foto (URL)</label>
-                        <input type="text" id="client-photo-input" class="w-full px-3 py-2 border rounded-xl text-sm">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Foto (JPG / PNG)</label>
+                        <input type="file" id="client-photo-file-update" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-emerald-700 cursor-pointer">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Ubicación</label>
                         <input type="text" id="client-location-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                 </div>
-                <button onclick="saveClientProfile()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Mis Datos</button>
-                <button onclick="logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
+                <button onclick="window.saveClientProfile()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Mis Datos</button>
+                <button onclick="window.logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CARRITO -->
+    <!-- MODAL DEL CARRITO DE COMPRAS -->
     <div id="cart-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-cart-shopping text-accent mr-2"></i> Tu Carrito de Compras</h3>
-                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
             <div id="cart-items-container" class="overflow-y-auto flex-grow space-y-3 mb-4"></div>
             <div class="border-t pt-4 space-y-3">
@@ -210,12 +216,14 @@
         </div>
     </div>
 
-    <!-- MODAL ADMIN -->
+    <!-- MODAL MODO ADMIN (GESTIÓN, CAJA Y ESTADÍSTICAS) -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
             <div class="p-5 bg-secondary text-white flex items-center justify-between">
                 <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-amber-400 mr-2"></i> Panel de Administración y Caja</h3>
-                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
             
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-2 overflow-x-auto">
@@ -226,12 +234,13 @@
                 <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Historial Ventas</button>
                 <button onclick="switchAdminTab('closing')" id="tab-btn-closing" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">📊 Cierre Diario</button>
                 <button onclick="switchAdminTab('stats')" id="tab-btn-stats" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">📈 Estadísticas y Ganancias</button>
+                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Clientes</button>
             </div>
 
             <div class="p-6 overflow-y-auto flex-grow space-y-6">
-                <!-- 1. CONFIG -->
+                <!-- 1. CONFIGURACIÓN -->
                 <div id="admin-tab-config" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Tasa del Dólar BCV (Bs/$)</label>
                             <div class="flex gap-2">
@@ -246,6 +255,13 @@
                                 <button onclick="saveAdminPhone()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">Guardar</button>
                             </div>
                         </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nueva Contraseña Admin</label>
+                            <div class="flex gap-2">
+                                <input type="password" id="admin-pass-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Nueva clave">
+                                <button onclick="saveAdminPassword()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">Cambiar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -254,45 +270,43 @@
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-folder-plus text-primary mr-1"></i> Agregar Nuevo Departamento</h4>
                         <div class="flex gap-2">
-                            <input type="text" id="new-dept-name" placeholder="Ej: Bebidas, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
+                            <input type="text" id="new-dept-name" placeholder="Ej: Bebidas y snacks, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
                             <button onclick="addDepartment()" class="bg-accent text-white font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap cursor-pointer">Crear</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 border-b"><th class="p-3">Departamento / Categoría</th><th class="p-3 text-center">Acciones</th></tr>
+                                <tr class="bg-slate-100 text-slate-700 border-b">
+                                    <th class="p-3">Departamento / Categoría</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
                             </thead>
                             <tbody id="admin-dept-table"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 3. INVENTARIO -->
+                <!-- 3. INVENTARIO, PRECIOS, PROMOCIONES Y EDICIÓN -->
                 <div id="admin-tab-inventory" class="space-y-4 hidden">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 id="form-product-title" class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-box text-primary mr-1"></i> Registrar o Editar Producto</h4>
                         <input type="hidden" id="edit-prod-key" value="">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                             <input type="text" id="prod-name" placeholder="Nombre del producto" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-cost" step="0.01" placeholder="Costo ($)" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-price" step="0.01" placeholder="Precio Detal ($)" class="px-3 py-2 border rounded-xl text-sm">
-                            
-                            <input type="number" id="prod-price-mayor" step="0.01" placeholder="Precio Mayor ($) Opcional" class="px-3 py-2 border rounded-xl text-sm">
-                            <input type="number" id="prod-min-mayor" placeholder="A partir de cuántas unidades (Mayor)" class="px-3 py-2 border rounded-xl text-sm">
-                            
-                            <input type="number" id="prod-price-gran-mayor" step="0.01" placeholder="Precio Gran Mayor ($) Opcional" class="px-3 py-2 border rounded-xl text-sm">
-                            <input type="number" id="prod-min-gran-mayor" placeholder="A partir de cuántas unidades (Gran Mayor)" class="px-3 py-2 border rounded-xl text-sm">
-                            
+                            <input type="number" id="prod-price-mayor" step="0.01" placeholder="Precio Mayor ($)" class="px-3 py-2 border rounded-xl text-sm">
+                            <input type="number" id="prod-price-gran-mayor" step="0.01" placeholder="Precio Gran Mayor ($)" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-stock" placeholder="Stock inicial" class="px-3 py-2 border rounded-xl text-sm">
                             <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white"></select>
+                            <input type="text" id="prod-image" placeholder="URL de la foto" class="px-3 py-2 border rounded-xl text-sm">
                         </div>
-                        <div class="mb-3">
-                            <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="w-full px-3 py-2 border rounded-xl text-sm">
-                        </div>
-                        <div class="flex items-center gap-2 mb-3 bg-amber-50 p-3 rounded-xl border border-amber-200">
-                            <input type="checkbox" id="prod-is-promo" class="w-4 h-4 accent-accent rounded">
-                            <label for="prod-is-promo" class="font-bold text-amber-900 text-sm cursor-pointer">🔥 Marcar como producto en Promoción</label>
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-3 bg-amber-50 p-3 rounded-xl border border-amber-200">
+                            <label class="flex items-center gap-2 cursor-pointer font-bold text-amber-900 text-sm">
+                                <input type="checkbox" id="prod-is-promo" class="w-4 h-4 accent-accent rounded">
+                                🔥 Marcar como producto en Promoción (Aparecerá destacado arriba)
+                            </label>
                         </div>
                         <div class="flex gap-2">
                             <button onclick="saveProduct()" id="btn-save-prod" class="bg-accent text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-orange-600 cursor-pointer">Guardar Producto</button>
@@ -309,6 +323,7 @@
                                     <th class="p-3">Mayor / Gran Mayor</th>
                                     <th class="p-3">Promo?</th>
                                     <th class="p-3">Stock</th>
+                                    <th class="p-3 text-center">Ajustar</th>
                                     <th class="p-3 text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -317,28 +332,34 @@
                     </div>
                 </div>
 
-                <!-- 4. POS -->
+                <!-- 4. CAJA LOCAL EXCLUSIVA PARA EL ADMINISTRADOR (TIENDA FÍSICA) -->
                 <div id="admin-tab-pos" class="space-y-4 hidden">
                     <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
-                        <h4 class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-cash-register mr-1"></i> Caja Registradora Presencial</h4>
+                        <h4 class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-cash-register mr-1"></i> Caja Registradora Presencial (Precios Automáticos por Cantidad)</h4>
+                        <p class="text-xs text-amber-800">Al ingresar la cantidad, el sistema aplicará automáticamente el precio de Detal, Mayor o Gran Mayor configurado.</p>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-3">
                             <label class="block text-xs font-semibold text-slate-700">Seleccionar Producto:</label>
                             <select id="pos-product-select" class="w-full px-3 py-2 border rounded-xl text-sm bg-white"></select>
-                            <label class="block text-xs font-semibold text-slate-700">Cantidad:</label>
+                            <label class="block text-xs font-semibold text-slate-700">Cantidad que lleva:</label>
                             <input type="number" id="pos-qty-input" value="1" min="1" class="w-full px-3 py-2 border rounded-xl text-sm">
-                            <label class="block text-xs font-semibold text-slate-700">Cliente en Tienda:</label>
+                            <label class="block text-xs font-semibold text-slate-700">Nombre del Cliente en Tienda:</label>
                             <input type="text" id="pos-client-name" value="Cliente Mostrador" class="w-full px-3 py-2 border rounded-xl text-sm">
-                            <button onclick="addPosItem()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm cursor-pointer shadow">Añadir a la Cuenta</button>
+                            <button onclick="addPosItem()" class="w-full bg-primary hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm cursor-pointer shadow">Añadir a la Cuenta del Cliente</button>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl border flex flex-col justify-between">
                             <div>
-                                <h5 class="font-bold text-slate-800 border-b pb-2 mb-2">Cuenta Actual</h5>
-                                <div id="pos-cart-items" class="space-y-2 max-h-48 overflow-y-auto text-sm"><p class="text-slate-400 text-xs">No hay productos agregados.</p></div>
+                                <h5 class="font-bold text-slate-800 border-b pb-2 mb-2">Cuenta Actual en Caja</h5>
+                                <div id="pos-cart-items" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+                                    <p class="text-slate-400 text-xs">No hay productos agregados a la caja.</p>
+                                </div>
                             </div>
                             <div class="border-t pt-3 mt-4">
-                                <div class="flex justify-between font-black text-base mb-3"><span>Total a Cobrar:</span><span id="pos-total-price" class="text-accent text-xl">$0.00</span></div>
+                                <div class="flex justify-between font-black text-base mb-3">
+                                    <span>Total a Cobrar:</span>
+                                    <span id="pos-total-price" class="text-accent text-xl">$0.00</span>
+                                </div>
                                 <button onclick="checkoutPosSale()" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-sm cursor-pointer shadow">Registrar Venta y Descontar Stock</button>
                             </div>
                         </div>
@@ -350,489 +371,1036 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 border-b"><th class="p-3">Fecha / ID</th><th class="p-3">Tipo / Cliente</th><th class="p-3">Ubicación</th><th class="p-3">Total ($)</th></tr>
+                                <tr class="bg-slate-100 text-slate-700 border-b">
+                                    <th class="p-3">Fecha / ID</th>
+                                    <th class="p-3">Tipo / Cliente</th>
+                                    <th class="p-3">Ubicación</th>
+                                    <th class="p-3">Total ($)</th>
+                                    <th class="p-3">Detalle</th>
+                                </tr>
                             </thead>
                             <tbody id="admin-sales-table"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- 6. CIERRE -->
+                <!-- 6. CIERRE DIARIO -->
                 <div id="admin-tab-closing" class="space-y-4 hidden">
                     <div class="bg-gradient-to-r from-emerald-800 to-primary text-white p-6 rounded-2xl shadow-md">
                         <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-chart-line text-amber-400 mr-2"></i> Reporte de Cierre Diario</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                            <div class="bg-white/10 p-4 rounded-xl border border-white/20"><p class="text-xs text-emerald-200">Total Transacciones Hoy</p><p id="closing-count" class="text-2xl font-black">0</p></div>
-                            <div class="bg-white/10 p-4 rounded-xl border border-white/20"><p class="text-xs text-emerald-200">Total Ingresos del Día</p><p id="closing-total" class="text-2xl font-black text-amber-400">$0.00</p></div>
+                        <p class="text-xs text-emerald-100 mb-4">Resumen consolidado de todas las ventas del día (Pedidos web + Ventas presenciales en caja).</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                                <p class="text-xs text-emerald-200">Total Transacciones Hoy</p>
+                                <p id="closing-count" class="text-2xl font-black">0</p>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                                <p class="text-xs text-emerald-200">Total Ingresos del Día</p>
+                                <p id="closing-total" class="text-2xl font-black text-amber-400">$0.00</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 7. STATS -->
+                <!-- 7. ESTADÍSTICAS Y MÁRGENES DE GANANCIA -->
                 <div id="admin-tab-stats" class="space-y-6 hidden">
+                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+                        <h4 class="font-bold text-emerald-900 mb-1"><i class="fa-solid fa-chart-pie mr-1"></i> Reporte Financiero y Estadísticas</h4>
+                        <p class="text-xs text-emerald-700">Analiza el rendimiento de tu negocio con ingresos, costos y márgenes de ganancia organizados por periodos específicos.</p>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-accent"><h5 class="font-bold text-slate-800 mb-2">Ventas Totales</h5><span id="stat-week-sales" class="text-2xl font-black text-primary">$0.00</span></div>
-                        <div class="bg-white p-5 rounded-2xl border shadow-sm border-t-4 border-t-success"><h5 class="font-bold text-slate-800 mb-2">Ganancia Neta Estimada</h5><span id="stat-week-profit" class="text-2xl font-black text-success">$0.00</span></div>
+                        <!-- SEMANAL -->
+                        <div class="bg-white p-5 rounded-2xl border shadow-sm space-y-3 border-t-4 border-t-accent">
+                            <div class="flex justify-between items-center">
+                                <h5 class="font-bold text-slate-800"><i class="fa-solid fa-calendar-week text-accent mr-1"></i> Ventas Semanales</h5>
+                                <span class="text-xs bg-orange-50 text-orange-700 font-semibold px-2 py-0.5 rounded-full">Últimos 7 días</span>
+                            </div>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between text-slate-600"><span>Ventas Totales:</span><span id="stat-week-sales" class="font-bold text-slate-800">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600"><span>Costo Mercancía:</span><span id="stat-week-cost" class="font-semibold">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 pt-2 border-t font-bold"><span>Ganancia Neta:</span><span id="stat-week-profit" class="text-emerald-600">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 text-xs"><span>Margen de Ganancia:</span><span id="stat-week-margin" class="font-bold text-accent">0%</span></div>
+                            </div>
+                        </div>
+
+                        <!-- MENSUAL -->
+                        <div class="bg-white p-5 rounded-2xl border shadow-sm space-y-3 border-t-4 border-t-primary">
+                            <div class="flex justify-between items-center">
+                                <h5 class="font-bold text-slate-800"><i class="fa-solid fa-calendar-days text-primary mr-1"></i> Ventas Mensuales</h5>
+                                <span class="text-xs bg-emerald-50 text-primary font-semibold px-2 py-0.5 rounded-full">Mes Actual</span>
+                            </div>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between text-slate-600"><span>Ventas Totales:</span><span id="stat-month-sales" class="font-bold text-slate-800">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600"><span>Costo Mercancía:</span><span id="stat-month-cost" class="font-semibold">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 pt-2 border-t font-bold"><span>Ganancia Neta:</span><span id="stat-month-profit" class="text-emerald-600">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 text-xs"><span>Margen de Ganancia:</span><span id="stat-month-margin" class="font-bold text-accent">0%</span></div>
+                            </div>
+                        </div>
+
+                        <!-- ANUAL -->
+                        <div class="bg-white p-5 rounded-2xl border shadow-sm space-y-3 border-t-4 border-t-slate-800">
+                            <div class="flex justify-between items-center">
+                                <h5 class="font-bold text-slate-800"><i class="fa-solid fa-calendar text-slate-800 mr-1"></i> Ventas Anuales</h5>
+                                <span class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-full">Año Actual</span>
+                            </div>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between text-slate-600"><span>Ventas Totales:</span><span id="stat-year-sales" class="font-bold text-slate-800">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600"><span>Costo Mercancía:</span><span id="stat-year-cost" class="font-semibold">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 pt-2 border-t font-bold"><span>Ganancia Neta:</span><span id="stat-year-profit" class="text-emerald-600">$0.00</span></div>
+                                <div class="flex justify-between text-slate-600 text-xs"><span>Margen de Ganancia:</span><span id="stat-year-margin" class="font-bold text-accent">0%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. CLIENTES -->
+                <div id="admin-tab-clients" class="space-y-4 hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 border-b">
+                                    <th class="p-3">Foto</th>
+                                    <th class="p-3">Nombre y Apellido</th>
+                                    <th class="p-3">Cédula (CI)</th>
+                                    <th class="p-3">Teléfono</th>
+                                    <th class="p-3">Ubicación / Dirección</th>
+                                    <th class="p-3 text-center">Total Compras</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-clients-table"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT -->
-    <script>
-        const firebaseConfig = { databaseURL: "https://abasto-express-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
+    <!-- SCRIPT DE FIREBASE Y LÓGICA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        let products = {};
-        let categories = ['Víveres', 'Bebidas', 'Limpieza'];
-        let cart = [];
-        let posCart = [];
-        let salesHistory = {};
-        let storeConfig = { rate: 45.50, phone: "584125551234" };
-        let currentCategory = 'Todos';
-        let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
-
-        window.onload = function() {
-            setTimeout(() => {
-                const spinner = document.getElementById('loading-spinner');
-                if(spinner) spinner.classList.add('hidden');
-            }, 1000);
-
-            db.ref('config').on('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    storeConfig = data;
-                    document.getElementById('top-rate-display').innerText = Number(storeConfig.rate).toFixed(2);
-                    document.getElementById('admin-rate-input').value = storeConfig.rate;
-                    document.getElementById('admin-phone-input').value = storeConfig.phone || '';
-                }
-            });
-
-            db.ref('categories').on('value', snapshot => {
-                const data = snapshot.val();
-                if (data) categories = Object.values(data);
-                renderCategories();
-                renderCategorySelects();
-                renderDeptTable();
-            });
-
-            db.ref('products').on('value', snapshot => {
-                products = snapshot.val() || {};
-                renderProducts();
-                renderInventoryTable();
-                renderPosSelect();
-                const spinner = document.getElementById('loading-spinner');
-                if(spinner) spinner.classList.add('hidden');
-            });
-
-            db.ref('sales').on('value', snapshot => {
-                salesHistory = snapshot.val() || {};
-                renderSalesTable();
-                updateStatsAndClosing();
-            });
-
-            updateClientAuthUI();
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDVvmv4IMKVqw4dTEVuKfRddkmZHvTozU",
+            authDomain: "abasto-express-revenga.firebaseapp.com",
+            databaseURL: "https://abasto-express-revenga-default-rtdb.firebaseio.com",
+            projectId: "abasto-express-revenga",
+            storageBucket: "abasto-express-revenga.firebasestorage.app",
+            messagingSenderId: "949998603525",
+            appId: "1:949998603525:web:3d17f8878cec631291bb6c",
+            measurementId: "G-FTGBP8J3YH"
         };
 
-        function renderCategories() {
-            const container = document.getElementById('categories-container');
-            if(!container) return;
-            container.innerHTML = `<button onclick="filterCategory('Todos')" class="category-btn ${currentCategory === 'Todos' ? 'active bg-primary text-white' : 'bg-white text-slate-700'} px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition cursor-pointer">Todos</button>`;
-            categories.forEach(cat => {
-                container.innerHTML += `<button onclick="filterCategory('${cat}')" class="category-btn ${currentCategory === cat ? 'active bg-primary text-white' : 'bg-white text-slate-700'} px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition cursor-pointer">${cat}</button>`;
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        window.db = db;
+        window.ref = ref;
+        window.get = get;
+        window.set = set;
+        window.push = push;
+        window.remove = remove;
+        window.update = update;
+
+        let currentAdminPin = "Abasto2026*";
+        let whatsappNumber = "584125551234";
+        let currentBcvRate = 45.50;
+        let allProducts = {};
+        let allDepartments = ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
+        let currentCategory = 'Todos';
+        let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
+        let cart = [];
+        let posCart = [];
+
+        function convertFileToBase64(fileInputId) {
+            return new Promise((resolve) => {
+                const fileInput = document.getElementById(fileInputId);
+                if (fileInput && fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) { resolve(e.target.result); };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else { resolve(null); }
             });
         }
 
-        function filterCategory(cat) {
-            currentCategory = cat;
-            renderCategories();
-            renderProducts();
-        }
+        window.openClientAuthModal = function() {
+            const modal = document.getElementById('client-auth-modal');
+            const formView = document.getElementById('client-form-view');
+            const profileView = document.getElementById('client-profile-view');
 
-        function renderCategorySelects() {
-            const selectProd = document.getElementById('prod-category');
-            if(!selectProd) return;
-            selectProd.innerHTML = '';
-            categories.forEach(cat => {
-                selectProd.innerHTML += `<option value="${cat}">${cat}</option>`;
-            });
-        }
-
-        function renderDeptTable() {
-            const tbody = document.getElementById('admin-dept-table');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            db.ref('categories').once('value', snapshot => {
-                const data = snapshot.val();
-                if(data) {
-                    Object.keys(data).forEach(key => {
-                        tbody.innerHTML += `
-                            <tr class="border-b">
-                                <td class="p-3 font-medium">${data[key]}</td>
-                                <td class="p-3 text-center">
-                                    <button onclick="deleteDepartment('${key}')" class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-trash"></i> Eliminar</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-            });
-        }
-
-        function addDepartment() {
-            const name = document.getElementById('new-dept-name').value.trim();
-            if (!name) return;
-            db.ref('categories').push(name, () => {
-                document.getElementById('new-dept-name').value = '';
-                renderDeptTable();
-            });
-        }
-
-        function deleteDepartment(key) {
-            if (confirm('¿Eliminar este departamento?')) {
-                db.ref('categories/' + key).remove(() => renderDeptTable());
-            }
-        }
-
-        function renderProducts() {
-            const container = document.getElementById('products-container');
-            const promosContainer = document.getElementById('promos-container');
-            const promosSection = document.getElementById('promos-section');
-            const catalogTitle = document.getElementById('catalog-title');
-            
-            if(!container || !promosContainer) return;
-
-            container.innerHTML = '';
-            promosContainer.innerHTML = '';
-            
-            let hasPromos = false;
-            let hasCatalog = false;
-            const searchInput = document.getElementById('search-input');
-            const search = searchInput ? searchInput.value.toLowerCase() : '';
-            const rate = Number(storeConfig.rate) || 45.50;
-
-            Object.keys(products).forEach(key => {
-                const p = products[key];
-                if (currentCategory !== 'Todos' && p.category !== currentCategory) return;
-                if (search && !p.name.toLowerCase().includes(search)) return;
-
-                const priceBs = (p.price * rate).toFixed(2);
-                
-                // Mostrar Mayor solo si tiene precio registrado
-                let mayorHtml = '';
-                if (p.priceMayor && Number(p.priceMayor) > 0) {
-                    const mayorBs = (Number(p.priceMayor) * rate).toFixed(2);
-                    const minMayorTxt = p.minMayor ? ` (a partir de ${p.minMayor} un.)` : '';
-                    mayorHtml = `<div class="flex justify-between text-xs text-slate-500"><span>Mayor${minMayorTxt}:</span><span class="font-semibold text-slate-700">$${Number(p.priceMayor).toFixed(2)} (Bs ${mayorBs})</span></div>`;
-                }
-
-                // Mostrar Gran Mayor solo si tiene precio registrado
-                let granMayorHtml = '';
-                if (p.priceGranMayor && Number(p.priceGranMayor) > 0) {
-                    const granMayorBs = (Number(p.priceGranMayor) * rate).toFixed(2);
-                    const minGranMayorTxt = p.minGranMayor ? ` (a partir de ${p.minGranMayor} un.)` : '';
-                    granMayorHtml = `<div class="flex justify-between text-xs text-slate-500"><span>Gran Mayor${minGranMayorTxt}:</span><span class="font-semibold text-slate-700">$${Number(p.priceGranMayor).toFixed(2)} (Bs ${granMayorBs})</span></div>`;
-                }
-
-                const cardHtml = `
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between">
-                        <img src="${p.image || 'https://via.placeholder.com/300'}" class="h-40 w-full object-cover">
-                        <div class="p-4 space-y-2">
-                            <span class="text-xs bg-emerald-50 text-primary font-bold px-2 py-0.5 rounded-full">${p.category || 'General'}</span>
-                            <h4 class="font-bold text-slate-800 text-sm">${p.name}</h4>
-                            <div class="bg-slate-50 p-2.5 rounded-xl space-y-1">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-slate-600 font-medium">Detal:</span>
-                                    <span class="font-bold text-primary">$${Number(p.price).toFixed(2)} / Bs ${priceBs}</span>
-                                </div>
-                                ${mayorHtml}
-                                ${granMayorHtml}
-                            </div>
-                            <p class="text-xs text-slate-400">Stock disponible: ${p.stock}</p>
-                            <button onclick="addToCart('${key}')" class="w-full bg-accent hover:bg-orange-600 text-white font-bold py-2 rounded-xl text-xs transition shadow cursor-pointer mt-2">Agregar al Carrito</button>
-                        </div>
-                    </div>
-                `;
-
-                if (p.isPromo) {
-                    hasPromos = true;
-                    promosContainer.innerHTML += cardHtml;
-                } else {
-                    hasCatalog = true;
-                    container.innerHTML += cardHtml;
-                }
-            });
-
-            if (promosSection) { if (hasPromos) promosSection.classList.remove('hidden'); else promosSection.classList.add('hidden'); }
-            if (catalogTitle && container) {
-                if (hasCatalog) { catalogTitle.classList.remove('hidden'); container.classList.remove('hidden'); }
-                else { catalogTitle.classList.add('hidden'); container.classList.add('hidden'); }
-            }
-        }
-
-        function filterProducts() { renderProducts(); }
-
-        // --- CARRITO ---
-        function addToCart(key) {
-            const p = products[key];
-            if (!p || p.stock <= 0) { alert('Producto agotado'); return; }
-            const existing = cart.find(item => item.key === key);
-            if (existing) {
-                if (existing.qty < p.stock) existing.qty++; else alert('No hay más stock disponible');
-            } else {
-                cart.push({ key, name: p.name, price: p.price, qty: 1 });
-            }
-            updateCartBadge();
-        }
-
-        function updateCartBadge() {
-            const badge = document.getElementById('cart-badge');
-            if(badge) badge.innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-        }
-
-        function openCartModal() {
-            const container = document.getElementById('cart-items-container');
-            if(!container) return;
-            container.innerHTML = '';
-            if (cart.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 text-center py-6 text-sm">Tu carrito está vacío.</p>`;
-                document.getElementById('cart-total-price').innerText = '$0.00';
-                document.getElementById('cart-modal').classList.remove('hidden');
-                return;
-            }
-
-            let total = 0;
-            cart.forEach((item, index) => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                container.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border">
-                        <div>
-                            <h5 class="font-bold text-sm">${item.name}</h5>
-                            <p class="text-xs text-slate-500">$${item.price.toFixed(2)} x ${item.qty}</p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="font-bold text-sm">$${subtotal.toFixed(2)}</span>
-                            <button onclick="cart.splice(${index},1); openCartModal(); updateCartBadge();" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('cart-total-price').innerText = `$${total.toFixed(2)}`;
-            document.getElementById('cart-modal').classList.remove('hidden');
-        }
-
-        function checkoutWhatsApp() {
-            if (!loggedClient) {
-                alert('Por favor regístrate o inicia sesión en "Mi Cuenta" antes de enviar tu pedido.');
-                document.getElementById('cart-modal').classList.add('hidden');
-                openClientAuthModal();
-                return;
-            }
-            if (cart.length === 0) return;
-
-            const rate = Number(storeConfig.rate) || 45.50;
-            let text = `*📦 NUEVO PEDIDO - ABASTO EXPRESS*%0A`;
-            text += `👤 *Cliente:* ${loggedClient.name}%0A`;
-            text += `🪪 *Cédula:* ${loggedClient.ci}%0A`;
-            text += `📞 *Teléfono:* ${loggedClient.phone}%0A`;
-            text += `📍 *Ubicación:* ${loggedClient.location}%0A%0A*Detalle del pedido:*%0A`;
-
-            let totalUSD = 0;
-            cart.forEach(item => {
-                const sub = item.price * item.qty;
-                totalUSD += sub;
-                text += `- ${item.qty}x ${item.name} ($${sub.toFixed(2)})%0A`;
-            });
-
-            const totalBs = (totalUSD * rate).toFixed(2);
-            text += `%0A💰 *Total:* $${totalUSD.toFixed(2)} (Bs ${totalBs})`;
-
-            cart.forEach(item => {
-                const prod = products[item.key];
-                if (prod) {
-                    db.ref('products/' + item.key).update({ stock: prod.stock - item.qty });
-                }
-            });
-
-            db.ref('sales').push({
-                date: new Date().toISOString(),
-                type: 'Pedido Web',
-                clientName: loggedClient.name,
-                clientCi: loggedClient.ci,
-                location: loggedClient.location,
-                items: cart,
-                totalUSD
-            });
-
-            cart = [];
-            updateCartBadge();
-            document.getElementById('cart-modal').classList.add('hidden');
-            const phone = storeConfig.phone || '584125551234';
-            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
-        }
-
-        // --- CLIENTE AUTH ---
-        function openClientAuthModal() {
             if (loggedClient) {
-                document.getElementById('client-form-view').classList.add('hidden');
-                document.getElementById('client-profile-view').classList.remove('hidden');
+                formView.classList.add('hidden');
+                profileView.classList.remove('hidden');
                 document.getElementById('profile-name-display').innerText = loggedClient.name;
                 document.getElementById('profile-ci-display').innerText = `Cédula: ${loggedClient.ci}`;
-                document.getElementById('profile-img-preview').src = loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
-                document.getElementById('client-phone-input').value = loggedClient.phone;
-                document.getElementById('client-location-input').value = loggedClient.location;
-                document.getElementById('client-photo-input').value = loggedClient.photo || '';
+                document.getElementById('client-phone-input').value = loggedClient.phone || '';
+                document.getElementById('client-location-input').value = loggedClient.location || '';
+                if(loggedClient.photo) {
+                    document.getElementById('profile-img-preview').src = loggedClient.photo;
+                }
             } else {
-                document.getElementById('client-form-view').classList.remove('hidden');
-                document.getElementById('client-profile-view').classList.add('hidden');
+                formView.classList.remove('hidden');
+                profileView.classList.add('hidden');
             }
-            document.getElementById('client-auth-modal').classList.remove('hidden');
+            modal.classList.remove('hidden');
         }
 
-        function closeClientAuthModal() { document.getElementById('client-auth-modal').classList.add('hidden'); }
+        window.closeClientAuthModal = function() {
+            document.getElementById('client-auth-modal').classList.add('hidden');
+        }
 
-        function registerOrLoginClient() {
+        window.registerOrLoginClient = async function() {
             const name = document.getElementById('client-name').value.trim();
             const ci = document.getElementById('client-ci').value.trim();
             const phone = document.getElementById('client-phone').value.trim();
             const location = document.getElementById('client-location').value.trim();
             const pin = document.getElementById('client-pin').value.trim();
-            const photo = document.getElementById('client-photo-url').value.trim();
 
-            if (!name || !ci || !phone || !location || pin.length !== 5) {
-                alert('Complete todos los datos correctamente (Clave de 5 dígitos).');
+            if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa todos los campos obligatorios.");
+            if(pin.length !== 5) return alert("La clave de seguridad debe ser exactamente de 5 dígitos.");
+
+            let photoBase64 = await convertFileToBase64('client-photo-file');
+
+            const clientsSnap = await window.get(window.ref(window.db, 'clients'));
+            let clientId = null;
+            let existingPhoto = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+
+            if (clientsSnap.exists()) {
+                const clients = clientsSnap.val();
+                Object.keys(clients).forEach(id => {
+                    if (clients[id].ci === ci) {
+                        clientId = id;
+                        if(clients[id].photo) existingPhoto = clients[id].photo;
+                    }
+                });
+            }
+
+            if (!photoBase64) photoBase64 = existingPhoto;
+
+            loggedClient = { name, ci, phone, pin, photo: photoBase64, location };
+            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
+
+            if (clientId) {
+                await window.update(window.ref(window.db, `clients/${clientId}`), loggedClient);
+            } else {
+                const newClientRef = window.push(window.ref(window.db, 'clients'));
+                await window.set(newClientRef, loggedClient);
+            }
+            
+            updateClientUI();
+            closeClientAuthModal();
+            alert(`¡Bienvenido(a) ${name}! Ya puedes hacer tus compras desde casa.`);
+            window.loadStoreData();
+        }
+
+        window.saveClientProfile = async function() {
+            const phone = document.getElementById('client-phone-input').value.trim();
+            const location = document.getElementById('client-location-input').value.trim();
+            let newPhoto = await convertFileToBase64('client-photo-file-update');
+
+            if (loggedClient) {
+                if (newPhoto) loggedClient.photo = newPhoto;
+                loggedClient.phone = phone;
+                loggedClient.location = location;
+                localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
+
+                const clientsSnap = await window.get(window.ref(window.db, 'clients'));
+                if (clientsSnap.exists()) {
+                    const clients = clientsSnap.val();
+                    Object.keys(clients).forEach(async id => {
+                        if (clients[id].ci === loggedClient.ci) {
+                            let updateData = { phone, location };
+                            if (newPhoto) updateData.photo = newPhoto;
+                            await window.update(window.ref(window.db, `clients/${id}`), updateData);
+                        }
+                    });
+                }
+
+                updateClientUI();
+                alert("¡Perfil actualizado con éxito!");
+                closeClientAuthModal();
+                window.loadStoreData();
+            }
+        }
+
+        window.logoutClient = function() {
+            localStorage.removeItem('abasto_client');
+            loggedClient = null;
+            updateClientUI();
+            closeClientAuthModal();
+            alert("Has cerrado sesión.");
+        }
+
+        async function initApp() {
+            try {
+                const configRef = ref(db, 'config');
+                const snapshot = await get(configRef);
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if (data.bcvRate) {
+                        currentBcvRate = parseFloat(data.bcvRate);
+                        document.getElementById('top-rate-display').innerText = data.bcvRate;
+                        document.getElementById('admin-rate-input').value = data.bcvRate;
+                    }
+                    if (data.adminPin) currentAdminPin = data.adminPin;
+                    if (data.whatsappPhone) {
+                        whatsappNumber = data.whatsappPhone;
+                        document.getElementById('admin-phone-input').value = whatsappNumber;
+                    }
+                    if (data.departments) allDepartments = data.departments;
+                }
+                window.currentAdminPin = currentAdminPin;
+                updateClientUI();
+                await loadStoreData();
+            } catch (error) {
+                console.error("Error al conectar con Firebase:", error);
+            }
+        }
+
+        window.updateClientUI = function() {
+            const container = document.getElementById('client-auth-container');
+            if (loggedClient) {
+                container.innerHTML = `
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
+                        <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-amber-400">
+                        <span>${loggedClient.name}</span>
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="window.openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer">
+                        <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
+                    </button>
+                `;
+            }
+        }
+
+        async function loadStoreData() {
+            const prodRef = ref(db, 'products');
+            const prodSnap = await get(prodRef);
+            allProducts = prodSnap.exists() ? prodSnap.val() : {};
+
+            renderCategories();
+            renderProducts();
+            renderAdminInventory();
+            renderAdminDepartments();
+            renderPosProducts();
+            loadSales();
+            loadClientsData();
+        }
+
+        window.loadStoreData = loadStoreData;
+
+        window.renderCategories = function() {
+            const container = document.getElementById('categories-container');
+            const selectEl = document.getElementById('prod-category');
+            
+            container.innerHTML = `<button onclick="filterCategory('Todos')" class="category-btn ${currentCategory === 'Todos' ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition cursor-pointer">Todos</button>`;
+            selectEl.innerHTML = '';
+
+            allDepartments.forEach(dept => {
+                const isActive = currentCategory === dept;
+                container.innerHTML += `<button onclick="filterCategory('${dept}')" class="category-btn ${isActive ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition cursor-pointer">${dept}</button>`;
+                selectEl.innerHTML += `<option value="${dept}">${dept}</option>`;
+            });
+        }
+
+        window.renderProducts = function() {
+            const promosContainer = document.getElementById('promos-container');
+            const promosSection = document.getElementById('promos-section');
+            const container = document.getElementById('products-container');
+            const catalogTitle = document.getElementById('catalog-title');
+
+            promosContainer.innerHTML = '';
+            container.innerHTML = '';
+
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const keys = Object.keys(allProducts);
+
+            let promoKeys = [];
+            let normalKeys = [];
+
+            keys.forEach(key => {
+                const p = allProducts[key];
+                const matchesCat = currentCategory === 'Todos' || p.category === currentCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm);
+
+                if (matchesCat && matchesSearch) {
+                    if (p.isPromo) {
+                        promoKeys.push(key);
+                    } else {
+                        normalKeys.push(key);
+                    }
+                }
+            });
+
+            // Renderizar Promociones arriba
+            if (promoKeys.length > 0) {
+                promosSection.classList.remove('hidden');
+                promoKeys.forEach(key => {
+                    promosContainer.innerHTML += buildProductCard(key, allProducts[key], true);
+                });
+            } else {
+                promosSection.classList.add('hidden');
+            }
+
+            // Renderizar Catálogo General
+            if (normalKeys.length > 0 || (promoKeys.length > 0 && currentCategory !== 'Todos')) {
+                catalogTitle.classList.remove('hidden');
+                normalKeys.forEach(key => {
+                    container.innerHTML += buildProductCard(key, allProducts[key], false);
+                });
+            } else {
+                if(promoKeys.length === 0) {
+                    container.innerHTML = '<p class="text-slate-500 col-span-full text-center py-12">No hay productos disponibles en esta categoría.</p>';
+                    catalogTitle.classList.add('hidden');
+                }
+            }
+
+            document.getElementById('loading-spinner').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+
+        function buildProductCard(key, p, isPromo) {
+            const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80';
+            const stockVal = p.stock !== undefined ? p.stock : 10;
+            const stockBadge = stockVal > 0 ? `<span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Stock: ${stockVal}</span>` : `<span class="text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-200">Agotado</span>`;
+            
+            const priceMayor = p.priceMayor !== undefined ? p.priceMayor : p.price;
+            const priceGranMayor = p.priceGranMayor !== undefined ? p.priceGranMayor : p.price;
+
+            // Cálculo en Bolívares
+            const bolivaresDetal = (p.price * currentBcvRate).toFixed(2);
+            const bolivaresMayor = (priceMayor * currentBcvRate).toFixed(2);
+            const bolivaresGranMayor = (priceGranMayor * currentBcvRate).toFixed(2);
+
+            const promoTag = isPromo ? `<span class="absolute top-2 left-2 bg-accent text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow animate-pulse"><i class="fa-solid fa-fire mr-1"></i> ¡PROMO!</span>` : '';
+
+            return `
+                <div class="bg-white rounded-2xl shadow-sm border ${isPromo ? 'border-accent shadow-md ring-2 ring-accent/20' : 'border-slate-100'} overflow-hidden flex flex-col justify-between hover:shadow-md transition">
+                    <div class="h-40 bg-slate-100 overflow-hidden relative">
+                        <img src="${img}" alt="${p.name}" class="w-full h-full object-cover">
+                        ${promoTag}
+                        <span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">${p.category || 'General'}</span>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold text-slate-800 text-base">${p.name}</h3>
+                                ${stockBadge}
+                            </div>
+                            <div class="space-y-1 mb-3 text-xs bg-slate-50 p-2.5 rounded-xl border">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-slate-500 font-medium">Detal:</span>
+                                    <div class="text-right">
+                                        <span class="text-accent font-black text-sm">$${p.price}</span>
+                                        <span class="text-slate-400 text-[11px] block">Bs. ${bolivaresDetal}</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-baseline border-t pt-1">
+                                    <span class="text-slate-500 font-medium">Mayor:</span>
+                                    <div class="text-right">
+                                        <span class="text-slate-800 font-bold">$${priceMayor}</span>
+                                        <span class="text-slate-400 text-[11px] block">Bs. ${bolivaresMayor}</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-baseline border-t pt-1">
+                                    <span class="text-slate-500 font-medium">Gran Mayor:</span>
+                                    <div class="text-right">
+                                        <span class="text-emerald-700 font-bold">$${priceGranMayor}</span>
+                                        <span class="text-slate-400 text-[11px] block">Bs. ${bolivaresGranMayor}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-accent hover:bg-orange-600 text-white shadow' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-cart-plus"></i> ${stockVal > 0 ? 'Añadir al Carrito' : 'Agotado'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.addToCart = function(key, name, price, stock) {
+            if (stock <= 0) return alert("Producto agotado.");
+            
+            if (!loggedClient) {
+                alert("Para poder comprar desde casa, por favor regístrate o ingresa tus datos.");
+                window.openClientAuthModal();
                 return;
             }
 
-            loggedClient = { name, ci, phone, location, pin, photo };
-            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
-            db.ref('clients/' + ci).set(loggedClient);
-            alert('¡Registro exitoso!');
-            closeClientAuthModal();
-            updateClientAuthUI();
-        }
-
-        function saveClientProfile() {
-            loggedClient.phone = document.getElementById('client-phone-input').value.trim();
-            loggedClient.location = document.getElementById('client-location-input').value.trim();
-            loggedClient.photo = document.getElementById('client-photo-input').value.trim();
-            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
-            db.ref('clients/' + loggedClient.ci).set(loggedClient);
-            alert('¡Datos actualizados!');
-            closeClientAuthModal();
-        }
-
-        function logoutClient() {
-            loggedClient = null;
-            localStorage.removeItem('abasto_client');
-            closeClientAuthModal();
-            updateClientAuthUI();
-            alert('Sesión cerrada');
-        }
-
-        function updateClientAuthUI() {
-            const container = document.getElementById('client-auth-container');
-            if(!container) return;
-            if (loggedClient) {
-                container.innerHTML = `<button onclick="openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer"><i class="fa-solid fa-user-check text-amber-400"></i> <span>${loggedClient.name.split(' ')[0]}</span></button>`;
+            const existing = cart.find(item => item.key === key);
+            if (existing) {
+                if (existing.qty < stock) {
+                    existing.qty++;
+                } else {
+                    alert("No hay más stock disponible para este producto.");
+                    return;
+                }
             } else {
-                container.innerHTML = `<button onclick="openClientAuthModal()" class="hover:text-amber-400 transition flex items-center gap-1 font-semibold cursor-pointer"><i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span></button>`;
+                cart.push({ key, name, price, qty: 1 });
+            }
+            updateCartBadge();
+            alert(`¡${name} agregado al carrito!`);
+        }
+
+        window.updateCartBadge = function() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.innerText = totalItems;
+        }
+
+        window.openCartModal = function() {
+            if (!loggedClient) {
+                alert("Por favor, regístrate antes de ver tu carrito.");
+                window.openClientAuthModal();
+                return;
+            }
+
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total-price');
+            container.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-8">Tu carrito está vacío.</p>';
+                totalEl.innerText = '$0.00 (Bs. 0.00)';
+                document.getElementById('cart-modal').classList.add('hidden');
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                const subBs = (subtotal * currentBcvRate).toFixed(2);
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
+                            <p class="text-xs text-slate-500">$${item.price} x ${item.qty} = <span class="font-bold text-accent">$${subtotal.toFixed(2)}</span> <span class="text-slate-400">(Bs. ${subBs})</span></p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            const totalBs = (total * currentBcvRate).toFixed(2);
+            totalEl.innerText = `$${total.toFixed(2)} (Bs. ${totalBs})`;
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        window.removeFromCart = function(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            window.openCartModal();
+        }
+
+        window.checkoutWhatsApp = async function() {
+            if (!loggedClient) {
+                alert("Por favor, completa tu registro.");
+                document.getElementById('cart-modal').classList.add('hidden');
+                window.openClientAuthModal();
+                return;
+            }
+            if (cart.length === 0) return alert("Tu carrito está vacío.");
+
+            let itemsText = "";
+            let totalPrice = 0;
+            let totalCost = 0;
+
+            try {
+                for (const item of cart) {
+                    const prodRef = ref(db, `products/${item.key}`);
+                    const prodSnap = await get(prodRef);
+                    if (prodSnap.exists()) {
+                        const prodData = prodSnap.val();
+                        const currentStock = prodData.stock;
+                        const itemCost = prodData.cost !== undefined ? prodData.cost : (item.price * 0.7);
+
+                        if (currentStock < item.qty) {
+                            alert(`Lo sentimos, el producto ${item.name} ya no tiene suficiente stock.`);
+                            return;
+                        }
+                        await update(prodRef, { stock: currentStock - item.qty });
+                        totalCost += (itemCost * item.qty);
+                    }
+                    const sub = item.price * item.qty;
+                    totalPrice += sub;
+                    itemsText += `• ${item.qty}x ${item.name} ($${sub.toFixed(2)})\n`;
+                }
+
+                const totalBs = (totalPrice * currentBcvRate).toFixed(2);
+
+                const saleRef = push(ref(db, 'sales'));
+                await set(saleRef, {
+                    date: new Date().toLocaleString(),
+                    timestamp: Date.now(),
+                    type: '🌐 Pedido Web (Casa)',
+                    client: `${loggedClient.name} (CI: ${loggedClient.ci})`,
+                    location: loggedClient.location || 'No especificada',
+                    total: totalPrice.toFixed(2),
+                    totalCost: totalCost.toFixed(2),
+                    items: itemsText.trim().replace(/\n/g, ' | ')
+                });
+
+                const message = `*🛒 NUEVO PEDIDO WEB (CASA) - ABASTO EXPRESS*\n\n` +
+                                `👤 *Cliente:* ${loggedClient.name}\n` +
+                                `🪪 *Cédula:* ${loggedClient.ci}\n` +
+                                `📞 *Teléfono:* ${loggedClient.phone || 'No registrado'}\n` +
+                                `📍 *Ubicación de Entrega:* ${loggedClient.location || 'No especificada'}\n\n` +
+                                `📦 *PRODUCTOS SOLICITADOS:*\n${itemsText}\n` +
+                                `💰 *TOTAL A PAGAR:* $${totalPrice.toFixed(2)} (Bs. ${totalBs})\n\n` +
+                                `¡Pedido realizado desde casa con éxito!`;
+
+                const phone = whatsappNumber;
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+
+                cart = [];
+                updateCartBadge();
+                document.getElementById('cart-modal').classList.add('hidden');
+                await loadStoreData();
+            } catch (e) {
+                alert("Error al procesar el pedido.");
             }
         }
 
-        // --- ADMIN ---
-        function openAdminModal() {
-            const pass = prompt('Contraseña de Administrador:');
-            if (pass === '12345' || pass === 'admin') {
-                document.getElementById('admin-modal').classList.remove('hidden');
-                switchAdminTab('config');
-            } else if (pass !== null) {
-                alert('Contraseña incorrecta');
+        // LÓGICA DE CAJA LOCAL (EXCLUSIVA ADMIN)
+        window.renderPosProducts = function() {
+            const select = document.getElementById('pos-product-select');
+            select.innerHTML = '';
+            Object.keys(allProducts).forEach(key => {
+                const p = allProducts[key];
+                select.innerHTML += `<option value="${key}">${p.name} - Detal: $${p.price} (Stock: ${p.stock})</option>`;
+            });
+        }
+
+        window.addPosItem = function() {
+            const select = document.getElementById('pos-product-select');
+            const key = select.value;
+            if(!key || !allProducts[key]) return alert("Selecciona un producto válido.");
+            const p = allProducts[key];
+            const qty = parseInt(document.getElementById('pos-qty-input').value) || 1;
+
+            if(qty > p.stock) return alert("No hay suficiente stock disponible para esta cantidad.");
+
+            let unitPrice = p.price;
+            let scaleType = "Detal";
+            if (qty >= 12 && p.priceGranMayor) {
+                unitPrice = p.priceGranMayor;
+                scaleType = "Gran Mayor";
+            } else if (qty >= 6 && p.priceMayor) {
+                unitPrice = p.priceMayor;
+                scaleType = "Mayor";
             }
+
+            const itemCost = p.cost !== undefined ? p.cost : (p.price * 0.7);
+
+            const existing = posCart.find(item => item.key === key && item.scaleType === scaleType);
+            if(existing) {
+                if((existing.qty + qty) > p.stock) return alert("Supera el stock disponible.");
+                existing.qty += qty;
+            } else {
+                posCart.push({ key, name: p.name, price: unitPrice, cost: itemCost, qty, scaleType });
+            }
+            renderPosCart();
+        }
+
+        window.renderPosCart = function() {
+            const container = document.getElementById('pos-cart-items');
+            const totalEl = document.getElementById('pos-total-price');
+            container.innerHTML = '';
+            let total = 0;
+
+            if(posCart.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-xs">No hay productos agregados a la caja.</p>';
+                totalEl.innerText = '$0.00';
+                return;
+            }
+
+            posCart.forEach((item, index) => {
+                const sub = item.price * item.qty;
+                total += sub;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-2 rounded-lg border">
+                        <div>
+                            <span class="font-bold text-slate-800">${item.name}</span> <span class="text-xs bg-slate-100 px-1.5 py-0.5 rounded font-semibold text-slate-600">${item.scaleType}</span>
+                            <p class="text-xs text-slate-500">${item.qty}x @ $${item.price} = <span class="font-bold text-accent">$${sub.toFixed(2)}</span></p>
+                        </div>
+                        <button onclick="posCart.splice(${index},1); renderPosCart();" class="text-red-500 font-bold cursor-pointer text-base px-2">×</button>
+                    </div>
+                `;
+            });
+            const totalBs = (total * currentBcvRate).toFixed(2);
+            totalEl.innerText = `$${total.toFixed(2)} (Bs. ${totalBs})`;
+        }
+
+        window.checkoutPosSale = async function() {
+            if(posCart.length === 0) return alert("La cuenta en caja está vacía.");
+            const clientName = document.getElementById('pos-client-name').value.trim() || "Cliente Presencial";
+            let itemsText = "";
+            let total = 0;
+            let totalCost = 0;
+
+            try {
+                for(const item of posCart) {
+                    const prodRef = ref(db, `products/${item.key}`);
+                    const prodSnap = await get(prodRef);
+                    if(prodSnap.exists()) {
+                        const curStock = prodSnap.val().stock;
+                        if(curStock < item.qty) return alert(`Stock insuficiente para ${item.name}`);
+                        await update(prodRef, { stock: curStock - item.qty });
+                    }
+                    const sub = item.price * item.qty;
+                    total += sub;
+                    totalCost += (item.cost * item.qty);
+                    itemsText += `• ${item.qty}x ${item.name} [${item.scaleType}] ($${sub.toFixed(2)}) | `;
+                }
+
+                const saleRef = push(ref(db, 'sales'));
+                await set(saleRef, {
+                    date: new Date().toLocaleString(),
+                    timestamp: Date.now(),
+                    type: '🏪 Venta en Local (Caja)',
+                    client: clientName,
+                    location: 'Tienda Física / Mostrador',
+                    total: total.toFixed(2),
+                    totalCost: totalCost.toFixed(2),
+                    items: itemsText
+                });
+
+                alert(`¡Venta en caja registrada por $${total.toFixed(2)}! Stock descontado con éxito.`);
+                posCart = [];
+                renderPosCart();
+                await loadStoreData();
+            } catch(e) {
+                alert("Error al procesar la venta en caja.");
+            }
+        }
+
+        window.renderAdminInventory = function() {
+            const tableBody = document.getElementById('admin-inventory-table');
+            tableBody.innerHTML = '';
+            const keys = Object.keys(allProducts);
+
+            if (keys.length > 0) {
+                keys.forEach(key => {
+                    const p = allProducts[key];
+                    const img = p.image && p.image.trim() !== '' ? p.image : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80';
+                    const currentStock = p.stock !== undefined ? p.stock : 10;
+                    const cost = p.cost !== undefined ? p.cost : (p.price * 0.7).toFixed(2);
+                    const priceMayor = p.priceMayor !== undefined ? p.priceMayor : p.price;
+                    const priceGranMayor = p.priceGranMayor !== undefined ? p.priceGranMayor : p.price;
+                    const isPromoBadge = p.isPromo ? `<span class="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">Sí</span>` : `<span class="text-slate-400 text-xs">No</span>`;
+
+                    tableBody.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-lg shadow-sm"></td>
+                            <td class="p-3 font-medium">${p.name}</td>
+                            <td class="p-3 text-xs text-slate-600">Costo: $${cost}<br><b>Detal: $${p.price}</b></td>
+                            <td class="p-3 text-xs text-slate-600">Mayor: $${priceMayor}<br>G. Mayor: $${priceGranMayor}</td>
+                            <td class="p-3">${isPromoBadge}</td>
+                            <td class="p-3 font-semibold text-slate-700">${currentStock}</td>
+                            <td class="p-3 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer">-1</button>
+                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer">+1</button>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="editProduct('${key}')" class="text-primary hover:text-emerald-700 font-bold cursor-pointer" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteProduct('${key}')" class="text-red-500 hover:text-red-700 cursor-pointer" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-500">No hay productos registrados.</td></tr>';
+            }
+        }
+
+        window.renderAdminDepartments = function() {
+            const tableBody = document.getElementById('admin-dept-table');
+            tableBody.innerHTML = '';
+            allDepartments.forEach((dept, index) => {
+                tableBody.innerHTML += `
+                    <tr class="border-b hover:bg-slate-50">
+                        <td class="p-3 font-medium text-slate-800">${dept}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deleteDepartment(${index})" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function loadSales() {
+            const salesRef = ref(db, 'sales');
+            const salesSnap = await get(salesRef);
+            const salesTable = document.getElementById('admin-sales-table');
+            salesTable.innerHTML = '';
+
+            let todayTotal = 0;
+            let todayCount = 0;
+            const now = Date.now();
+            const todayStr = new Date().toDateString();
+
+            let weekSales = 0, weekCost = 0;
+            let monthSales = 0, monthCost = 0;
+            let yearSales = 0, yearCost = 0;
+
+            const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            if (salesSnap.exists()) {
+                const sales = salesSnap.val();
+                Object.keys(sales).forEach(key => {
+                    const s = sales[key];
+                    const saleTimestamp = s.timestamp || now;
+                    const saleDateObj = new Date(saleTimestamp);
+                    const saleTotal = parseFloat(s.total || 0);
+                    const saleCost = parseFloat(s.totalCost || (saleTotal * 0.7));
+
+                    if (saleDateObj.toDateString() === todayStr) {
+                        todayCount++;
+                        todayTotal += saleTotal;
+                    }
+
+                    if ((now - saleTimestamp) <= oneWeekMs) {
+                        weekSales += saleTotal;
+                        weekCost += saleCost;
+                    }
+
+                    if (saleDateObj.getMonth() === currentMonth && saleDateObj.getFullYear() === currentYear) {
+                        monthSales += saleTotal;
+                        monthCost += saleCost;
+                    }
+
+                    if (saleDateObj.getFullYear() === currentYear) {
+                        yearSales += saleTotal;
+                        yearCost += saleCost;
+                    }
+
+                    salesTable.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-3 text-xs text-slate-500">${s.date || key}</td>
+                            <td class="p-3 font-medium"><span class="bg-slate-100 px-2 py-1 rounded-md text-xs font-semibold mr-1">${s.type || 'Venta'}</span> ${s.client}</td>
+                            <td class="p-3 text-xs text-slate-600">${s.location || 'Mostrador'}</td>
+                            <td class="p-3 font-bold text-accent">$${saleTotal.toFixed(2)}</td>
+                            <td class="p-3 text-xs text-slate-600">${s.items}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                salesTable.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
+            }
+
+            document.getElementById('closing-count').innerText = todayCount;
+            document.getElementById('closing-total').innerText = `$${todayTotal.toFixed(2)}`;
+
+            updateStatCard('week', weekSales, weekCost);
+            updateStatCard('month', monthSales, monthCost);
+            updateStatCard('year', yearSales, yearCost);
+        }
+
+        function updateStatCard(period, totalSales, totalCost) {
+            const profit = totalSales - totalCost;
+            const margin = totalCost > 0 ? ((profit / totalCost) * 100).toFixed(1) : (totalSales > 0 ? 100 : 0);
+
+            document.getElementById(`stat-${period}-sales`).innerText = `$${totalSales.toFixed(2)}`;
+            document.getElementById(`stat-${period}-cost`).innerText = `$${totalCost.toFixed(2)}`;
+            document.getElementById(`stat-${period}-profit`).innerText = `$${profit.toFixed(2)}`;
+            document.getElementById(`stat-${period}-margin`).innerText = `${margin}%`;
+        }
+
+        async function loadClientsData() {
+            const clientsRef = ref(db, 'clients');
+            const clientsSnap = await get(clientsRef);
+            const clientsTable = document.getElementById('admin-clients-table');
+            clientsTable.innerHTML = '';
+
+            const salesRef = ref(db, 'sales');
+            const salesSnap = await get(salesRef);
+            let salesData = salesSnap.exists() ? salesSnap.val() : {};
+
+            if (clientsSnap.exists()) {
+                const clients = clientsSnap.val();
+                Object.keys(clients).forEach(key => {
+                    const c = clients[key];
+                    const img = c.photo && c.photo.trim() !== '' ? c.photo : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80';
+                    
+                    let purchaseCount = 0;
+                    let totalSpent = 0;
+                    Object.values(salesData).forEach(s => {
+                        if (s.client && s.client.includes(c.ci)) {
+                            purchaseCount++;
+                            totalSpent += parseFloat(s.total || 0);
+                        }
+                    });
+
+                    clientsTable.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-3"><img src="${img}" class="w-10 h-10 object-cover rounded-full shadow-sm border"></td>
+                            <td class="p-3 font-medium text-slate-800">${c.name}</td>
+                            <td class="p-3 text-slate-600">${c.ci}</td>
+                            <td class="p-3 text-slate-600">${c.phone || 'No registrado'}</td>
+                            <td class="p-3 text-xs text-slate-600">${c.location || 'No especificada'}</td>
+                            <td class="p-3 text-center font-bold text-accent">${purchaseCount} compras ($${totalSpent.toFixed(2)})</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                clientsTable.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados en la base de datos.</td></tr>';
+            }
+        }
+
+        window.adjustStock = async function(key, amount) {
+            const p = allProducts[key];
+            const currentStock = p.stock !== undefined ? p.stock : 10;
+            const newStock = Math.max(0, currentStock + amount);
+            await update(ref(db, `products/${key}`), { stock: newStock });
+            await window.loadStoreData();
+        }
+
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            renderCategories();
+            renderProducts();
+        }
+
+        window.filterProducts = function() {
+            renderProducts();
+        }
+
+        initApp();
+    </script>
+
+    <script>
+        function openAdminModal() {
+            const pin = prompt("Ingresa la contraseña de administración:");
+            if (pin === (window.currentAdminPin || "Abasto2026*")) {
+                document.getElementById('admin-modal').classList.remove('hidden');
+            } else if (pin !== null) { alert("Contraseña incorrecta"); }
         }
 
         function switchAdminTab(tab) {
-            ['config', 'departments', 'inventory', 'pos', 'sales', 'closing', 'stats'].forEach(t => {
-                const el = document.getElementById(`admin-tab-${t}`);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if(el) el.classList.add('hidden');
-                if(btn) btn.className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer border-b-2 border-transparent";
+            ['config', 'departments', 'inventory', 'pos', 'sales', 'closing', 'stats', 'clients'].forEach(t => {
+                document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer";
             });
-            const activeEl = document.getElementById(`admin-tab-${tab}`);
-            const activeBtn = document.getElementById(`tab-btn-${tab}`);
-            if(activeEl) activeEl.classList.remove('hidden');
-            if(activeBtn) activeBtn.className = "py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer";
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-primary text-primary whitespace-nowrap cursor-pointer";
         }
 
-        function saveAdminRate() {
-            const rate = parseFloat(document.getElementById('admin-rate-input').value);
-            if (!rate) return;
-            db.ref('config/rate').set(rate, () => alert('Tasa actualizada'));
+        async function saveAdminRate() {
+            const newRate = document.getElementById('admin-rate-input').value;
+            if(!newRate) return alert("Ingresa una tasa válida");
+            await window.set(window.ref(window.db, 'config/bcvRate'), newRate);
+            document.getElementById('top-rate-display').innerText = newRate;
+            alert("¡Tasa BCV actualizada!");
+            location.reload();
         }
 
-        function saveAdminPhone() {
-            const phone = document.getElementById('admin-phone-input').value.trim();
-            db.ref('config/phone').set(phone, () => alert('Teléfono actualizado'));
+        async function saveAdminPhone() {
+            const newPhone = document.getElementById('admin-phone-input').value;
+            if(!newPhone) return alert("Ingresa un número válido");
+            await window.set(window.ref(window.db, 'config/whatsappPhone'), newPhone);
+            alert("¡WhatsApp actualizado!");
         }
 
-        // --- INVENTARIO & EDICIÓN ---
-        function saveProduct() {
-            const key = document.getElementById('edit-prod-key').value;
-            const name = document.getElementById('prod-name').value.trim();
+        async function saveAdminPassword() {
+            const newPass = document.getElementById('admin-pass-input').value;
+            if(!newPass) return alert("Ingresa una contraseña válida");
+            await window.set(window.ref(window.db, 'config/adminPin'), newPass);
+            window.currentAdminPin = newPass;
+            document.getElementById('admin-pass-input').value = '';
+            alert("¡Contraseña actualizada!");
+        }
+
+        async function addDepartment() {
+            const deptName = document.getElementById('new-dept-name').value.trim();
+            if(!deptName) return alert("Ingresa un nombre");
+            const snap = await window.get(window.ref(window.db, 'config/departments'));
+            let depts = snap.exists() ? snap.val() : ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
+            if(!depts.includes(deptName)) {
+                depts.push(deptName);
+                await window.set(window.ref(window.db, 'config/departments'), depts);
+                document.getElementById('new-dept-name').value = '';
+                alert("¡Departamento agregado!");
+                await window.loadStoreData();
+            } else { alert("Ya existe."); }
+        }
+
+        async function deleteDepartment(index) {
+            const snap = await window.get(window.ref(window.db, 'config/departments'));
+            let depts = snap.exists() ? snap.val() : ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
+            if(depts.length <= 1) return alert("Debes tener al menos un departamento.");
+            if(confirm("¿Eliminar departamento?")) {
+                depts.splice(index, 1);
+                await window.set(window.ref(window.db, 'config/departments'), depts);
+                alert("¡Eliminado!");
+                await window.loadStoreData();
+            }
+        }
+
+        async function saveProduct() {
+            const editKey = document.getElementById('edit-prod-key').value;
+            const name = document.getElementById('prod-name').value;
             const cost = parseFloat(document.getElementById('prod-cost').value);
             const price = parseFloat(document.getElementById('prod-price').value);
-            const priceMayor = parseFloat(document.getElementById('prod-price-mayor').value) || 0;
-            const minMayor = parseInt(document.getElementById('prod-min-mayor').value) || 0;
-            const priceGranMayor = parseFloat(document.getElementById('prod-price-gran-mayor').value) || 0;
-            const minGranMayor = parseInt(document.getElementById('prod-min-gran-mayor').value) || 0;
+            const priceMayor = parseFloat(document.getElementById('prod-price-mayor').value) || price;
+            const priceGranMayor = parseFloat(document.getElementById('prod-price-gran-mayor').value) || price;
             const stock = parseInt(document.getElementById('prod-stock').value);
             const category = document.getElementById('prod-category').value;
-            const image = document.getElementById('prod-image').value.trim();
+            const image = document.getElementById('prod-image').value;
             const isPromo = document.getElementById('prod-is-promo').checked;
 
-            if (!name || isNaN(cost) || isNaN(price) || isNaN(stock)) {
-                alert('Complete los campos obligatorios correctamente.');
-                return;
-            }
+            if(!name || isNaN(cost) || isNaN(price) || isNaN(stock)) return alert("Completa los campos obligatorios correctamente");
+            
+            const productData = { 
+                name, 
+                cost, 
+                price, 
+                priceMayor, 
+                priceGranMayor, 
+                stock, 
+                category, 
+                image: image || '',
+                isPromo 
+            };
 
-            const prodData = { name, cost, price, priceMayor, minMayor, priceGranMayor, minGranMayor, stock, category, image, isPromo };
-
-            if (key) {
-                db.ref('products/' + key).set(prodData, () => {
-                    alert('¡Producto actualizado!');
-                    resetProductForm();
-                });
+            if (editKey) {
+                await window.update(window.ref(window.db, `products/${editKey}`), productData);
+                alert("¡Producto actualizado con éxito!");
             } else {
-                db.ref('products').push(prodData, () => {
-                    alert('¡Producto registrado!');
-                    resetProductForm();
-                });
+                const newProdRef = window.push(window.ref(window.db, 'products'));
+                await window.set(newProdRef, productData);
+                alert("¡Producto registrado con éxito!");
             }
+            
+            resetProductForm();
+            await window.loadStoreData();
         }
 
-        function editProduct(key) {
-            const p = products[key];
-            if (!p) return;
-            document.getElementById('edit-prod-key').value = key;
-            document.getElementById('prod-name').value = p.name || '';
-            document.getElementById('prod-cost').value = p.cost || '';
-            document.getElementById('prod-price').value = p.price || '';
-            document.getElementById('prod-price-mayor').value = (p.priceMayor && Number(p.priceMayor) > 0) ? p.priceMayor : '';
-            document.getElementById('prod-min-mayor').value = p.minMayor || '';
-            document.getElementById('prod-price-gran-mayor').value = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? p.priceGranMayor : '';
-            document.getElementById('prod-min-gran-mayor').value = p.minGranMayor || '';
-            document.getElementById('prod-stock').value = p.stock || '';
-            document.getElementById('prod-category').value = p.category || categories[0];
-            document.getElementById('prod-image').value = p.image || '';
-            document.getElementById('prod-is-promo').checked = p.isPromo || false;
+        window.editProduct = function(key) {
+            const p = window.allProducts ? window.allProducts[key] : null;
+            if(!p) return;
 
-            document.getElementById('form-product-title').innerHTML = `<i class="fa-solid fa-pen text-accent mr-1"></i> Editando: ${p.name}`;
-            document.getElementById('btn-save-prod').innerText = 'Actualizar Producto';
+            document.getElementById('edit-prod-key').value = key;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-cost').value = p.cost !== undefined ? p.cost : '';
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-price-mayor').value = p.priceMayor !== undefined ? p.priceMayor : '';
+            document.getElementById('prod-price-gran-mayor').value = p.priceGranMayor !== undefined ? p.priceGranMayor : '';
+            document.getElementById('prod-stock').value = p.stock;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-image').value = p.image || '';
+            document.getElementById('prod-is-promo').checked = !!p.isPromo;
+
+            document.getElementById('form-product-title').innerHTML = `<i class="fa-solid fa-pen-to-square text-primary mr-1"></i> Editando Producto: ${p.name}`;
+            document.getElementById('btn-save-prod').innerText = "Actualizar Cambios";
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
         }
 
@@ -842,179 +1410,34 @@
             document.getElementById('prod-cost').value = '';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-price-mayor').value = '';
-            document.getElementById('prod-min-mayor').value = '';
             document.getElementById('prod-price-gran-mayor').value = '';
-            document.getElementById('prod-min-gran-mayor').value = '';
             document.getElementById('prod-stock').value = '';
             document.getElementById('prod-image').value = '';
             document.getElementById('prod-is-promo').checked = false;
+
             document.getElementById('form-product-title').innerHTML = `<i class="fa-solid fa-box text-primary mr-1"></i> Registrar o Editar Producto`;
-            document.getElementById('btn-save-prod').innerText = 'Guardar Producto';
+            document.getElementById('btn-save-prod').innerText = "Guardar Producto";
             document.getElementById('btn-cancel-edit').classList.add('hidden');
         }
 
-        function deleteProduct(key) {
-            if (confirm('¿Eliminar producto?')) {
-                db.ref('products/' + key).remove();
+        window.resetProductForm = resetProductForm;
+
+        async function deleteProduct(key) {
+            if(confirm("¿Eliminar producto?")) {
+                await window.remove(window.ref(window.db, `products/${key}`));
+                await window.loadStoreData();
             }
         }
 
-        function renderInventoryTable() {
-            const tbody = document.getElementById('admin-inventory-table');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            Object.keys(products).forEach(key => {
-                const p = products[key];
-                
-                const mayorTxt = (p.priceMayor && Number(p.priceMayor) > 0) ? `$${Number(p.priceMayor).toFixed(2)} (Min: ${p.minMayor || 0})` : '';
-                const granMayorTxt = (p.priceGranMayor && Number(p.priceGranMayor) > 0) ? `$${Number(p.priceGranMayor).toFixed(2)} (Min: ${p.minGranMayor || 0})` : '';
-                let mayorGranMayorCombined = '-';
-                if (mayorTxt && granMayorTxt) {
-                    mayorGranMayorCombined = `Mayor: ${mayorTxt}<br>G. Mayor: ${granMayorTxt}`;
-                } else if (mayorTxt) {
-                    mayorGranMayorCombined = `Mayor: ${mayorTxt}`;
-                } else if (granMayorTxt) {
-                    mayorGranMayorCombined = `G. Mayor: ${granMayorTxt}`;
-                }
-
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-slate-50">
-                        <td class="p-3"><img src="${p.image || 'https://via.placeholder.com/50'}" class="w-10 h-10 object-cover rounded-xl"></td>
-                        <td class="p-3 font-semibold">${p.name}<br><span class="text-xs text-slate-400">${p.category || ''}</span></td>
-                        <td class="p-3">$${Number(p.cost).toFixed(2)} / <strong class="text-primary">$${Number(p.price).toFixed(2)}</strong></td>
-                        <td class="p-3 text-xs">${mayorGranMayorCombined}</td>
-                        <td class="p-3">${p.isPromo ? '🔥 Sí' : 'No'}</td>
-                        <td class="p-3 font-bold">${p.stock}</td>
-                        <td class="p-3 text-center space-x-1">
-                            <button onclick="editProduct('${key}')" class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-pen"></i> Editar</button>
-                            <button onclick="deleteProduct('${key}')" class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // --- POS & SALES ---
-        function renderPosSelect() {
-            const select = document.getElementById('pos-product-select');
-            if(!select) return;
-            select.innerHTML = '';
-            Object.keys(products).forEach(key => {
-                const p = products[key];
-                select.innerHTML += `<option value="${key}">${p.name} (Stock: ${p.stock} - $${p.price})</option>`;
-            });
-        }
-
-        function addPosItem() {
-            const key = document.getElementById('pos-product-select').value;
-            const qty = parseInt(document.getElementById('pos-qty-input').value) || 1;
-            const p = products[key];
-            if (!p || p.stock < qty) { alert('Stock insuficiente'); return; }
-
-            let unitPrice = p.price;
-            if (p.minGranMayor && qty >= p.minGranMayor && p.priceGranMayor && Number(p.priceGranMayor) > 0) {
-                unitPrice = Number(p.priceGranMayor);
-            } else if (p.minMayor && qty >= p.minMayor && p.priceMayor && Number(p.priceMayor) > 0) {
-                unitPrice = Number(p.priceMayor);
-            }
-
-            posCart.push({ key, name: p.name, price: unitPrice, qty });
-            renderPosCart();
-        }
-
-        function renderPosCart() {
-            const container = document.getElementById('pos-cart-items');
-            if(!container) return;
-            container.innerHTML = '';
-            let total = 0;
-            posCart.forEach((item, index) => {
-                const sub = item.price * item.qty;
-                total += sub;
-                container.innerHTML += `
-                    <div class="flex justify-between items-center text-xs border-b pb-1">
-                        <span>${item.qty}x ${item.name} ($${item.price.toFixed(2)})</span>
-                        <div class="flex gap-2 items-center">
-                            <strong>$${sub.toFixed(2)}</strong>
-                            <button onclick="posCart.splice(${index},1); renderPosCart();" class="text-red-500 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('pos-total-price').innerText = `$${total.toFixed(2)}`;
-        }
-
-        function checkoutPosSale() {
-            if (posCart.length === 0) return;
-            const clientName = document.getElementById('pos-client-name').value.trim() || 'Cliente Mostrador';
-            let totalUSD = posCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
-            posCart.forEach(item => {
-                const p = products[item.key];
-                db.ref('products/' + item.key).update({ stock: p.stock - item.qty });
-            });
-
-            db.ref('sales').push({
-                date: new Date().toISOString(),
-                type: 'Caja Física',
-                clientName,
-                items: posCart,
-                totalUSD
-            });
-
-            alert('¡Venta registrada con éxito!');
-            posCart = [];
-            renderPosCart();
-        }
-
-        function renderSalesTable() {
-            const tbody = document.getElementById('admin-sales-table');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            Object.values(salesHistory).reverse().forEach(s => {
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-slate-50">
-                        <td class="p-3 text-xs">${new Date(s.date).toLocaleString()}<br><strong>${s.type}</strong></td>
-                        <td class="p-3">${s.clientName || 'Cliente Web'}</td>
-                        <td class="p-3 text-xs">${s.location || 'Tienda Física'}</td>
-                        <td class="p-3 font-bold text-primary">$${Number(s.totalUSD).toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function updateStatsAndClosing() {
-            let count = 0;
-            let total = 0;
-            let weekSales = 0;
-            let weekProfit = 0;
-            const todayStr = new Date().toISOString().split('T')[0];
-
-            Object.values(salesHistory).forEach(s => {
-                const sDate = s.date.split('T')[0];
-                const totalUSD = Number(s.totalUSD) || 0;
-                weekSales += totalUSD;
-
-                if (s.items) {
-                    s.items.forEach(i => {
-                        const prod = Object.values(products).find(pr => pr.name === i.name);
-                        if (prod && prod.cost) {
-                            weekProfit += (i.price - prod.cost) * i.qty;
-                        }
-                    });
-                }
-                if (sDate === todayStr) { count++; total += totalUSD; }
-            });
-
-            const cc = document.getElementById('closing-count');
-            const ct = document.getElementById('closing-total');
-            const sws = document.getElementById('stat-week-sales');
-            const swp = document.getElementById('stat-week-profit');
-
-            if(cc) cc.innerText = count;
-            if(ct) ct.innerText = `$${total.toFixed(2)}`;
-            if(sws) sws.innerText = `$${weekSales.toFixed(2)}`;
-            if(swp) swp.innerText = `$${weekProfit.toFixed(2)}`;
-        }
+        window.openAdminModal = openAdminModal;
+        window.switchAdminTab = switchAdminTab;
+        window.saveAdminRate = saveAdminRate;
+        window.saveAdminPhone = saveAdminPhone;
+        window.saveAdminPassword = saveAdminPassword;
+        window.addDepartment = addDepartment;
+        window.deleteDepartment = deleteDepartment;
+        window.saveProduct = saveProduct;
+        window.deleteProduct = deleteProduct;
     </script>
 </body>
 </html>
