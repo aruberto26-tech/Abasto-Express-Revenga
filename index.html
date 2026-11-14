@@ -36,10 +36,10 @@
                     <span class="text-slate-400">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
                 </div>
-                <!-- BOTÓN DE CLIENTE FIJO / REGISTRO -->
+                <!-- BOTÓN DE CLIENTE -->
                 <div id="client-auth-container">
-                    <button onclick="openClientAuthModal()" id="top-client-btn" class="hover:text-accent transition flex items-center gap-1 font-semibold">
-                        <i class="fa-solid fa-user-circle"></i> <span id="client-btn-text">Registro / Ingresar</span>
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-user-circle"></i> <span>Registro / Ingresar</span>
                     </button>
                 </div>
                 <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1">
@@ -68,6 +68,11 @@
                     </span>
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
                 </div>
+                <!-- BOTÓN DEL CARRITO -->
+                <button onclick="openCartModal()" class="relative bg-primary hover:bg-slate-800 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-accent text-slate-900 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+                </button>
             </div>
         </div>
     </header>
@@ -78,7 +83,7 @@
             <div class="space-y-2 text-center md:text-left">
                 <span class="bg-accent text-slate-900 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">🔥 Ofertas del Día</span>
                 <h2 class="text-2xl sm:text-3xl font-black">¡Ahorra en tus compras con delivery rápido!</h2>
-                <p class="text-slate-300 text-sm max-w-xl">Escoge tu departamento favorito y haz tus pedidos al instante.</p>
+                <p class="text-slate-300 text-sm max-w-xl">Escoge tu departamento favorito, llena tu carrito y haz tu pedido.</p>
             </div>
             <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center">
                 <p class="text-xs text-slate-300">Servicio activo</p>
@@ -106,30 +111,73 @@
         </div>
     </main>
 
-    <!-- MODAL DE REGISTRO / INGRESO DE CLIENTE -->
+    <!-- MODAL DE REGISTRO / PERFIL DE CLIENTE -->
     <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Acceso de Clientes</h3>
+                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Mi Cuenta de Cliente</h3>
                 <button onclick="document.getElementById('client-auth-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="space-y-4">
-                <p class="text-xs text-slate-500">Regístrate fácilmente con tu cédula y una clave de 5 dígitos, o ingresa si ya estás registrado.</p>
+            <div id="client-form-view" class="space-y-4">
+                <p class="text-xs text-slate-500">Regístrate o ingresa con tu cédula y clave de 5 dígitos.</p>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo</label>
                     <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Cédula</label>
-                    <input type="text" id="client-ci" placeholder="Ej: V-12345678" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    <input type="text" id="client-ci" placeholder="Ej: 31908447" class="w-full px-3 py-2 border rounded-xl text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
                 <button onclick="registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow">Ingresar / Registrarse</button>
+            </div>
+
+            <!-- VISTA DE PERFIL UNA VEZ REGISTRADO (FOTO Y UBICACIÓN) -->
+            <div id="client-profile-view" class="space-y-4 hidden text-center">
+                <div class="flex flex-col items-center">
+                    <img id="profile-img-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-24 h-24 object-cover rounded-full shadow-md border-2 border-accent mb-2">
+                    <h4 id="profile-name-display" class="font-bold text-lg text-slate-800">Nombre</h4>
+                    <p id="profile-ci-display" class="text-xs text-slate-500">Cédula</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1 text-left">URL de tu Foto de Perfil</label>
+                    <input type="text" id="client-photo-input" placeholder="https://..." class="w-full px-3 py-2 border rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1 text-left">Tu Ubicación / Dirección exacta</label>
+                    <input type="text" id="client-location-input" placeholder="Ej: Urbanización Los Pinos, Calle 4, Casa #12" class="w-full px-3 py-2 border rounded-xl text-sm">
+                </div>
+                <button onclick="saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow">Guardar Foto y Ubicación</button>
+                <button onclick="logoutClient()" class="text-xs text-red-500 underline font-medium">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DEL CARRITO DE COMPRAS -->
+    <div id="cart-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-cart-shopping text-accent mr-2"></i> Tu Carrito de Compras</h3>
+                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="cart-items-container" class="overflow-y-auto flex-grow space-y-3 mb-4">
+                <!-- Items del carrito -->
+            </div>
+            <div class="border-t pt-4 space-y-3">
+                <div class="flex justify-between text-base font-black text-slate-800">
+                    <span>Total a Pagar:</span>
+                    <span id="cart-total-price" class="text-accent">$0.00</span>
+                </div>
+                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Pedido por WhatsApp
+                </button>
             </div>
         </div>
     </div>
@@ -144,7 +192,6 @@
                 </button>
             </div>
             
-            <!-- PESTAÑAS DEL ADMIN -->
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-2 overflow-x-auto">
                 <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap">Configuración</button>
                 <button onclick="switchAdminTab('departments')" id="tab-btn-departments" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap">Departamentos</button>
@@ -197,9 +244,7 @@
                                     <th class="p-3 text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-dept-table">
-                                <!-- Departamentos -->
-                            </tbody>
+                            <tbody id="admin-dept-table"></tbody>
                         </table>
                     </div>
                 </div>
@@ -212,9 +257,7 @@
                             <input type="text" id="prod-name" placeholder="Nombre del producto" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-price" step="0.01" placeholder="Precio ($)" class="px-3 py-2 border rounded-xl text-sm">
                             <input type="number" id="prod-stock" placeholder="Stock inicial" class="px-3 py-2 border rounded-xl text-sm">
-                            <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white">
-                                <!-- Opciones dinámicas -->
-                            </select>
+                            <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white"></select>
                             <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="px-3 py-2 border rounded-xl text-sm col-span-full">
                         </div>
                         <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90">Guardar Producto</button>
@@ -228,13 +271,11 @@
                                     <th class="p-3">Depto</th>
                                     <th class="p-3">Precio</th>
                                     <th class="p-3">Stock Actual</th>
-                                    <th class="p-3 text-center">Sumar / Sacar Mercancía</th>
+                                    <th class="p-3 text-center">Sumar / Sacar</th>
                                     <th class="p-3 text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-inventory-table">
-                                <!-- Inventario -->
-                            </tbody>
+                            <tbody id="admin-inventory-table"></tbody>
                         </table>
                     </div>
                 </div>
@@ -247,13 +288,12 @@
                                 <tr class="bg-slate-100 text-slate-700 border-b">
                                     <th class="p-3">Fecha / ID</th>
                                     <th class="p-3">Cliente</th>
+                                    <th class="p-3">Ubicación</th>
                                     <th class="p-3">Total ($)</th>
-                                    <th class="p-3">Detalle del Pedido</th>
+                                    <th class="p-3">Detalle</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-sales-table">
-                                <!-- Ventas -->
-                            </tbody>
+                            <tbody id="admin-sales-table"></tbody>
                         </table>
                     </div>
                 </div>
@@ -293,6 +333,7 @@
         let allDepartments = ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
         let currentCategory = 'Todos';
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
+        let cart = [];
 
         async function initApp() {
             try {
@@ -309,9 +350,7 @@
                         whatsappNumber = data.whatsappPhone;
                         document.getElementById('admin-phone-input').value = whatsappNumber;
                     }
-                    if (data.departments) {
-                        allDepartments = data.departments;
-                    }
+                    if (data.departments) allDepartments = data.departments;
                 }
                 window.currentAdminPin = currentAdminPin;
                 updateClientUI();
@@ -325,15 +364,15 @@
             const container = document.getElementById('client-auth-container');
             if (loggedClient) {
                 container.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="text-accent font-bold"><i class="fa-solid fa-user-check"></i> ${loggedClient.name} (${loggedClient.ci})</span>
-                        <button onclick="logoutClient()" class="text-xs text-slate-400 hover:text-white underline">Salir</button>
-                    </div>
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                        <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-accent">
+                        <span>${loggedClient.name}</span>
+                    </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="openClientAuthModal()" id="top-client-btn" class="hover:text-accent transition flex items-center gap-1 font-semibold">
-                        <i class="fa-solid fa-user-circle"></i> <span id="client-btn-text">Registro / Ingresar</span>
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-user-circle"></i> <span>Registro / Ingresar</span>
                     </button>
                 `;
             }
@@ -401,8 +440,8 @@
                                     </div>
                                     <p class="text-accent font-black text-xl mb-3">$${p.price}</p>
                                 </div>
-                                <button onclick="orderProduct('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-slate-100 hover:bg-primary hover:text-white text-slate-700' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
-                                    <i class="fa-brands fa-whatsapp text-green-600 text-lg"></i> ${stockVal > 0 ? 'Pedir por WhatsApp' : 'Agotado'}
+                                <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-primary hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> ${stockVal > 0 ? 'Agregar al Carrito' : 'Agotado'}
                                 </button>
                             </div>
                         </div>
@@ -413,6 +452,128 @@
             }
             document.getElementById('loading-spinner').classList.add('hidden');
             container.classList.remove('hidden');
+        }
+
+        window.addToCart = function(key, name, price, stock) {
+            if (stock <= 0) return alert("Producto agotado.");
+            const existing = cart.find(item => item.key === key);
+            if (existing) {
+                if (existing.qty < stock) {
+                    existing.qty++;
+                } else {
+                    alert("No hay más stock disponible para este producto.");
+                    return;
+                }
+            } else {
+                cart.push({ key, name, price, qty: 1 });
+            }
+            updateCartBadge();
+            alert(`¡${name} agregado al carrito!`);
+        }
+
+        window.updateCartBadge = function() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.innerText = totalItems;
+        }
+
+        window.openCartModal = function() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total-price');
+            container.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-8">Tu carrito está vacío.</p>';
+                totalEl.innerText = '$0.00';
+                document.getElementById('cart-modal').classList.remove('hidden');
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
+                            <p class="text-xs text-slate-500">$${item.price} x ${item.qty} = <span class="font-bold text-accent">$${subtotal.toFixed(2)}</span></p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            totalEl.innerText = `$${total.toFixed(2)}`;
+            document.getElementById('cart-modal').classList.remove('hidden');
+        }
+
+        window.removeFromCart = function(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            window.openCartModal();
+        }
+
+        // ENVIAR PEDIDO COMPLETO AL WHATSAPP CON TODOS LOS DATOS
+        window.checkoutWhatsApp = async function() {
+            if (!loggedClient) {
+                alert("Por favor, regístrate o inicia sesión arriba a la derecha antes de enviar tu pedido.");
+                document.getElementById('cart-modal').classList.add('hidden');
+                openClientAuthModal();
+                return;
+            }
+            if (cart.length === 0) return alert("Tu carrito está vacío.");
+
+            let itemsText = "";
+            let totalPrice = 0;
+
+            try {
+                for (const item of cart) {
+                    const prodRef = ref(db, `products/${item.key}`);
+                    const prodSnap = await get(prodRef);
+                    if (prodSnap.exists()) {
+                        const currentStock = prodSnap.val().stock;
+                        if (currentStock < item.qty) {
+                            alert(`Lo sentimos, el producto ${item.name} ya no tiene suficiente stock.`);
+                            return;
+                        }
+                        // Descontar stock
+                        await update(prodRef, { stock: currentStock - item.qty });
+                    }
+                    const sub = item.price * item.qty;
+                    totalPrice += sub;
+                    itemsText += `• ${item.qty}x ${item.name} ($${sub.toFixed(2)})\n`;
+                }
+
+                // Registrar venta en Firebase
+                const saleRef = push(ref(db, 'sales'));
+                await set(saleRef, {
+                    date: new Date().toLocaleString(),
+                    client: `${loggedClient.name} (CI: ${loggedClient.ci})`,
+                    location: loggedClient.location || 'No especificada',
+                    total: totalPrice.toFixed(2),
+                    items: itemsText.trim().replace(/\n/g, ' | ')
+                });
+
+                // Construir mensaje de WhatsApp detallado
+                const message = `*🛒 NUEVO PEDIDO - ABASTO EXPRESS*\n\n` +
+                                `👤 *Cliente:* ${loggedClient.name}\n` +
+                                `🪪 *Cédula:* ${loggedClient.ci}\n` +
+                                `📍 *Ubicación:* ${loggedClient.location || 'No especificada'}\n` +
+                                `🖼️ *Foto de perfil:* ${loggedClient.photo || 'No registrada'}\n\n` +
+                                `📦 *PRODUCTOS SOLICITADOS:*\n${itemsText}\n` +
+                                `💰 *TOTAL A PAGAR:* $${totalPrice.toFixed(2)}\n\n` +
+                                `¡Por favor confirmar mi pedido y el envío!`;
+
+                const phone = whatsappNumber;
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+
+                cart = [];
+                updateCartBadge();
+                document.getElementById('cart-modal').classList.add('hidden');
+                await loadStoreData();
+            } catch (e) {
+                alert("Error al procesar el pedido.");
+            }
         }
 
         window.renderAdminInventory = function() {
@@ -434,9 +595,9 @@
                             <td class="p-3 font-semibold text-slate-700">${currentStock}</td>
                             <td class="p-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
-                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold" title="Restar 1">-1</button>
-                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold" title="Sumar 1">+1</button>
-                                    <button onclick="customAdjustStock('${key}', ${currentStock})" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded-lg text-xs font-medium" title="Cantidad específica">± Cant</button>
+                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold">-1</button>
+                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold">+1</button>
+                                    <button onclick="customAdjustStock('${key}', ${currentStock})" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded-lg text-xs font-medium">± Cant</button>
                                 </div>
                             </td>
                             <td class="p-3 text-center">
@@ -478,41 +639,15 @@
                     salesTable.innerHTML += `
                         <tr class="border-b hover:bg-slate-50">
                             <td class="p-3 text-xs text-slate-500">${s.date || key}</td>
-                            <td class="p-3 font-medium">${s.client || 'Cliente General'}</td>
+                            <td class="p-3 font-medium">${s.client}</td>
+                            <td class="p-3 text-xs text-slate-600">${s.location || 'No especificada'}</td>
                             <td class="p-3 font-bold text-accent">$${s.total}</td>
                             <td class="p-3 text-xs text-slate-600">${s.items}</td>
                         </tr>
                     `;
                 });
             } else {
-                salesTable.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
-            }
-        }
-
-        // PEDIDO Y DESCUENTO AUTOMÁTICO DE STOCK CON CLIENTE REGISTRADO
-        window.orderProduct = async function(key, name, price, currentStock) {
-            if (currentStock <= 0) return alert("Lo sentimos, este producto está agotado.");
-            
-            const clientName = loggedClient ? `${loggedClient.name} (CI: ${loggedClient.ci})` : 'Cliente General';
-            
-            const newStock = currentStock - 1;
-            try {
-                await update(ref(db, `products/${key}`), { stock: newStock });
-                const saleRef = push(ref(db, 'sales'));
-                await set(saleRef, {
-                    date: new Date().toLocaleString(),
-                    client: clientName,
-                    total: price,
-                    items: `1x ${name}`
-                });
-
-                const phone = whatsappNumber;
-                const text = encodeURIComponent(`¡Hola! 👋 Soy *${clientName}*. Deseo pedir el producto *${name}* por un valor de *$${price}* en Abasto Express.`);
-                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
-
-                await loadStoreData();
-            } catch (e) {
-                alert("Error al procesar el pedido");
+                salesTable.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">No hay ventas registradas.</td></tr>';
             }
         }
 
@@ -520,10 +655,8 @@
             const p = allProducts[key];
             const currentStock = p.stock !== undefined ? p.stock : 10;
             const newStock = Math.max(0, currentStock + amount);
-            try {
-                await update(ref(db, `products/${key}`), { stock: newStock });
-                await window.loadStoreData();
-            } catch (e) { alert("Error al actualizar el stock"); }
+            await update(ref(db, `products/${key}`), { stock: newStock });
+            await window.loadStoreData();
         }
 
         window.customAdjustStock = async function(key, currentStock) {
@@ -532,10 +665,8 @@
                 const val = parseInt(input);
                 if(!isNaN(val)) {
                     const newStock = Math.max(0, currentStock + val);
-                    try {
-                        await update(ref(db, `products/${key}`), { stock: newStock });
-                        await window.loadStoreData();
-                    } catch (e) { alert("Error al actualizar el stock"); }
+                    await update(ref(db, `products/${key}`), { stock: newStock });
+                    await window.loadStoreData();
                 } else { alert("Ingresa un número válido."); }
             }
         }
@@ -557,15 +688,30 @@
         function openAdminModal() {
             const pin = prompt("Ingresa la contraseña de administración:");
             if (pin === (window.currentAdminPin || "Abasto2026*")) {
-                const modal = document.getElementById('admin-modal');
-                if (modal) modal.classList.remove('hidden');
-            } else if (pin !== null) {
-                alert("Contraseña incorrecta");
-            }
+                document.getElementById('admin-modal').classList.remove('hidden');
+            } else if (pin !== null) { alert("Contraseña incorrecta"); }
         }
 
         function openClientAuthModal() {
-            document.getElementById('client-auth-modal').classList.remove('hidden');
+            const modal = document.getElementById('client-auth-modal');
+            const formView = document.getElementById('client-form-view');
+            const profileView = document.getElementById('client-profile-view');
+
+            if (loggedClient) {
+                formView.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                document.getElementById('profile-name-display').innerText = loggedClient.name;
+                document.getElementById('profile-ci-display').innerText = `Cédula: ${loggedClient.ci}`;
+                document.getElementById('client-photo-input').value = loggedClient.photo || '';
+                document.getElementById('client-location-input').value = loggedClient.location || '';
+                if(loggedClient.photo) {
+                    document.getElementById('profile-img-preview').src = loggedClient.photo;
+                }
+            } else {
+                formView.classList.remove('hidden');
+                profileView.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
         }
 
         async function registerOrLoginClient() {
@@ -576,34 +722,41 @@
             if(!name || !ci || !pin) return alert("Por favor completa todos los campos.");
             if(pin.length !== 5) return alert("La clave debe ser exactamente de 5 dígitos.");
 
-            // Guardar o verificar en Firebase / LocalStorage
-            const clientData = { name, ci, pin };
-            localStorage.setItem('abasto_client', JSON.stringify(clientData));
-            window.loggedClient = clientData;
+            loggedClient = { name, ci, pin, photo: '', location: '' };
+            localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
             
-            document.getElementById('client-auth-modal').classList.add('hidden');
-            window.updateClientUI();
-            alert(`¡Bienvenido(a) ${name}! Ya estás registrado y listo para comprar.`);
+            updateClientUI();
+            openClientAuthModal();
+            alert(`¡Bienvenido(a) ${name}! Ya estás registrado. Ahora puedes configurar tu foto y ubicación.`);
+        }
+
+        async function saveClientProfile() {
+            const photo = document.getElementById('client-photo-input').value.trim();
+            const location = document.getElementById('client-location-input').value.trim();
+
+            if (loggedClient) {
+                loggedClient.photo = photo;
+                loggedClient.location = location;
+                localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
+                updateClientUI();
+                alert("¡Perfil, foto y ubicación actualizados con éxito!");
+                document.getElementById('client-auth-modal').classList.add('hidden');
+            }
         }
 
         function logoutClient() {
             localStorage.removeItem('abasto_client');
-            window.loggedClient = null;
-            window.updateClientUI();
+            loggedClient = null;
+            updateClientUI();
+            document.getElementById('client-auth-modal').classList.add('hidden');
             alert("Has cerrado sesión.");
         }
 
         function switchAdminTab(tab) {
-            document.getElementById('admin-tab-config').classList.add('hidden');
-            document.getElementById('admin-tab-departments').classList.add('hidden');
-            document.getElementById('admin-tab-inventory').classList.add('hidden');
-            document.getElementById('admin-tab-sales').classList.add('hidden');
-            
-            document.getElementById('tab-btn-config').className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
-            document.getElementById('tab-btn-departments').className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
-            document.getElementById('tab-btn-inventory').className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
-            document.getElementById('tab-btn-sales').className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
-
+            ['config', 'departments', 'inventory', 'sales'].forEach(t => {
+                document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
+            });
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap";
         }
@@ -634,8 +787,7 @@
 
         async function addDepartment() {
             const deptName = document.getElementById('new-dept-name').value.trim();
-            if(!deptName) return alert("Ingresa un nombre para el departamento");
-            
+            if(!deptName) return alert("Ingresa un nombre");
             const snap = await window.get(window.ref(window.db, 'config/departments'));
             let depts = snap.exists() ? snap.val() : ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
             if(!depts.includes(deptName)) {
@@ -644,17 +796,17 @@
                 document.getElementById('new-dept-name').value = '';
                 alert("¡Departamento agregado!");
                 await window.loadStoreData();
-            } else { alert("Este departamento ya existe."); }
+            } else { alert("Ya existe."); }
         }
 
         async function deleteDepartment(index) {
             const snap = await window.get(window.ref(window.db, 'config/departments'));
             let depts = snap.exists() ? snap.val() : ["Bebidas y snacks", "Víveres", "Comida", "Accesorios", "Repuestos", "Cosméticos"];
             if(depts.length <= 1) return alert("Debes tener al menos un departamento.");
-            if(confirm("¿Estás seguro de eliminar este departamento?")) {
+            if(confirm("¿Eliminar departamento?")) {
                 depts.splice(index, 1);
                 await window.set(window.ref(window.db, 'config/departments'), depts);
-                alert("¡Departamento eliminado!");
+                alert("¡Eliminado!");
                 await window.loadStoreData();
             }
         }
@@ -666,7 +818,7 @@
             const category = document.getElementById('prod-category').value;
             const image = document.getElementById('prod-image').value;
 
-            if(!name || isNaN(price) || isNaN(stock)) return alert("Completa nombre, precio y stock correctamente");
+            if(!name || isNaN(price) || isNaN(stock)) return alert("Completa los campos correctamente");
             
             const newProdRef = window.push(window.ref(window.db, 'products'));
             await window.set(newProdRef, { name, price, stock, category, image: image || '' });
@@ -676,12 +828,12 @@
             document.getElementById('prod-stock').value = '';
             document.getElementById('prod-image').value = '';
             
-            alert("¡Producto guardado con éxito!");
+            alert("¡Producto guardado!");
             await window.loadStoreData();
         }
 
         async function deleteProduct(key) {
-            if(confirm("¿Eliminar este producto?")) {
+            if(confirm("¿Eliminar producto?")) {
                 await window.remove(window.ref(window.db, `products/${key}`));
                 await window.loadStoreData();
             }
@@ -690,6 +842,7 @@
         window.openAdminModal = openAdminModal;
         window.openClientAuthModal = openClientAuthModal;
         window.registerOrLoginClient = registerOrLoginClient;
+        window.saveClientProfile = saveClientProfile;
         window.logoutClient = logoutClient;
         window.switchAdminTab = switchAdminTab;
         window.saveAdminRate = saveAdminRate;
