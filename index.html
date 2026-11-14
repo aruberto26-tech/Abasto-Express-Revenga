@@ -301,6 +301,17 @@
         </div>
     </div>
 
+    <script>
+function openAdminModal() {
+    const pin = prompt("Ingresa la contraseña de administración:");
+    if (pin === "Abasto2026*") {
+        const modal = document.getElementById('admin-modal');
+        if (modal) modal.classList.remove('hidden');
+    } else if (pin !== null) {
+        alert("Contraseña incorrecta");
+    }
+}
+</script>
     <!-- MODAL MODO ADMIN -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
         <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
