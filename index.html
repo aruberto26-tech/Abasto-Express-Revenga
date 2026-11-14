@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abasto Express - Tu Bodega Online</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Abasto Express</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#16a34a',
+                        primary: '#1e293b',
                         secondary: '#0f172a',
                         accent: '#f59e0b'
                     }
@@ -19,21 +19,12 @@
             }
         }
     </script>
-    <!-- FontAwesome para iconos -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK (Compatibilidad para un solo archivo HTML) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- INDICADOR DE SINCRONIZACIÓN EN LA NUBE -->
-    <div id="sync-status" class="bg-emerald-600 text-white text-[11px] text-center py-1 font-bold hidden">
-        <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Sincronizando cambios en la nube...
-    </div>
-
-    <!-- BARRA SUPERIOR / TASA Y ANUNCIOS -->
+    <!-- BARRA SUPERIOR -->
     <div class="bg-secondary text-white text-xs sm:text-sm py-2 px-4 shadow-inner">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-2">
@@ -45,9 +36,6 @@
                     <span class="text-slate-400">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
                 </div>
-                <button onclick="openClientModal()" id="top-client-btn" class="hover:text-accent transition flex items-center gap-1">
-                    <i class="fa-solid fa-user-circle"></i> <span id="client-btn-text">Cliente Fijo</span>
-                </button>
                 <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1">
                     <i class="fa-solid fa-lock text-xs"></i> Admin
                 </button>
@@ -58,261 +46,96 @@
     <!-- ENCABEZADO PRINCIPAL -->
     <header class="bg-white shadow-sm sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <!-- Logo y Nombre -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="filterCategory('Todos')">
                 <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white text-2xl shadow-md">
                     <i class="fa-solid fa-basket-shopping"></i>
                 </div>
                 <div>
-                    <h1 id="store-title" class="text-2xl font-black text-secondary tracking-tight">Abasto Express</h1>
-                    <p class="text-xs text-slate-500 font-medium">Delante de tu puerta en minutos</p>
+                    <h1 class="text-2xl font-black text-primary tracking-tight">ABASTO EXPRESS</h1>
+                    <p class="text-xs text-slate-500 font-medium">Tu tienda virtual de confianza</p>
                 </div>
-            </div>
-
-            <!-- Buscador -->
-            <div class="w-full sm:w-96 relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Buscar harina, aceite, queso..." class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
-            </div>
-
-            <!-- Acciones Carrito -->
-            <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-                <button onclick="toggleCart()" class="relative bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 shadow-lg shadow-primary/20 transition transform active:scale-95">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span>Ver Carrito</span>
-                    <span id="cart-badge" class="bg-accent text-secondary text-xs px-2 py-0.5 rounded-full font-black hidden">0</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- CATEGORÍAS -->
-        <div class="bg-slate-100 border-t border-slate-200 py-2.5 px-4 overflow-x-auto">
-            <div class="max-w-7xl mx-auto flex items-center gap-2 min-w-max" id="categories-container">
-                <!-- Generado por JS -->
             </div>
         </div>
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
-        <!-- Banner de Ofertas / Promos -->
-        <div class="bg-gradient-to-r from-secondary to-slate-800 text-white rounded-3xl p-6 sm:p-8 mb-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 text-white/5 text-9xl pointer-events-none">
-                <i class="fa-solid fa-store"></i>
-            </div>
-            <div class="z-10 text-center md:text-left">
-                <span class="bg-accent text-secondary text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">Servicio Local</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold mb-2">¡Compra sin salir de casa!</h2>
-                <p class="text-slate-300 text-sm sm:text-base max-w-xl">Pide tus víveres y embutidos con total confianza. Delivery gratis en los primeros 2 kilómetros alrededor del pueblo.</p>
-            </div>
-            <div class="z-10 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                <button onclick="filterCategory('Ofertas')" class="bg-accent hover:bg-amber-400 text-secondary font-bold px-6 py-3 rounded-xl shadow-lg transition text-center">
-                    <i class="fa-solid fa-tag mr-2"></i> Ver Ofertas del Día
-                </button>
-            </div>
+        <!-- SECCIÓN DE CARGA Y PRODUCTOS -->
+        <div id="loading-spinner" class="flex flex-col items-center justify-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
+            <p class="text-slate-500 text-sm font-medium">Cargando inventario y precios...</p>
         </div>
 
-        <!-- Listado de Productos -->
-        <div class="flex justify-between items-center mb-6">
-            <h3 id="current-category-title" class="text-xl font-bold text-secondary">Catálogo Disponible</h3>
-            <div class="flex items-center gap-2 text-sm text-slate-500">
-                <span>Ordenar por:</span>
-                <select id="sort-select" onchange="sortProducts(this.value)" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary font-medium text-slate-700">
-                    <option value="default">Por defecto</option>
-                    <option value="price-asc">Precio: más bajo a alto</option>
-                    <option value="price-desc">Precio: más alto a bajo</option>
-                    <option value="name">Nombre (A-Z)</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="col-span-full text-center py-12 text-slate-400">
-                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 text-primary"></i>
-                <p>Cargando catálogo actualizado...</p>
-            </div>
+        <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
+            <!-- Los productos se cargan dinámicamente desde Firebase -->
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-secondary text-slate-400 py-10 px-4 mt-16 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-            <div>
-                <h4 class="text-white font-bold text-base mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-basket-shopping text-accent"></i> Abasto Express
-                </h4>
-                <p class="text-slate-400 mb-4">Solución comunitaria para pedidos y entrega a domicilio rápida, conectando el abasto directamente con los hogares del pueblo.</p>
-                <p class="text-xs text-slate-500">© 2026 Abasto Express. Todos los derechos reservados.</p>
+    <!-- MODAL MODO ADMIN -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
+            <div class="p-5 bg-secondary text-white flex items-center justify-between">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-accent mr-2"></i> Panel de Administración</h3>
+                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
-            <div>
-                <h4 class="text-white font-bold text-base mb-3">Horario de Atención</h4>
-                <ul class="space-y-2 text-slate-300">
-                    <li class="flex justify-between"><span>Lunes a Sábado:</span> <span class="font-medium text-white">8:00 AM - 7:00 PM</span></li>
-                    <li class="flex justify-between"><span>Domingos:</span> <span class="font-medium text-white">8:00 AM - 2:00 PM</span></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold text-base mb-3">Contacto Directo</h4>
-                <p class="mb-3 text-slate-300">¿Tienes dudas con tu pedido? Escríbenos al WhatsApp oficial de la tienda.</p>
-                <a id="footer-whatsapp-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-bold transition shadow-md">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Abrir WhatsApp
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- CARRITO LATERAL (DRAWER) -->
-    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
-                <div class="p-5 bg-secondary text-white flex items-center justify-between">
-                    <h3 class="text-lg font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-cart-shopping text-accent"></i> Tu Carrito de Compras
-                    </h3>
-                    <button onclick="toggleCart()" class="text-slate-400 hover:text-white p-2">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
-
-                <div class="bg-amber-50 border-b border-amber-100 p-3 text-xs text-amber-800 flex items-center gap-2">
-                    <i class="fa-solid fa-truck-fast text-accent text-base"></i>
-                    <span id="delivery-promo-text">¡Primeros 2 km de delivery completamente gratis!</span>
-                </div>
-
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-
-                <div class="border-t border-slate-200 p-4 bg-slate-50 space-y-3">
-                    <h4 class="font-bold text-sm text-secondary flex items-center gap-2">
-                        <i class="fa-solid fa-address-book text-primary"></i> Datos de Entrega
-                    </h4>
-                    
-                    <div class="space-y-2">
-                        <input type="text" id="order-name" placeholder="Nombre y Apellido *" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="tel" id="order-phone" placeholder="Teléfono / WhatsApp *" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                            <select id="order-distance" onchange="updateCartTotals()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-medium text-slate-700">
-                                <option value="1">1 km (¡Gratis!)</option>
-                                <option value="2" selected>2 km (¡Gratis!)</option>
-                                <option value="3">3 km ($1.00)</option>
-                                <option value="4">4 km ($2.00)</option>
-                                <option value="5">5 km ($3.00)</option>
-                                <option value="6">6 km ($4.00)</option>
-                                <option value="7">7 km ($5.00)</option>
-                            </select>
-                        </div>
-                        <input type="text" id="order-address" placeholder="Ubicación / Dirección Exacta *" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                        <div class="flex gap-2">
-                            <input type="text" id="order-reference" placeholder="Punto de referencia (ej. Casa verde)" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                            <button onclick="captureGPS()" type="button" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shrink-none" title="Capturar Ubicación GPS">
-                                <i class="fa-solid fa-location-dot text-primary"></i> GPS
-                            </button>
-                        </div>
-                        <div class="flex items-center gap-2 pt-1">
-                            <select id="order-payment" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-primary font-medium text-slate-700">
-                                <option value="Pago Móvil">Pago Móvil</option>
-                                <option value="Efectivo ($)">Efectivo ($)</option>
-                                <option value="Zelle">Zelle</option>
-                                <option value="Punto de Venta">Punto de Venta</option>
-                            </select>
-                        </div>
-                        <div id="save-client-checkbox-wrapper" class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" id="save-as-client" class="rounded text-primary focus:ring-primary">
-                            <label for="save-as-client" class="text-xs text-slate-600">Guardar mis datos como cliente fijo (PIN por defecto: 1234)</label>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-200 pt-3 space-y-1 text-sm">
-                        <div class="flex justify-between text-slate-500">
-                            <span>Subtotal productos:</span>
-                            <span id="cart-subtotal">$0.00</span>
-                        </div>
-                        <div class="flex justify-between text-slate-500">
-                            <span>Costo Delivery:</span>
-                            <span id="cart-delivery-cost">$0.00</span>
-                        </div>
-                        <div class="flex justify-between font-extrabold text-secondary text-base pt-1 border-t border-slate-200">
-                            <span>Total a Pagar:</span>
-                            <div class="text-right">
-                                <div id="cart-total-usd" class="text-primary">$0.00</div>
-                                <div id="cart-total-bs" class="text-xs text-slate-500 font-medium">0.00 Bs.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg transition">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> Enviar Pedido por WhatsApp
-                    </button>
-                </div>
+            <div class="p-6 overflow-y-auto flex-grow">
+                <p class="text-slate-600">Panel de control de inventario y configuración de Abasto Express.</p>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CLIENTE FIJO -->
-    <div id="client-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
-            <button onclick="closeClientModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <div id="client-login-view">
-                <div class="text-center mb-6">
-                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">
-                        <i class="fa-solid fa-user-check"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-secondary">Acceso Clientes Fijos</h3>
-                    <p class="text-xs text-slate-500 mt-1">Ingresa con tu teléfono y PIN de 4 dígitos para comprar más rápido.</p>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Número de Teléfono</label>
-                        <input type="tel" id="client-login-phone" placeholder="Ej. 04125551234" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">PIN de Acceso (4 dígitos)</label>
-                        <input type="password" maxlength="4" id="client-login-pin" placeholder="Ej. 1234" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                    <button onclick="loginClient()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg transition">
-                        Iniciar Sesión
-                    </button>
-                </div>
-            </div>
+    <!-- SCRIPT DE CONFIGURACIÓN Y FUNCIONES -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-            <div id="client-dashboard-view" class="hidden space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <div>
-                        <h3 id="client-dash-name" class="font-bold text-secondary text-lg">Nombre Cliente</h3>
-                        <p id="client-dash-phone" class="text-xs text-slate-500">0412-5551234</p>
-                    </div>
-                    <button onclick="logoutClient()" class="text-xs bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg font-bold hover:bg-rose-100 transition">Cerrar Sesión</button>
-                </div>
-                <div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1">
-                    <p class="font-bold text-slate-700">Dirección Habitual:</p>
-                    <p id="client-dash-address" class="text-slate-600">-</p>
-                    <p class="font-bold text-slate-700 pt-1">Referencia:</p>
-                    <p id="client-dash-ref" class="text-slate-600">-</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-sm text-secondary mb-2">Tus Compras Recientes</h4>
-                    <div id="client-orders-history" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDVvmv4IMKVqw4dTEVuKfRddkmZHvTozU",
+            authDomain: "abasto-express-revenga.firebaseapp.com",
+            databaseURL: "https://abasto-express-revenga-default-rtdb.firebaseio.com",
+            projectId: "abasto-express-revenga",
+            storageBucket: "abasto-express-revenga.firebasestorage.app",
+            messagingSenderId: "949998603525",
+            appId: "1:949998603525:web:3d17f8878cec631291bb6c",
+            measurementId: "G-FTGBP8J3YH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        async function initApp() {
+            try {
+                const configRef = ref(db, 'config');
+                const snapshot = await get(configRef);
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if (data.bcvRate) {
+                        document.getElementById('top-rate-display').innerText = data.bcvRate;
+                    }
+                }
+                document.getElementById('loading-spinner').classList.add('hidden');
+                document.getElementById('products-container').classList.remove('hidden');
+            } catch (error) {
+                console.error("Error al conectar con Firebase:", error);
+            }
+        }
+
+        initApp();
+    </script>
 
     <script>
-function openAdminModal() {
-    const pin = prompt("Ingresa la contraseña de administración:");
-    if (pin === "Abasto2026*") {
-        const modal = document.getElementById('admin-modal');
-        if (modal) modal.classList.remove('hidden');
-    } else if (pin !== null) {
-        alert("Contraseña incorrecta");
-    }
-}
-</script>
-    <!-- MODAL MODO ADMIN -->
-    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
-        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
-            <div class="p-5 bg-secondary text-white flex items-center justify-between"
+        function openAdminModal() {
+            const pin = prompt("Ingresa la contraseña de administración:");
+            if (pin === "Abasto2026*") {
+                const modal = document.getElementById('admin-modal');
+                if (modal) modal.classList.remove('hidden');
+            } else if (pin !== null) {
+                alert("Contraseña incorrecta");
+            }
+        }
+        window.openAdminModal = openAdminModal;
+    </script>
+</body>
+</html>
