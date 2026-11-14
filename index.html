@@ -136,8 +136,8 @@
                     <input type="text" id="client-phone" placeholder="Ej: 0412-5551234" class="w-full px-3 py-2 border rounded-xl text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">URL de tu Foto (Imagen de perfil)</label>
-                    <input type="text" id="client-photo" placeholder="https://..." class="w-full px-3 py-2 border rounded-xl text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto de Perfil (Seleccionar de galería JPG / PNG)</label>
+                    <input type="file" id="client-photo-file" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-slate-800 cursor-pointer">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Ubicación / Dirección de Entrega</label>
@@ -160,8 +160,8 @@
                 </div>
                 <div class="text-left space-y-2">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Foto (URL)</label>
-                        <input type="text" id="client-photo-input" class="w-full px-3 py-2 border rounded-xl text-sm">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Foto (Galería JPG / PNG)</label>
+                        <input type="file" id="client-photo-file-update" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50 file:mr-4 file:py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-slate-800 cursor-pointer">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Actualizar Ubicación</label>
@@ -369,7 +369,22 @@
         let loggedClient = JSON.parse(localStorage.getItem('abasto_client')) || null;
         let cart = [];
 
-        // DECLARAR LAS FUNCIONES DE MODAL DE CLIENTE GLOBALMENTE EN WINDOW INMEDIATAMENTE
+        // Función auxiliar para convertir archivo de imagen a Base64 (JPG/PNG directo de galería)
+        function convertFileToBase64(fileInputId) {
+            return new Promise((resolve) => {
+                const fileInput = document.getElementById(fileInputId);
+                if (fileInput && fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        resolve(e.target.result);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    resolve(null);
+                }
+            });
+        }
+
         window.openClientAuthModal = function() {
             const modal = document.getElementById('client-auth-modal');
             const formView = document.getElementById('client-form-view');
@@ -381,7 +396,6 @@
                 document.getElementById('profile-name-display').innerText = loggedClient.name;
                 document.getElementById('profile-ci-display').innerText = `Cédula: ${loggedClient.ci}`;
                 document.getElementById('profile-phone-display').innerText = `Teléfono: ${loggedClient.phone || 'No registrado'}`;
-                document.getElementById('client-photo-input').value = loggedClient.photo || '';
                 document.getElementById('client-location-input').value = loggedClient.location || '';
                 if(loggedClient.photo) {
                     document.getElementById('profile-img-preview').src = loggedClient.photo;
@@ -401,26 +415,34 @@
             const name = document.getElementById('client-name').value.trim();
             const ci = document.getElementById('client-ci').value.trim();
             const phone = document.getElementById('client-phone').value.trim();
-            const photo = document.getElementById('client-photo').value.trim();
             const location = document.getElementById('client-location').value.trim();
             const pin = document.getElementById('client-pin').value.trim();
 
             if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa todos los campos obligatorios.");
             if(pin.length !== 5) return alert("La clave de seguridad debe ser exactamente de 5 dígitos.");
 
+            // Obtener foto desde la galería del teléfono (JPG/PNG)
+            let photoBase64 = await convertFileToBase64('client-photo-file');
+
             const clientsSnap = await window.get(window.ref(window.db, 'clients'));
             let clientId = null;
+            let existingPhoto = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
 
             if (clientsSnap.exists()) {
                 const clients = clientsSnap.val();
                 Object.keys(clients).forEach(id => {
                     if (clients[id].ci === ci) {
                         clientId = id;
+                        if(clients[id].photo) existingPhoto = clients[id].photo;
                     }
                 });
             }
 
-            loggedClient = { name, ci, phone, pin, photo, location };
+            if (!photoBase64) {
+                photoBase64 = existingPhoto;
+            }
+
+            loggedClient = { name, ci, phone, pin, photo: photoBase64, location };
             localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
 
             if (clientId) {
@@ -437,11 +459,13 @@
         }
 
         window.saveClientProfile = async function() {
-            const photo = document.getElementById('client-photo-input').value.trim();
             const location = document.getElementById('client-location-input').value.trim();
+            let newPhoto = await convertFileToBase64('client-photo-file-update');
 
             if (loggedClient) {
-                loggedClient.photo = photo;
+                if (newPhoto) {
+                    loggedClient.photo = newPhoto;
+                }
                 loggedClient.location = location;
                 localStorage.setItem('abasto_client', JSON.stringify(loggedClient));
 
@@ -450,7 +474,9 @@
                     const clients = clientsSnap.val();
                     Object.keys(clients).forEach(async id => {
                         if (clients[id].ci === loggedClient.ci) {
-                            await window.update(window.ref(window.db, `clients/${id}`), { photo, location });
+                            let updateData = { location };
+                            if (newPhoto) updateData.photo = newPhoto;
+                            await window.update(window.ref(window.db, `clients/${id}`), updateData);
                         }
                     });
                 }
@@ -705,7 +731,7 @@
                                 `🪪 *Cédula:* ${loggedClient.ci}\n` +
                                 `📞 *Teléfono:* ${loggedClient.phone || 'No registrado'}\n` +
                                 `📍 *Ubicación:* ${loggedClient.location || 'No especificada'}\n` +
-                                `🖼️ *Foto de perfil:* ${loggedClient.photo || 'No registrada'}\n\n` +
+                                `🖼️ *Foto de perfil cargada desde galería*\n\n` +
                                 `📦 *PRODUCTOS SOLICITADOS:*\n${itemsText}\n` +
                                 `💰 *TOTAL A PAGAR:* $${totalPrice.toFixed(2)}\n\n` +
                                 `¡Por favor confirmar mi pedido y el envío!`;
