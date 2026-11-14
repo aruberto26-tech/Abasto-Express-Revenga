@@ -36,13 +36,13 @@
                     <span class="text-slate-400">Tasa BCV:</span>
                     <span id="top-rate-display" class="font-bold text-accent">45.50</span> Bs/$
                 </div>
-                <!-- BOTÓN DE CLIENTE -->
+                <!-- BOTÓN DE CLIENTE (DISPARADOR FIJO) -->
                 <div id="client-auth-container">
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 </div>
-                <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1">
+                <button onclick="openAdminModal()" class="hover:text-accent transition flex items-center gap-1 cursor-pointer">
                     <i class="fa-solid fa-lock text-xs"></i> Admin
                 </button>
             </div>
@@ -69,7 +69,7 @@
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm">
                 </div>
                 <!-- BOTÓN DEL CARRITO -->
-                <button onclick="openCartModal()" class="relative bg-primary hover:bg-slate-800 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center">
+                <button onclick="openCartModal()" class="relative bg-primary hover:bg-slate-800 text-white p-2.5 rounded-xl transition shadow-md flex items-center justify-center cursor-pointer">
                     <i class="fa-solid fa-cart-shopping text-lg"></i>
                     <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-accent text-slate-900 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
                 </button>
@@ -115,13 +115,14 @@
     <div id="client-auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Datos del Cliente</h3>
-                <button onclick="document.getElementById('client-auth-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+                <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-user-circle text-accent mr-2"></i> Registro de Cliente</h3>
+                <button onclick="closeClientAuthModal()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
+            
             <div id="client-form-view" class="space-y-3">
-                <p class="text-xs text-slate-500 bg-amber-50 p-3 rounded-xl border border-amber-200">⚠️ Para realizar tu compra, por favor completa tus datos de registro y entrega.</p>
+                <p class="text-xs text-slate-500 bg-amber-50 p-3 rounded-xl border border-amber-200">⚠️ Por favor completa tus datos para poder registrarte y realizar tus compras.</p>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre y Apellido</label>
                     <input type="text" id="client-name" placeholder="Ej: Juan Pérez" class="w-full px-3 py-2 border rounded-xl text-sm">
@@ -146,7 +147,7 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Clave de Seguridad (5 dígitos)</label>
                     <input type="password" id="client-pin" maxlength="5" placeholder="•••••" class="w-full px-3 py-2 border rounded-xl text-sm text-center tracking-widest font-bold">
                 </div>
-                <button onclick="registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow">Guardar y Continuar Compra</button>
+                <button onclick="registerOrLoginClient()" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Guardar Registro y Comprar</button>
             </div>
 
             <!-- VISTA DE PERFIL UNA VEZ REGISTRADO -->
@@ -167,8 +168,8 @@
                         <input type="text" id="client-location-input" class="w-full px-3 py-2 border rounded-xl text-sm">
                     </div>
                 </div>
-                <button onclick="saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow">Actualizar Datos</button>
-                <button onclick="logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto">Cerrar Sesión</button>
+                <button onclick="saveClientProfile()" class="w-full bg-accent text-slate-900 font-bold py-2.5 rounded-xl text-sm transition shadow cursor-pointer">Actualizar Datos</button>
+                <button onclick="logoutClient()" class="text-xs text-red-500 underline font-medium block mx-auto cursor-pointer">Cerrar Sesión</button>
             </div>
         </div>
     </div>
@@ -178,7 +179,7 @@
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h3 class="font-bold text-lg text-slate-800"><i class="fa-solid fa-cart-shopping text-accent mr-2"></i> Tu Carrito de Compras</h3>
-                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700">
+                <button onclick="document.getElementById('cart-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 cursor-pointer">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
@@ -188,7 +189,7 @@
                     <span>Total a Pagar:</span>
                     <span id="cart-total-price" class="text-accent">$0.00</span>
                 </div>
-                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+                <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Pedido por WhatsApp
                 </button>
             </div>
@@ -200,17 +201,17 @@
         <div class="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
             <div class="p-5 bg-secondary text-white flex items-center justify-between">
                 <h3 class="font-bold text-lg"><i class="fa-solid fa-lock text-accent mr-2"></i> Panel de Administración</h3>
-                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+                <button onclick="document.getElementById('admin-modal').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
             
             <div class="flex border-b border-slate-200 bg-slate-100 px-6 gap-2 overflow-x-auto">
-                <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap">Configuración</button>
-                <button onclick="switchAdminTab('departments')" id="tab-btn-departments" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap">Departamentos</button>
-                <button onclick="switchAdminTab('inventory')" id="tab-btn-inventory" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap">Inventario y Stock</button>
-                <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap">Ventas</button>
-                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap">Clientes Registrados</button>
+                <button onclick="switchAdminTab('config')" id="tab-btn-config" class="py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap cursor-pointer">Configuración</button>
+                <button onclick="switchAdminTab('departments')" id="tab-btn-departments" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Departamentos</button>
+                <button onclick="switchAdminTab('inventory')" id="tab-btn-inventory" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Inventario y Stock</button>
+                <button onclick="switchAdminTab('sales')" id="tab-btn-sales" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Ventas</button>
+                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer">Clientes Registrados</button>
             </div>
 
             <div class="p-6 overflow-y-auto flex-grow space-y-6">
@@ -221,21 +222,21 @@
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Tasa del Dólar BCV (Bs/$)</label>
                             <div class="flex gap-2">
                                 <input type="number" id="admin-rate-input" step="0.01" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Ej: 45.50">
-                                <button onclick="saveAdminRate()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800">Guardar</button>
+                                <button onclick="saveAdminRate()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Guardar</button>
                             </div>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp de Pedidos</label>
                             <div class="flex gap-2">
                                 <input type="text" id="admin-phone-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Ej: 584125551234">
-                                <button onclick="saveAdminPhone()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800">Guardar</button>
+                                <button onclick="saveAdminPhone()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Guardar</button>
                             </div>
                         </div>
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Nueva Contraseña Admin</label>
                             <div class="flex gap-2">
                                 <input type="password" id="admin-pass-input" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Nueva clave">
-                                <button onclick="saveAdminPassword()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800">Cambiar</button>
+                                <button onclick="saveAdminPassword()" class="bg-primary text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 cursor-pointer">Cambiar</button>
                             </div>
                         </div>
                     </div>
@@ -247,7 +248,7 @@
                         <h4 class="font-bold text-slate-700 mb-3"><i class="fa-solid fa-folder-plus text-accent mr-1"></i> Agregar Nuevo Departamento</h4>
                         <div class="flex gap-2">
                             <input type="text" id="new-dept-name" placeholder="Ej: Bebidas y snacks, Víveres..." class="w-full px-3 py-2 border rounded-xl text-sm">
-                            <button onclick="addDepartment()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap">Crear</button>
+                            <button onclick="addDepartment()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 whitespace-nowrap cursor-pointer">Crear</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -274,7 +275,7 @@
                             <select id="prod-category" class="px-3 py-2 border rounded-xl text-sm bg-white"></select>
                             <input type="text" id="prod-image" placeholder="URL de la foto del producto" class="px-3 py-2 border rounded-xl text-sm col-span-full">
                         </div>
-                        <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90">Guardar Producto</button>
+                        <button onclick="saveProduct()" class="bg-accent text-slate-900 font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 cursor-pointer">Guardar Producto</button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
@@ -397,14 +398,14 @@
             const container = document.getElementById('client-auth-container');
             if (loggedClient) {
                 container.innerHTML = `
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <img src="${loggedClient.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}" class="w-6 h-6 object-cover rounded-full border border-accent">
                         <span>${loggedClient.name}</span>
                     </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold">
+                    <button onclick="openClientAuthModal()" class="hover:text-accent transition flex items-center gap-1 font-semibold cursor-pointer">
                         <i class="fa-solid fa-user-circle"></i> <span>Mi Cuenta</span>
                     </button>
                 `;
@@ -430,12 +431,12 @@
             const container = document.getElementById('categories-container');
             const selectEl = document.getElementById('prod-category');
             
-            container.innerHTML = `<button onclick="filterCategory('Todos')" class="category-btn ${currentCategory === 'Todos' ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition">Todos</button>`;
+            container.innerHTML = `<button onclick="filterCategory('Todos')" class="category-btn ${currentCategory === 'Todos' ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition cursor-pointer">Todos</button>`;
             selectEl.innerHTML = '';
 
             allDepartments.forEach(dept => {
                 const isActive = currentCategory === dept;
-                container.innerHTML += `<button onclick="filterCategory('${dept}')" class="category-btn ${isActive ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition">${dept}</button>`;
+                container.innerHTML += `<button onclick="filterCategory('${dept}')" class="category-btn ${isActive ? 'active bg-primary text-white font-bold shadow-sm' : 'bg-white text-slate-700 border border-slate-200 font-semibold'} px-4 py-2 rounded-xl text-sm whitespace-nowrap transition cursor-pointer">${dept}</button>`;
                 selectEl.innerHTML += `<option value="${dept}">${dept}</option>`;
             });
         }
@@ -474,7 +475,7 @@
                                     </div>
                                     <p class="text-accent font-black text-xl mb-3">$${p.price}</p>
                                 </div>
-                                <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-primary hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
+                                <button onclick="addToCart('${key}', '${p.name}', ${p.price}, ${stockVal})" class="w-full ${stockVal > 0 ? 'bg-primary hover:bg-slate-800 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 cursor-pointer">
                                     <i class="fa-solid fa-cart-plus"></i> ${stockVal > 0 ? 'Agregar al Carrito' : 'Agotado'}
                                 </button>
                             </div>
@@ -491,9 +492,9 @@
         window.addToCart = function(key, name, price, stock) {
             if (stock <= 0) return alert("Producto agotado.");
             
-            // Si el cliente no está registrado, se le exige registrarse antes de comprar
+            // Verificación automática de registro
             if (!loggedClient) {
-                alert("Para poder comprar, por favor completa tu registro.");
+                alert("Para poder comprar y agregar productos al carrito, debes registrarte primero.");
                 openClientAuthModal();
                 return;
             }
@@ -534,7 +535,7 @@
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-center text-slate-400 py-8">Tu carrito está vacío.</p>';
                 totalEl.innerText = '$0.00';
-                document.getElementById('cart-modal').classList.add('hidden');
+                document.getElementById('cart-modal').classList.remove('hidden');
                 return;
             }
 
@@ -547,12 +548,12 @@
                             <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
                             <p class="text-xs text-slate-500">$${item.price} x ${item.qty} = <span class="font-bold text-accent">$${subtotal.toFixed(2)}</span></p>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
             });
             totalEl.innerText = `$${total.toFixed(2)}`;
-            document.getElementById('cart-modal').classList.add('hidden');
+            document.getElementById('cart-modal').classList.remove('hidden');
         }
 
         window.removeFromCart = function(index) {
@@ -641,13 +642,13 @@
                             <td class="p-3 font-semibold text-slate-700">${currentStock}</td>
                             <td class="p-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
-                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold">-1</button>
-                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold">+1</button>
-                                    <button onclick="customAdjustStock('${key}', ${currentStock})" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded-lg text-xs font-medium">± Cant</button>
+                                    <button onclick="adjustStock('${key}', -1)" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold cursor-pointer">-1</button>
+                                    <button onclick="adjustStock('${key}', 1)" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold cursor-pointer">+1</button>
+                                    <button onclick="customAdjustStock('${key}', ${currentStock})" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded-lg text-xs font-medium cursor-pointer">± Cant</button>
                                 </div>
                             </td>
                             <td class="p-3 text-center">
-                                <button onclick="deleteProduct('${key}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="deleteProduct('${key}')" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -665,7 +666,7 @@
                     <tr class="border-b hover:bg-slate-50">
                         <td class="p-3 font-medium text-slate-800">${dept}</td>
                         <td class="p-3 text-center">
-                            <button onclick="deleteDepartment(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="deleteDepartment(${index})" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -779,7 +780,8 @@
             } else if (pin !== null) { alert("Contraseña incorrecta"); }
         }
 
-        function openClientAuthModal() {
+        // FUNCIONES GLOBALES ASEGURADAS PARA ABRIR Y CERRAR EL MODAL DE CLIENTE
+        window.openClientAuthModal = function() {
             const modal = document.getElementById('client-auth-modal');
             const formView = document.getElementById('client-form-view');
             const profileView = document.getElementById('client-profile-view');
@@ -802,6 +804,10 @@
             modal.classList.remove('hidden');
         }
 
+        window.closeClientAuthModal = function() {
+            document.getElementById('client-auth-modal').classList.add('hidden');
+        }
+
         async function registerOrLoginClient() {
             const name = document.getElementById('client-name').value.trim();
             const ci = document.getElementById('client-ci').value.trim();
@@ -810,7 +816,7 @@
             const location = document.getElementById('client-location').value.trim();
             const pin = document.getElementById('client-pin').value.trim();
 
-            if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa los campos obligatorios.");
+            if(!name || !ci || !phone || !location || !pin) return alert("Por favor completa todos los campos obligatorios.");
             if(pin.length !== 5) return alert("La clave de seguridad debe ser exactamente de 5 dígitos.");
 
             const clientsSnap = await window.get(window.ref(window.db, 'clients'));
@@ -836,7 +842,7 @@
             }
             
             updateClientUI();
-            document.getElementById('client-auth-modal').classList.add('hidden');
+            closeClientAuthModal();
             alert(`¡Registro exitoso, ${name}! Ya puedes continuar con tu compra.`);
             window.loadStoreData();
         }
@@ -862,7 +868,7 @@
 
                 updateClientUI();
                 alert("¡Perfil actualizado con éxito!");
-                document.getElementById('client-auth-modal').classList.add('hidden');
+                closeClientAuthModal();
                 window.loadStoreData();
             }
         }
@@ -871,17 +877,17 @@
             localStorage.removeItem('abasto_client');
             loggedClient = null;
             updateClientUI();
-            document.getElementById('client-auth-modal').classList.add('hidden');
+            closeClientAuthModal();
             alert("Has cerrado sesión.");
         }
 
         function switchAdminTab(tab) {
             ['config', 'departments', 'inventory', 'sales', 'clients'].forEach(t => {
                 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap";
+                document.getElementById(`tab-btn-${t}`).className = "py-3 px-4 font-semibold text-sm text-slate-500 hover:text-primary whitespace-nowrap cursor-pointer";
             });
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap";
+            document.getElementById(`tab-btn-${tab}`).className = "py-3 px-4 font-bold text-sm border-b-2 border-accent text-primary whitespace-nowrap cursor-pointer";
         }
 
         async function saveAdminRate() {
@@ -963,7 +969,6 @@
         }
 
         window.openAdminModal = openAdminModal;
-        window.openClientAuthModal = openClientAuthModal;
         window.registerOrLoginClient = registerOrLoginClient;
         window.saveClientProfile = saveClientProfile;
         window.logoutClient = logoutClient;
